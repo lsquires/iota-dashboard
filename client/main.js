@@ -61,8 +61,7 @@ Template.vis.rendered = function () {
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', '#000');
 
-    node.append("title")
-      .text(function (d) { return d.name; });
+
 
     d3cola.on("tick", function () {
       // draw directed edges with proper padding from node centers
@@ -133,6 +132,9 @@ Template.vis.rendered = function () {
       .attr("r", nodeRadius)
       .style("fill", function (d) { return color(d.group); })
       .call(d3cola.drag);
+
+    node.append("title")
+      .text(function (d) { return d.name; });
 
     d3cola.start(10,20,20);
   }
