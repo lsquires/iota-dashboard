@@ -18,14 +18,15 @@ Meteor.startup(() => {
     name: 'Clean export of bad files',
     schedule: function(parser) {
       // parser is a later.parse object
-      return parser.text('every 2 minutes');
+      return parser.text('every 1 minutes');
     },
     job: function() {
       console.log("doing job");
-      var now = new Date((new Date()).getTime() - 30*60000);
+      var now = new Date((new Date()).getTime() - 5*60000);
       files.find().forEach(function (item) {
         if(item.time < now) {
           console.log("removing:"+item.txid);
+          fs.unlinkSync(item.path);
           txs.remove({_id: item.txid});
           files.remove({txid: item.txid});
         }
@@ -69,7 +70,8 @@ Meteor.startup(() => {
 });
 
 function addTX(tx, path) {
-  console.log("adding tx"); 
+  console.log("adding tx");
+  tx.time = new Date();
   var doc = txs.upsert({hash: tx.hash}, tx);
   files.insert({txid: doc.insertedId, path: path, time: new Date()});
 }
