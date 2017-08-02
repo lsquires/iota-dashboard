@@ -25,7 +25,9 @@ Template.hello.events({
 });
 Template.vis.rendered = function () {
   var width = 960,
-    height = 500;
+    height = 500,
+    centerx = width/2,
+    centery = height/2;
 
   var fill = d3.scale.category20();
 
@@ -90,7 +92,7 @@ Template.vis.rendered = function () {
 
   txs.find().observeChanges({
           added: function(id, fields) {
-          var node = {x: 10, y: 10, name: fields.hash, id: id};
+          var node = {x: centerx, y: centery, name: fields.hash, id: id};
           nodes.push(node);
             nodes.forEach(function(target){
             if(target.name == fields.branchTransaction || target.name == fields.trunkTransaction) {
