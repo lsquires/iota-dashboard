@@ -25,80 +25,90 @@ Template.hello.events({
 });
 Template.vis.rendered = function () {
   var width = 960,
-      height = 500,
-      nodeRadius = 5;
+    height = 500,
+    graph = {nodes: [{}],
+             links: [{}]};
+  var color = d3.scale.category20();
 
-  var color  = d3.scale.category20();
+  var d3cola = cola.d3adaptor(d3)
+    .avoidOverlaps(true)
+    .size([width, height]);
 
-  var force = cola.d3adaptor()
-      .size([width, height])
-      .nodes([{}])
-      .avoidOverlaps(true)
-      .on("tick", tick)
+  var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+
+    var nodeRadius = 5;
+
+    graph.nodes.forEach(function (v) { v.height = v.width = 2 * nodeRadius; });
+
+    d3cola
+      .nodes(graph.nodes)
+      .links(graph.links)
       .flowLayout("y", 30)
-      .symmetricDiffLinkLengths(6);
+      .symmetricDiffLinkLengths(6)
+      .start(10,20,20);
 
-  var svg = d3.select("#nodebox").append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .on("mousemove", mousemove)
-      .on("mousedown", mousedown);
+    // define arrow markers for graph links
+    svg.append('svg:defs').append('svg:marker')
+      .attr('id', 'end-arrow')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 6)
+      .attr('markerWidth', 3)
+      .attr('markerHeight', 3)
+      .attr('orient', 'auto')
+      .append('svg:path')
+      .attr('d', 'M0,-5L10,0L0,5')
+      .attr('fill', '#000');
 
-  svg.append("rect")
-      .attr("width", width)
-      .attr("height", height);
+    var path = svg.selectAll(".link")
+      .data(graph.links)
+      .enter().append('svg:path')
+      .attr('class', 'link');
 
-  var nodes = force.nodes(),
-      links = force.links(),
-      node = svg.selectAll(".node"),
-      link = svg.selectAll(".link");
+    var node = svg.selectAll(".node")
+      .data(graph.nodes)
+      .enter().append("circle")
+      .attr("class", "node")
+      .attr("r", nodeRadius)
+      .style("fill", function (d) { return color(d.group); })
+      .call(d3cola.drag);
 
-  var cursor = svg.append("circle")
-      .attr("r", 30)
-      .attr("transform", "translate(-100,-100)")
-      .attr("class", "cursor");
+    node.append("title")
+      .text(function (d) { return d.name; });
 
+    d3cola.on("tick", function () {
+      // draw directed edges with proper padding from node centers
+      path.attr('d', function (d) {
+        var deltaX = d.target.x - d.source.x,
+          deltaY = d.target.y - d.source.y,
+          dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
+          normX = deltaX / dist,
+          normY = deltaY / dist,
+          sourcePadding = nodeRadius,
+          targetPadding = nodeRadius + 2,
+          sourceX = d.source.x + (sourcePadding * normX),
+          sourceY = d.source.y + (sourcePadding * normY),
+          targetX = d.target.x - (targetPadding * normX),
+          targetY = d.target.y - (targetPadding * normY);
+        return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+      });
 
-  // define arrow markers for graph links
-  svg.append('svg:defs').append('svg:marker')
-    .attr('id', 'end-arrow')
-    .attr('viewBox', '0 -5 10 10')
-    .attr('refX', 6)
-    .attr('markerWidth', 3)
-    .attr('markerHeight', 3)
-    .attr('orient', 'auto')
-    .append('svg:path')
-    .attr('d', 'M0,-5L10,0L0,5')
-    .attr('fill', '#000');
-  restart();
-
-  function mousemove() {
-    cursor.attr("transform", "translate(" + d3.mouse(this) + ")");
-  }
-  function mousedown() {
-    var point = d3.mouse(this),
-        node = {x: point[0], y: point[1]},
-        n = nodes.push(node);
-
-    // add links to any nearby nodes
-    nodes.forEach(function(target) {
-      var x = target.x - node.x,
-          y = target.y - node.y;
-      if (Math.sqrt(x * x + y * y) < 30) {
-        links.push({source: node, target: target});
-      }
+      node.attr("cx", function (d) { return d.x; })
+        .attr("cy", function (d) { return d.y; });
     });
 
-    restart();
-  }
+  restart();
+
 
   txs.find().observeChanges({
           added: function(id, fields) {
           var node = {x: 10, y: 10, name: fields.hash, id: id};
-          nodes.push(node);
-          nodes.forEach(function(target){
+          graph.nodes.push(node);
+            graph.nodes.forEach(function(target){
             if(target.name == fields.branchTransaction || target.name == fields.trunkTransaction) {
-              links.push({source: node, target: target});
+              graph.links.push({source: node, target: target});
               }
             });
           restart();
@@ -107,9 +117,15 @@ Template.vis.rendered = function () {
 
           },
           removed: function(id) {
-            for(var i = array.length - 1; i >= 0; i--) {
-              if(array[i].id === id) {
-                array.splice(i, 1);
+            for(var i = graph.nodes.length - 1; i >= 0; i--) {
+              if(graph.nodes[i].id === id) {
+                graph.nodes.splice(i, 1);
+                //Delete links
+                for(var i2 = graph.links.length - 1; i2 >= 0; i2--) {
+                  if(graph.links[i2].source === i || graph.links[i2].target === i) {
+                    graph.links.splice(i2, 1);
+                  }
+                }
               }
             }
             restart();
@@ -117,47 +133,21 @@ Template.vis.rendered = function () {
         });
   Meteor.subscribe("txs");
 
-  function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; })
-        .attr('d', function (d) {
-                  var deltaX = d.target.x - d.source.x,
-                      deltaY = d.target.y - d.source.y,
-                      dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-                      normX = deltaX / dist,
-                      normY = deltaY / dist,
-                    sourcePadding = nodeRadius,
-                    targetPadding = nodeRadius + 2,
-                    sourceX = d.source.x + (sourcePadding * normX),
-                      sourceY = d.source.y + (sourcePadding * normY),
-                      targetX = d.target.x - (targetPadding * normX),
-                      targetY = d.target.y - (targetPadding * normY);
-                  return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
-              });
-    node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
-    }
-
   function restart() {
 
-
-    var path = svg.selectAll(".link").data(links)
+    var path = svg.selectAll(".link")
+      .data(graph.links)
       .enter().append('svg:path')
       .attr('class', 'link');
 
-    var node = svg.selectAll(".node").data(nodes)
+    var node = svg.selectAll(".node")
+      .data(graph.nodes)
       .enter().append("circle")
       .attr("class", "node")
       .attr("r", nodeRadius)
       .style("fill", function (d) { return color(d.group); })
-      .call(force.drag);
+      .call(d3cola.drag);
 
-    node.append("title")
-      .text(function (d) { return d.name; });
-
-
-    force.start(10,20,20);
-    }
+    d3cola.start(10,20,20);
+  }
 }
