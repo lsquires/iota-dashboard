@@ -119,7 +119,8 @@ Template.vis.rendered = function () {
   Meteor.subscribe("txs");
 
   function restart() {
-
+    console.log(graph.nodes);
+    console.log(graph.links);
     var path = svg.selectAll(".link")
       .data(graph.links)
       .enter().append('svg:path')
