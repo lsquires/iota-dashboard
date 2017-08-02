@@ -25,7 +25,8 @@ Template.hello.events({
 });
 Template.vis.rendered = function () {
   var width = 960,
-      height = 500;
+      height = 500,
+      nodeRadius = 5;
 
   var color  = d3.scale.category20();
 
@@ -113,9 +114,9 @@ Template.vis.rendered = function () {
                       dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
                       normX = deltaX / dist,
                       normY = deltaY / dist,
-                      sourcePadding = 2,
-                      targetPadding = 4,
-                      sourceX = d.source.x + (sourcePadding * normX),
+                    sourcePadding = nodeRadius,
+                    targetPadding = nodeRadius + 2,
+                    sourceX = d.source.x + (sourcePadding * normX),
                       sourceY = d.source.y + (sourcePadding * normY),
                       targetX = d.target.x - (targetPadding * normX),
                       targetY = d.target.y - (targetPadding * normY);
