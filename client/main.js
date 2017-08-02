@@ -48,7 +48,6 @@ Template.vis.rendered = function () {
       .links(graph.links)
       .flowLayout("y", 30)
       .symmetricDiffLinkLengths(6)
-      .start(10,20,20);
 
     // define arrow markers for graph links
     svg.append('svg:defs').append('svg:marker')
@@ -61,19 +60,6 @@ Template.vis.rendered = function () {
       .append('svg:path')
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', '#000');
-
-    var path = svg.selectAll(".link")
-      .data(graph.links)
-      .enter().append('svg:path')
-      .attr('class', 'link');
-
-    var node = svg.selectAll(".node")
-      .data(graph.nodes)
-      .enter().append("circle")
-      .attr("class", "node")
-      .attr("r", nodeRadius)
-      .style("fill", function (d) { return color(d.group); })
-      .call(d3cola.drag);
 
     node.append("title")
       .text(function (d) { return d.name; });
