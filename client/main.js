@@ -59,7 +59,7 @@ Template.vis.rendered = function () {
     .attr("transform", "translate(-100,-100)")
     .attr("class", "cursor");
 
-  restart();
+
 
   function mousemove() {
     cursor.attr("transform", "translate(" + d3.mouse(this) + ")");
@@ -90,8 +90,9 @@ Template.vis.rendered = function () {
     node.attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
   }
-
-  txs.find().observeChanges({
+  let initializing = true;
+  Meteor.subscribe("txs");
+  const handle =  txs.find().observeChanges({
           added: function(id, fields) {
           var node = {x: centerx, y: centery, name: fields.hash, id: id};
           nodes.push(node);
@@ -100,7 +101,9 @@ Template.vis.rendered = function () {
               links.push({source: node, target: target});
               }
             });
-          restart();
+            if(!initializing) {
+              restart();
+            }
         },
           changed: function(id, fields) {
 
@@ -120,8 +123,8 @@ Template.vis.rendered = function () {
             restart();
           }
         });
-  Meteor.subscribe("txs");
-
+  initializing = false;
+  restart();
   function restart() {
     link = link.data(links);
 
