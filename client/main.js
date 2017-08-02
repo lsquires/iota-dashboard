@@ -24,8 +24,8 @@ Template.hello.events({
   },
 });
 Template.vis.rendered = function () {
-  var width = 1400,
-    height = 900,
+  var width = 1000,
+    height = 9000,
     centerx = width/2,
     centery = height/2;
 
@@ -36,7 +36,7 @@ Template.vis.rendered = function () {
     .nodes([{}])
     .symmetricDiffLinkLengths(5)
     .avoidOverlaps(true)
-    .flowLayout("x", 20)
+    .flowLayout("y", 20)
     .on("tick", tick);
 
   var svg = d3.select("#nodebox").append("svg")
