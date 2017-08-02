@@ -61,7 +61,21 @@ Template.vis.rendered = function () {
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', '#000');
 
+  var path = svg.selectAll(".link")
+    .data(graph.links)
+    .enter().append('svg:path')
+    .attr('class', 'link');
 
+  var node = svg.selectAll(".node")
+    .data(graph.nodes)
+    .enter().append("circle")
+    .attr("class", "node")
+    .attr("r", nodeRadius)
+    .style("fill", function (d) { return color(d.group); })
+    .call(d3cola.drag);
+
+  node.append("title")
+    .text(function (d) { return d.name; });
 
     d3cola.on("tick", function () {
       // draw directed edges with proper padding from node centers
