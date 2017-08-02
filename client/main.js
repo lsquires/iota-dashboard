@@ -26,8 +26,8 @@ Template.hello.events({
 Template.vis.rendered = function () {
   var width = 960,
     height = 500,
-    graph = {nodes: [{}],
-             links: [{}]};
+    graph = {nodes: [],
+             links: []};
   var color = d3.scale.category20();
 
   var d3cola = cola.d3adaptor(d3)
