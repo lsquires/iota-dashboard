@@ -7,7 +7,7 @@ var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQ
 var txs = new Mongo.Collection('txs');
 var files = new Mongo.Collection('files');
 txs.remove({});
-
+files.remove({});
 function deleteBeforeMilestone() {
 } 
 
