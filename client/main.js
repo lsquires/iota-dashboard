@@ -114,7 +114,7 @@ Template.vis.rendered = function () {
                 nodes.splice(i, 1);
                 //Delete links
                 for(var i2 = links.length - 1; i2 >= 0; i2--) {
-                  if(links[i2].source === i || links[i2].target === i) {
+                  if(links[i2].source.id === id || links[i2].target.id === id) {
                     links.splice(i2, 1);
                   }
                 }
