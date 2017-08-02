@@ -34,9 +34,9 @@ Template.vis.rendered = function () {
   var force = cola.d3adaptor(d3)
     .size([width, height])
     .nodes([{}])
-    .jaccardLinkLengths(5)
+    .jaccardLinkLengths(20)
     .avoidOverlaps(true)
-    .flowLayout("x", 15)
+    .flowLayout("x", 20)
     .on("tick", tick);
 
   var svg = d3.select("#nodebox").append("svg")
