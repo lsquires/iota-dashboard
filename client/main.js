@@ -1220,7 +1220,7 @@ Template.vis.rendered = function () {
 
   restart();
 
-  /*
+
   txs.find().observeChanges({
           added: function(id, fields) {
           var node = {x: 10, y: 10, name: fields.hash, id: id};
@@ -1249,7 +1249,7 @@ Template.vis.rendered = function () {
             }
             restart();
           }
-        });*/
+        });
   Meteor.subscribe("txs");
 
   function restart() {
