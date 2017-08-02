@@ -49,13 +49,27 @@ Template.vis.rendered = function () {
       .attr("height", height);
 
   var nodes = force.nodes(),
-      links = force.links();
+      links = force.links(),
+      node = svg.selectAll(".node"),
+      link = svg.selectAll(".link");
 
   var cursor = svg.append("circle")
       .attr("r", 30)
       .attr("transform", "translate(-100,-100)")
       .attr("class", "cursor");
 
+
+  // define arrow markers for graph links
+  svg.append('svg:defs').append('svg:marker')
+    .attr('id', 'end-arrow')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 6)
+    .attr('markerWidth', 3)
+    .attr('markerHeight', 3)
+    .attr('orient', 'auto')
+    .append('svg:path')
+    .attr('d', 'M0,-5L10,0L0,5')
+    .attr('fill', '#000');
   restart();
 
   function mousemove() {
@@ -127,38 +141,13 @@ Template.vis.rendered = function () {
     }
 
   function restart() {
-    /*link = link.data(links);
-
-    link.enter().insert("line", ".node")
-        .attr("class", "link");
-
-    node = node.data(nodes);
-
-    node.enter().insert("circle", ".cursor")
-        .attr("class", "node")
-        .attr("r", 5)
-        .call(force.drag);*/
 
 
-    // define arrow markers for graph links
-    svg.append('svg:defs').append('svg:marker')
-      .attr('id', 'end-arrow')
-      .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 6)
-      .attr('markerWidth', 3)
-      .attr('markerHeight', 3)
-      .attr('orient', 'auto')
-      .append('svg:path')
-      .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', '#000');
-
-    var path = svg.selectAll(".link")
-      .data(links)
+    var path = link.data(links)
       .enter().append('svg:path')
       .attr('class', 'link');
 
-    var node = svg.selectAll(".node")
-      .data(nodes)
+    var node = node.data(nodes)
       .enter().append("circle")
       .attr("class", "node")
       .attr("r", nodeRadius)
