@@ -24,8 +24,8 @@ Template.hello.events({
   },
 });
 Template.vis.rendered = function () {
-  var width = 960,
-    height = 500,
+  var width = 1400,
+    height = 900,
     centerx = width/2,
     centery = height/2;
 
@@ -34,7 +34,7 @@ Template.vis.rendered = function () {
   var force = cola.d3adaptor(d3)
     .size([width, height])
     .nodes([{}])
-    .jaccardLinkLengths(20)
+    .symmetricDiffLinkLengths(5)
     .avoidOverlaps(true)
     .flowLayout("x", 20)
     .on("tick", tick);
