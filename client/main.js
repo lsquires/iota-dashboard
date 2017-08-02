@@ -143,11 +143,11 @@ Template.vis.rendered = function () {
   function restart() {
 
 
-    var path = link.data(links)
+    var path = svg.selectAll(".link").data(links)
       .enter().append('svg:path')
       .attr('class', 'link');
 
-    var node = node.data(nodes)
+    var node = svg.selectAll(".node").data(nodes)
       .enter().append("circle")
       .attr("class", "node")
       .attr("r", nodeRadius)
