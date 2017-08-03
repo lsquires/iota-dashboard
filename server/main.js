@@ -18,7 +18,7 @@ Meteor.startup(() => {
     name: 'Clean export of bad files',
     schedule: function(parser) {
       // parser is a later.parse object
-      return parser.text('every 10 seconds');
+      return parser.text('every 30 seconds');
     },
     job: function() {
       console.log("doing job");

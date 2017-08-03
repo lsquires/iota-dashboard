@@ -94,11 +94,11 @@ Template.vis.rendered = function () {
   }
 
   function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
+    /*link.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
-    /*link.attr('d', function (d) {
+      .attr("y2", function(d) { return d.target.y; });*/
+    link.attr('d', function (d) {
       var deltaX = d.target.x - d.source.x,
         deltaY = d.target.y - d.source.y,
         dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
@@ -111,7 +111,7 @@ Template.vis.rendered = function () {
         targetX = d.target.x - (targetPadding * normX),
         targetY = d.target.y - (targetPadding * normY);
       return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
-    });*/
+    });
 
 
     node.attr("cx", function(d) { return d.x; })
@@ -166,7 +166,7 @@ Template.vis.rendered = function () {
       .remove();
 
     link = link.data(links);
-    link.enter().insert("line", ".node")
+    link.enter().append('svg:path')
       .attr("class", "link");
     link.exit()
       .remove();
