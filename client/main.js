@@ -34,7 +34,7 @@ Template.vis.rendered = function () {
 
   var force = cola.d3adaptor(d3)
     .size([width, height])
-    .nodes([{}])
+    .nodes([])
     .symmetricDiffLinkLengths(5)
     .avoidOverlaps(true)
     .flowLayout("y", 20)
@@ -43,8 +43,6 @@ Template.vis.rendered = function () {
   var svg = d3.select("#nodebox").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .on("mousemove", mousemove)
-    .on("mousedown", mousedown);
 
   svg.append("rect")
     .attr("width", width)
@@ -54,11 +52,6 @@ Template.vis.rendered = function () {
     links = force.links(),
     node = svg.selectAll(".node"),
     link = svg.selectAll(".link");
-
-  var cursor = svg.append("circle")
-    .attr("r", 30)
-    .attr("transform", "translate(-100,-100)")
-    .attr("class", "cursor");
 
   svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
@@ -73,31 +66,7 @@ Template.vis.rendered = function () {
 
 
 
-  function mousemove() {
-    cursor.attr("transform", "translate(" + d3.mouse(this) + ")");
-  }
-  function mousedown() {
-    var point = d3.mouse(this),
-      node = {x: point[0], y: point[1]},
-      n = nodes.push(node);
-
-    // add links to any nearby nodes
-    nodes.forEach(function(target) {
-      var x = target.x - node.x,
-        y = target.y - node.y;
-      if (Math.sqrt(x * x + y * y) < 30) {
-        links.push({source: node, target: target});
-      }
-    });
-
-    restart();
-  }
-
   function tick() {
-    /*link.attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });*/
     link.attr('d', function (d) {
       var deltaX = d.target.x - d.source.x,
         deltaY = d.target.y - d.source.y,
@@ -113,7 +82,6 @@ Template.vis.rendered = function () {
       return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
     });
 
-
     node.attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
   }
@@ -121,7 +89,7 @@ Template.vis.rendered = function () {
   Meteor.subscribe("txs");
   const handle =  txs.find().observeChanges({
           added: function(id, fields) {
-          var node = {x: centerx, y: centery, name: fields.hash, id: id};
+          var node = {x: centerx, y: centery, name: fields.hash, id: id, colour: getColour(fields)};
           nodes.push(node);
             nodes.forEach(function(target){
             if(target.name == fields.branchTransaction || target.name == fields.trunkTransaction) {
@@ -133,10 +101,15 @@ Template.vis.rendered = function () {
             }
         },
           changed: function(id, fields) {
-
+            console.log("changed");
+            nodes.forEach(function(target) {
+              if(nodes.name = fields.hash) {
+                nodes.colour = getColour(fields);
+              }
+            });
+            restart();
           },
           removed: function(id) {
-            console.log("removing");
             for(var i = nodes.length - 1; i >= 0; i--) {
               if(nodes[i].id === id) {
                 //Delete links
@@ -155,6 +128,10 @@ Template.vis.rendered = function () {
         });
   initializing = false;
   restart();
+
+  function getColour(tx) {
+    return 1;
+  }
   function restart() {
 
     node = node.data(nodes);
