@@ -24,8 +24,8 @@ Template.hello.events({
   },
 });
 Template.vis.rendered = function () {
-  var width = 1000,
-    height = 9000,
+  var width = 900,
+    height = 500,
     centerx = width/2,
     centery = height/2,
     nodeRadius = 5;
@@ -43,6 +43,11 @@ Template.vis.rendered = function () {
   var svg = d3.select("#nodebox").append("svg")
     .attr("width", width)
     .attr("height", height)
+    .attr("id","canvas")
+    .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+    .append("g")
+    .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+    .append("g");
 
   svg.append("rect")
     .attr("width", width)
@@ -135,6 +140,12 @@ Template.vis.rendered = function () {
     }
     return "blue";
   }
+
+  function zoom() {
+    var zoom = d3.event;
+    svg.attr("transform", "translate(" + zoom.translate + ")scale(" + zoom.scale + ")");
+  }
+
   function restart() {
 
     node = node.data(nodes);
