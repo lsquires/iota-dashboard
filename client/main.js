@@ -40,6 +40,7 @@ Template.vis.rendered = function () {
     .flowLayout("y", 25)
     .on("tick", tick);
 
+  var hover = d3.select("#graph_hover");
   var svg = d3.select("#nodebox").append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -152,7 +153,13 @@ Template.vis.rendered = function () {
     node.enter().insert("circle", ".cursor")
       .attr("class", "node")
       .attr("r", nodeRadius)
-      .call(force.drag);
+      .call(force.drag)
+      .on("mouseover", function(d){
+        hover.html(JSON.stringify(d.tx));
+      })
+      .on("mouseleave", function(d){
+        hover.html("");
+      });
     node.style("fill", function (d) { return d.colour; });
     node.exit()
       .remove();
