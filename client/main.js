@@ -27,7 +27,8 @@ Template.vis.rendered = function () {
   var width = 1000,
     height = 9000,
     centerx = width/2,
-    centery = height/2;
+    centery = height/2,
+    nodeRadius = 5;
 
   var fill = d3.scale.category20();
 
@@ -93,10 +94,25 @@ Template.vis.rendered = function () {
   }
 
   function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
+    /*link.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
+      .attr("y2", function(d) { return d.target.y; });*/
+    path.attr('d', function (d) {
+      var deltaX = d.target.x - d.source.x,
+        deltaY = d.target.y - d.source.y,
+        dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
+        normX = deltaX / dist,
+        normY = deltaY / dist,
+        sourcePadding = nodeRadius,
+        targetPadding = nodeRadius + 2,
+        sourceX = d.source.x + (sourcePadding * normX),
+        sourceY = d.source.y + (sourcePadding * normY),
+        targetX = d.target.x - (targetPadding * normX),
+        targetY = d.target.y - (targetPadding * normY);
+      return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+    });
+
 
     node.attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
@@ -120,6 +136,9 @@ Template.vis.rendered = function () {
 
           },
           removed: function(id) {
+            console.log(nodes);
+            console.log(links);
+            console.log("removing");
             for(var i = nodes.length - 1; i >= 0; i--) {
               if(nodes[i].id === id) {
                 //Delete links
@@ -132,24 +151,26 @@ Template.vis.rendered = function () {
                 break;
               }
             }
+            console.log(nodes);
+            console.log(links);
             restart();
           }
         });
   initializing = false;
   restart();
   function restart() {
-    console.log(nodes);
-    console.log(links);
+
     link = link.data(links);
 
     link.enter().insert("line", ".node")
+      .enter().append('svg:path')
       .attr("class", "link");
 
     node = node.data(nodes);
 
     node.enter().insert("circle", ".cursor")
       .attr("class", "node")
-      .attr("r", 5)
+      .attr("r", nodeRadius)
       .call(force.drag);
 
     force.start();
