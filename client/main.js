@@ -136,8 +136,6 @@ Template.vis.rendered = function () {
 
           },
           removed: function(id) {
-            console.log(nodes);
-            console.log(links);
             console.log("removing");
             for(var i = nodes.length - 1; i >= 0; i--) {
               if(nodes[i].id === id) {
@@ -151,8 +149,7 @@ Template.vis.rendered = function () {
                 break;
               }
             }
-            console.log(nodes);
-            console.log(links);
+            d3.event.stopPropagation();
             restart();
           }
         });
@@ -160,18 +157,19 @@ Template.vis.rendered = function () {
   restart();
   function restart() {
 
-    link = link.data(links);
-
-    link.enter().insert("line", ".node")
-      //.append('svg:path')
-      .attr("class", "link");
-
     node = node.data(nodes);
-
     node.enter().insert("circle", ".cursor")
       .attr("class", "node")
       .attr("r", nodeRadius)
       .call(force.drag);
+    node.exit()
+      .remove();
+
+    link = link.data(links);
+    link.enter().insert("line", ".node")
+      .attr("class", "link");
+    link.exit()
+      .remove();
 
     force.start();
   }
