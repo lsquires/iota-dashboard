@@ -44,9 +44,9 @@ Template.vis.rendered = function () {
     .attr("width", width)
     .attr("height", height)
     .attr("id","canvas")
-    .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+    .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom))
     .append("g")
-    .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+    .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom))
     .append("g");
 
   svg.append("rect")
