@@ -98,7 +98,7 @@ Template.vis.rendered = function () {
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });*/
-    path.attr('d', function (d) {
+    link.attr('d', function (d) {
       var deltaX = d.target.x - d.source.x,
         deltaY = d.target.y - d.source.y,
         dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
