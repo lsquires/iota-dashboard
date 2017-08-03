@@ -35,7 +35,7 @@ Template.vis.rendered = function () {
   var force = cola.d3adaptor(d3)
     .size([width, height])
     .nodes([])
-    .symmetricDiffLinkLengths(5)
+    .symmetricDiffLinkLengths(8)
     .avoidOverlaps(true)
     .flowLayout("y", 20)
     .on("tick", tick);
@@ -89,10 +89,10 @@ Template.vis.rendered = function () {
   Meteor.subscribe("txs");
   const handle =  txs.find().observeChanges({
           added: function(id, fields) {
-          var node = {x: centerx, y: centery, name: fields.hash, id: id, colour: getColour(fields)};
+          var node = {x: centerx, y: centery, tx: fields, id: id, colour: getColour(fields)};
           nodes.push(node);
             nodes.forEach(function(target){
-            if(target.name == fields.branchTransaction || target.name == fields.trunkTransaction) {
+            if(target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
               links.push({source: node, target: target});
               }
             });
@@ -103,7 +103,7 @@ Template.vis.rendered = function () {
           changed: function(id, fields) {
             console.log("changed");
             nodes.forEach(function(target) {
-              if(nodes.name = fields.hash) {
+              if(nodes.tx.hash = fields.hash) {
                 nodes.colour = getColour(fields);
               }
             });
