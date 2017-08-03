@@ -10,3 +10,7 @@
     opacity: 0.4;
     marker-end: url(#end-arrow);
 }
+
+.graph_hover {
+    width: 300px;
+}
