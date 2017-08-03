@@ -130,7 +130,10 @@ Template.vis.rendered = function () {
   restart();
 
   function getColour(tx) {
-    return 1;
+    if(tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
+      return "red";
+    }
+    return "blue";
   }
   function restart() {
 
@@ -139,6 +142,7 @@ Template.vis.rendered = function () {
       .attr("class", "node")
       .attr("r", nodeRadius)
       .call(force.drag);
+    node.style("fill", function (d) { return d.colour; });
     node.exit()
       .remove();
 
