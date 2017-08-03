@@ -98,7 +98,7 @@ Template.vis.rendered = function () {
           nodes.push(node);
             nodes.forEach(function(target){
             if(target.name == fields.branchTransaction || target.name == fields.trunkTransaction) {
-              links.push({source: node, target: target});
+              links.push({source: node.id, target: target.id});
               }
             });
             if(!initializing) {
@@ -111,13 +111,13 @@ Template.vis.rendered = function () {
           removed: function(id) {
             for(var i = nodes.length - 1; i >= 0; i--) {
               if(nodes[i].id === id) {
-                nodes.splice(i, 1);
                 //Delete links
                 for(var i2 = links.length - 1; i2 >= 0; i2--) {
-                  if(links[i2].source.id === id || links[i2].target.id === id) {
+                  if(links[i2].source === id || links[i2].target === id) {
                     links.splice(i2, 1);
                   }
                 }
+                nodes.splice(i, 1);
               }
             }
             restart();
