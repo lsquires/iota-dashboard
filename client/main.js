@@ -149,7 +149,7 @@ Template.vis.rendered = function () {
                 break;
               }
             }
-            d3.event.stopPropagation();
+            //d3.event.stopPropagation();
             restart();
           }
         });

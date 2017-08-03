@@ -18,11 +18,11 @@ Meteor.startup(() => {
     name: 'Clean export of bad files',
     schedule: function(parser) {
       // parser is a later.parse object
-      return parser.text('every 20 seconds');
+      return parser.text('every 10 seconds');
     },
     job: function() {
       console.log("doing job");
-      var now = new Date((new Date()).getTime() - 1*60000);
+      var now = new Date((new Date()).getTime() - 5*60000);
       files.find().forEach(function (item) {
         if(item.time < now) {
           console.log("removing:"+item.txid);
