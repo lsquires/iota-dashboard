@@ -59,6 +59,17 @@ Template.vis.rendered = function () {
     .attr("transform", "translate(-100,-100)")
     .attr("class", "cursor");
 
+  svg.append('svg:defs').append('svg:marker')
+    .attr('id', 'end-arrow')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 6)
+    .attr('markerWidth', 3)
+    .attr('markerHeight', 3)
+    .attr('orient', 'auto')
+    .append('svg:path')
+    .attr('d', 'M0,-5L10,0L0,5')
+    .attr('fill', '#000');
+
 
 
   function mousemove() {
@@ -127,6 +138,8 @@ Template.vis.rendered = function () {
   initializing = false;
   restart();
   function restart() {
+    console.log(nodes);
+    console.log(links);
     link = link.data(links);
 
     link.enter().insert("line", ".node")
