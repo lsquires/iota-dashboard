@@ -163,7 +163,7 @@ Template.vis.rendered = function () {
     link = link.data(links);
 
     link.enter().insert("line", ".node")
-      .enter().append('svg:path')
+      .append('svg:path')
       .attr("class", "link");
 
     node = node.data(nodes);
