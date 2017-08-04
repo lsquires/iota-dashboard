@@ -22,7 +22,7 @@ Template.registerHelper('navClassName', function (page) {
 Template.vis.rendered = function () {
 
 
-  startSim(document.getElementById('outernodebox').clientWidth);
+  startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
     var width = w,
       height = 800,
@@ -71,7 +71,8 @@ Template.vis.rendered = function () {
       .attr('fill', '#000');
 
     $(window).resize(function() {
-      width = document.getElementById('outernodebox').clientWidth;
+      console.log("resized");
+      width = document.getElementById('nodebox').clientWidth;
       centerx = width / 2,
       force.size([width, height]);
       svg.attr("width", width)
