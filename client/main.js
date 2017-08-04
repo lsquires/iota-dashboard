@@ -13,6 +13,8 @@ Router.route('/About');
 Router.route('/Stats');
 Router.route('/Contact');
 
+updated = new Date();
+
 Template.registerHelper('navClassName', function (page) {
   if (Router.current()) {
     return Router.current().route.getName() === page ? "active" : "";
@@ -165,7 +167,8 @@ Template.vis.rendered = function () {
 
     function restart() {
       console.log(txs.find().count() +" " + Counts.get("txs-count"));
-      if(Counts.get("txs-count") === txs.find().count() + 1) {
+      var now = new Date();
+      if(now > updated) {
         node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
@@ -195,6 +198,7 @@ Template.vis.rendered = function () {
           .remove();
 
         force.start();
+        updated = new Date((new Date()).getTime() + 500);
       }
     }
   }
