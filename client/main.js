@@ -20,11 +20,9 @@ Template.registerHelper('navClassName', function (page) {
 });
 
 Template.vis.rendered = function () {
-  $(window).resize(function() {
-    startSim($(window).width());
-  });
 
-  startSim(800);
+
+  startSim(document.getElementById('outernodebox').clientWidth);
   function startSim(w) {
     var width = w,
       height = 800,
@@ -52,7 +50,7 @@ Template.vis.rendered = function () {
       .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom))
       .append("g");
 
-    svg.append("rect")
+    var rect = svg.append("rect")
       .attr("width", width)
       .attr("height", height);
 
@@ -72,6 +70,15 @@ Template.vis.rendered = function () {
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', '#000');
 
+    $(window).resize(function() {
+      width = document.getElementById('outernodebox').clientWidth;
+      centerx = width / 2,
+      force.size([width, height]);
+      svg.attr("width", width)
+        .attr("height", height);
+      rect.attr("width", width)
+        .attr("height", height);
+    });
 
     function tick() {
       link.attr('d', function (d) {
