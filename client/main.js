@@ -164,36 +164,37 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-
-      node = node.data(nodes);
-      node.enter().insert("circle", ".cursor")
-        .attr("class", "node")
-        .attr("r", nodeRadius)
-        .call(force.drag)
-        .on("mouseover", function (d) {
-          hover.html(JSON.stringify(d.tx));
-          d3.select(this).select("circle").transition()
-            .duration(250)
-            .attr("r", 15);
-        })
-        .on("mouseleave", function (d) {
-          d3.select(this).select("circle").transition()
-            .duration(250)
-            .attr("r", nodeRadius);
+      if(Counts.get("txs-count") == txs.find().count()) {
+        node = node.data(nodes);
+        node.enter().insert("circle", ".cursor")
+          .attr("class", "node")
+          .attr("r", nodeRadius)
+          .call(force.drag)
+          .on("mouseover", function (d) {
+            hover.html(JSON.stringify(d.tx));
+            d3.select(this).select("circle").transition()
+              .duration(250)
+              .attr("r", 15);
+          })
+          .on("mouseleave", function (d) {
+            d3.select(this).select("circle").transition()
+              .duration(250)
+              .attr("r", nodeRadius);
+          });
+        node.style("fill", function (d) {
+          return d.colour;
         });
-      node.style("fill", function (d) {
-        return d.colour;
-      });
-      node.exit()
-        .remove();
+        node.exit()
+          .remove();
 
-      link = link.data(links);
-      link.enter().append('svg:path')
-        .attr("class", "link");
-      link.exit()
-        .remove();
+        link = link.data(links);
+        link.enter().append('svg:path')
+          .attr("class", "link");
+        link.exit()
+          .remove();
 
-      force.start();
+        force.start();
+      }
     }
   }
 
