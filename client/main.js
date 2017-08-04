@@ -36,7 +36,7 @@ Template.vis.rendered = function () {
     var force = cola.d3adaptor(d3)
       .size([width, height])
       .nodes([])
-      .symmetricDiffLinkLengths(7)
+      .jaccardLinkLengths(40,0.7)
       .avoidOverlaps(true)
       .flowLayout("y", 25)
       .on("tick", tick);
@@ -164,9 +164,6 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-      var now = new Date();
-      if(now > updated) {
-        updated = new Date();//new Date((new Date()).getTime() + 500);
         node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
@@ -194,9 +191,8 @@ Template.vis.rendered = function () {
           .attr("class", "link");
         link.exit()
           .remove();
-
         force.start();
-      }
+
     }
   }
 
