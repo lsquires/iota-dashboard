@@ -35,8 +35,11 @@ Meteor.startup(() => {
   });
 
 	Meteor.publish('txs', function () {
-		return txs.find();
-	});
+    return txs.find();
+  });
+  Meteor.publish('txscount', function () {
+    return txs.find().count();
+  });
   var iota = new IOTA({
 	'host': 'http://localhost',
 	'port':14265
