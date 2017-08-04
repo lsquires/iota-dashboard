@@ -171,9 +171,14 @@ Template.vis.rendered = function () {
         .call(force.drag)
         .on("mouseover", function (d) {
           hover.html(JSON.stringify(d.tx));
+          d3.select(this).select("circle").transition()
+            .duration(250)
+            .attr("r", 15);
         })
         .on("mouseleave", function (d) {
-          //hover.html("");
+          3.select(this).select("circle").transition()
+            .duration(250)
+            .attr("r", nodeRadius);
         });
       node.style("fill", function (d) {
         return d.colour;
