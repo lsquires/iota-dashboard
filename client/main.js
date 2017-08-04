@@ -9,12 +9,16 @@ var d3 = require('d3-3');
 Router.route('/', {name:"Home"},function () {
   this.render('Home');
 });
-
 Router.route('/About');
 Router.route('/Stats');
 Router.route('/Contact');
 
 Template.vis.rendered = function () {
+  Template.registerHelper('navClassName', function (page) {
+    if (Router.current()) {
+      return Router.current().route.getName() === page ? "active" : "";
+    }
+  });
   var width = 900,
     height = 500,
     centerx = width/2,
