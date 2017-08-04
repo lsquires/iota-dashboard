@@ -42,8 +42,8 @@ Template.vis.rendered = function () {
 
     var hover = d3.select("#graph_hover");
     var svg = d3.select("#nodebox").append("svg")
-      .attr("width", width)
-      .attr("height", height)
+      .attr("width", "100%")
+      .attr("height", "100%")
       .attr("id", "canvas")
       .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom))
       .append("g")
