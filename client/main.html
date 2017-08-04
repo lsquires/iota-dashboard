@@ -3,30 +3,44 @@
 </head>
 
 <body>
-  
-  {{> vis}}  
-  <h1>Welcome to Meteor!</h1>
-  
-  {{> hello}}
-  {{> info}}
 </body>
+
+<template name="Home">
+  <div class="wrapper">
+    {{> Nav}}
+    <div class="container profile">
+      {{> vis}}
+    </div>
+  </div>
+</template>
+
+<template name="About">
+  <div class="wrapper">
+    {{> Nav}}
+    <div class="container profile">
+      ABOUT
+    </div>
+  </div>
+</template>
 
 <template name="vis">
   <div id="nodebox"></div>
   <div id="graph_hover"></div>
 </template>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
-</template>
-
-<template name="info">
-  <h2>Learn Meteor!</h2>
-  <ul>
-    <li><a href="https://www.meteor.com/try" target="_blank">Do the Tutorial</a></li>
-    <li><a href="http://guide.meteor.com" target="_blank">Follow the Guide</a></li>
-    <li><a href="https://docs.meteor.com" target="_blank">Read the Docs</a></li>
-    <li><a href="https://forums.meteor.com" target="_blank">Discussions</a></li>
-  </ul>
+<template name="Nav">
+  <div class="header">
+    <div class="container">
+      IOTA Vis
+    </div>
+    <div class="collapse navbar-collapse mega-menu navbar-responsive-collapse">
+      <div class="container">
+        <ul class="nav navbar-nav">
+          <li id="LI_home" class="{{navClassName 'Home'}}"><a href="/">Home</a></li>
+          <li id="LI_about" class="{{navClassName 'About'}}"><a href="/about">About</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 </template>

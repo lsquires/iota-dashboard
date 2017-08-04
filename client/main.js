@@ -1,5 +1,4 @@
 import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
 import { Mongo } from 'meteor/mongo';
 import './main.html';
 txs = new Mongo.Collection('txs');
@@ -7,22 +6,14 @@ txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3-3');
 
-Template.hello.onCreated(function helloOnCreated() {
-  this.counter = new ReactiveVar(0);
+Router.route('/', {name:"Home"},function () {
+  this.render('Home');
 });
 
-Template.hello.helpers({
-  counter() {
-    return Template.instance().counter.get();
-  },
-});
+Router.route('/About');
+Router.route('/Stats');
+Router.route('/Contact');
 
-Template.hello.events({
-  'click button'(event, instance) {
-    // increment the counter when button is clicked
-    instance.counter.set(instance.counter.get() + 1);
-  },
-});
 Template.vis.rendered = function () {
   var width = 900,
     height = 500,

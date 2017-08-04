@@ -10,3 +10,47 @@ rect {
   pointer-events: none;
 }
 
+.header {
+  background: #fff;
+  border-bottom: solid 3px #ddd;
+}
+
+.header .navbar-nav>.active>a, .header .navbar-nav>li>a:hover {
+  border-bottom-color: #66DC71;
+}
+
+.header .navbar-nav>.active>a {
+  border-color: #66DC71;
+}
+.header .navbar-nav>li>a {
+  color: #687074;
+}
+.header .navbar-nav>.active>a, a:active, a:focus, .navbar-nav>li>a:hover {
+  color: #66DC71;
+}
+.inside-floating-box {
+  padding: 20px;
+}
+
+.header .navbar-nav>.active>a, .header .navbar-nav>.active>a:focus, .header .navbar-nav>.active>a:hover, .header .navbar-nav>li>a, .header .navbar-nav>li>a:focus, .header .navbar-nav>li>a:hover {
+  background: 0 0;
+}
+.header .navbar-nav>li>a, .header .navbar-nav>li>a:focus {
+  border-bottom: solid 3px transparent;
+}
+.profile .profile-body {
+  padding: 20px;
+  background: #f6f6f6;
+}
+
+
+.slogan-overlay .container p {
+  color: #FFFFFF;
+  font-size: 50px;
+  margin: 80px auto;
+  display: inline-block;
+  line-height: 65px;
+  font-family: "Inconsolata", Helvetica, Arial;
+  text-shadow: 2px 2px black;
+}
+
