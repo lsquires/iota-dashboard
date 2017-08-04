@@ -164,6 +164,7 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
+      console.log(txs.find().count() +" " + Counts.get("txs-count"));
       if(Counts.get("txs-count") == txs.find().count()) {
         node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
