@@ -2,7 +2,6 @@ import { Template } from 'meteor/templating';
 import { Mongo } from 'meteor/mongo';
 import './main.html';
 txs = new Mongo.Collection('txs');
-txscount = 0;
 var cola = require("webcola");
 var d3 = require('d3-3');
 
@@ -109,7 +108,6 @@ Template.vis.rendered = function () {
 
     let initializing = true;
     Meteor.subscribe("txs");
-    Meteor.subscribe("txs-count");
     const handle = txs.find().observeChanges({
       added: function (id, fields) {
         var node = {x: centerx, y: centery, tx: fields, id: id, colour: getColour(fields)};
@@ -166,9 +164,8 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-      console.log(txs.find().count() +" " + Counts.get("txs-count"));
       var now = new Date();
-      if(now > updated) {
+      //if(now > updated) {
         node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
@@ -200,7 +197,7 @@ Template.vis.rendered = function () {
         force.start();
         updated = new Date((new Date()).getTime() + 500);
       }
-    }
+    //}
   }
 
 
