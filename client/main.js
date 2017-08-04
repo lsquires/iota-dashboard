@@ -21,7 +21,7 @@ Template.registerHelper('navClassName', function (page) {
 
 Template.vis.rendered = function () {
   $(window).resize(function() {
-    startSim$((window).height());
+    startSim($(window).width());
   });
 
   startSim(800);
