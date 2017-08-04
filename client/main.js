@@ -165,7 +165,8 @@ Template.vis.rendered = function () {
 
     function restart() {
       var now = new Date();
-      //if(now > updated) {
+      if(now > updated) {
+        updated = new Date();//new Date((new Date()).getTime() + 500);
         node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
@@ -195,9 +196,8 @@ Template.vis.rendered = function () {
           .remove();
 
         force.start();
-        updated = new Date((new Date()).getTime() + 500);
       }
-    //}
+    }
   }
 
 
