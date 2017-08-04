@@ -176,7 +176,7 @@ Template.vis.rendered = function () {
             .attr("r", 15);
         })
         .on("mouseleave", function (d) {
-          3.select(this).select("circle").transition()
+          d3.select(this).select("circle").transition()
             .duration(250)
             .attr("r", nodeRadius);
         });
