@@ -13,12 +13,14 @@ Router.route('/About');
 Router.route('/Stats');
 Router.route('/Contact');
 
+Template.registerHelper('navClassName', function (page) {
+  if (Router.current()) {
+    return Router.current().route.getName() === page ? "active" : "";
+  }
+});
+
 Template.vis.rendered = function () {
-  Template.registerHelper('navClassName', function (page) {
-    if (Router.current()) {
-      return Router.current().route.getName() === page ? "active" : "";
-    }
-  });
+
   var width = 900,
     height = 500,
     centerx = width/2,
