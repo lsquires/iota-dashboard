@@ -107,7 +107,7 @@ Template.vis.rendered = function () {
 
     let initializing = true;
     Meteor.subscribe("txs");
-    Meteor.subscribe("txscount");
+    Meteor.subscribe("txs-count");
     const handle = txs.find().observeChanges({
       added: function (id, fields) {
         var node = {x: centerx, y: centery, tx: fields, id: id, colour: getColour(fields)};
