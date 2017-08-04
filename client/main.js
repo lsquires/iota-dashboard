@@ -36,9 +36,9 @@ Template.vis.rendered = function () {
     var force = cola.d3adaptor(d3)
       .size([width, height])
       .nodes([])
-      .jaccardLinkLengths(5)
+      .jaccardLinkLengths(6)
       .avoidOverlaps(true)
-      .flowLayout("y", 25)
+      .flowLayout("y", 30)
       .on("tick", tick);
 
     var hover = d3.select("#graph_hover");
