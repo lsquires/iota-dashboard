@@ -9,7 +9,11 @@
   <div class="wrapper">
     {{> Nav}}
     <div class="container profile">
-      {{> vis}}
+      <section class="map under-navbar">
+        <div class="profile-body">
+         {{> vis}}
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -24,8 +28,25 @@
 </template>
 
 <template name="vis">
-  <div id="nodebox"></div>
-  <div id="graph_hover"></div>
+  <div class="row margin-bottom-10">
+    <div class="col-sm-8">
+      <div class="floating-box  shadow-box">
+        <div class=inside-floating-box>
+          <div id="nodebox"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="floating-box  shadow-box">
+        <div class=inside-floating-box>
+          <div id="graph_hover"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+
+
 </template>
 
 <template name="Nav">

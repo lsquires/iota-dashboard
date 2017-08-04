@@ -21,8 +21,8 @@ Template.registerHelper('navClassName', function (page) {
 
 Template.vis.rendered = function () {
 
-  var width = 900,
-    height = 500,
+  var width = document.getElementById('nodebox').clientWidth,
+    height = document.getElementById('nodebox').clientHeight,
     centerx = width/2,
     centery = height/2,
     nodeRadius = 5;
