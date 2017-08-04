@@ -19,6 +19,27 @@ rect {
   border-bottom-color: #66DC71;
 }
 
+.floating-box {
+  background-color: #FFFFFF;
+  background: #fafafa;
+  border: 1px solid #eee;
+}
+
+.box-header {
+  border-bottom: 2px solid #ddd;
+  padding: 1px 5px 6px;
+  margin-bottom: 10px;
+}
+
+.info-box {
+  padding: 10px;
+}
+
+.shadow-box {
+  box-shadow: 0 6px 6px -6px #bbb;
+  -moz-box-shadow: 0 6px 6px -6px #bbb;
+  -webkit-box-shadow: 0 6px 6px -6px #bbb;
+}
 .header .navbar-nav>.active>a {
   border-color: #66DC71;
 }
@@ -38,6 +59,10 @@ rect {
 .header .navbar-nav>li>a, .header .navbar-nav>li>a:focus {
   border-bottom: solid 3px transparent;
 }
+.inside-floating-box {
+  padding: 20px;
+}
+
 .profile .profile-body {
   padding: 20px;
   background: #f6f6f6;
