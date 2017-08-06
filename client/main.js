@@ -26,8 +26,8 @@ Template.registerHelper('navClassName', function (page) {
 });
 
 Template.vis.rendered = function () {
-  var minsAgo = 0.5;
-  var nextClean = new Date();
+  minsAgo = 0.5;
+  nextClean = new Date();
 
 
 
