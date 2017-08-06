@@ -18,11 +18,11 @@ Meteor.startup(() => {
     name: 'Clean export of bad files',
     schedule: function(parser) {
       // parser is a later.parse object
-      return parser.text('every 30 seconds');
+      return parser.text('every 10 minutes');
     },
     job: function() {
       console.log("doing job");
-      var now = new Date((new Date()).getTime() - 3*60000);
+      var now = new Date((new Date()).getTime() - 60*60000);
       files.find().forEach(function (item) {
         if(item.time < now) {
           console.log("removing:"+item.txid);
@@ -34,8 +34,8 @@ Meteor.startup(() => {
     }
   });
 
-	Meteor.publish('txs', function () {
-    return txs.find();
+	Meteor.publish('txs', function (minsAgo) {
+    return txs.find({"time":{$gt: (new Date((new Date()).getTime() - minsAgo*60000))}});
   });
   var iota = new IOTA({
 	'host': 'http://localhost',

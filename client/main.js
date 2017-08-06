@@ -4,6 +4,25 @@ import './main.html';
 txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3-3');
+var minsAgo = 0.5;
+
+SyncedCron.add({
+  name: 'Clean client side of bad entries',
+  schedule: function(parser) {
+    // parser is a later.parse object
+    return parser.text('every 10 seconds');
+  },
+  job: function() {
+    console.log("doing job cs");
+    var now = new Date((new Date()).getTime() - minsAgo*60000);
+    txs.remove({time: { $lt: now}});
+    /*txs.find().forEach(function (item) {
+      if(item.time < now) {
+        txs.remove({_id: item._id});
+      }
+    });*/
+  }
+});
 
 Router.route('/', {name:"Home"},function () {
   this.render('Home');
@@ -107,7 +126,7 @@ Template.vis.rendered = function () {
     }
 
     let initializing = true;
-    Meteor.subscribe("txs");
+    Meteor.subscribe("txs", minsAgo);
     const handle = txs.find().observeChanges({
       added: function (id, fields) {
         var node = {x: centerx, y: centery, tx: fields, id: id, colour: getColour(fields)};
