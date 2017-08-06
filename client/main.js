@@ -36,7 +36,7 @@ Template.vis.rendered = function () {
     var force = cola.d3adaptor(d3)
       .size([width, height])
       .nodes([])
-      .symmetricDiffLinkLengths(6)
+      .symmetricDiffLinkLengths(8)
       .avoidOverlaps(true)
       .flowLayout("y", 30)
       .on("tick", tick);
