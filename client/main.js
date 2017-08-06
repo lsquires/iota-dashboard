@@ -14,7 +14,7 @@ var nextClean = new Date();
       var now = new Date((new Date()).getTime() - minsAgo * 60000);
       txs.find().forEach(function (item) {
         if (item.time < now) {
-          txs.remove(item._id);
+          txs._collection.remove(item._id);
         }
       })
     }
@@ -147,6 +147,7 @@ Template.vis.rendered = function () {
         restart();
       },
       removed: function (id) {
+        console.log("removed id");
         for (var i = nodes.length - 1; i >= 0; i--) {
           if (nodes[i].id === id) {
             //Delete links
