@@ -7,13 +7,13 @@ var d3 = require('d3-3');
 var minsAgo = 0.5;
 var nextClean = new Date();
 
-var slider = $('#ex1').slider()
+var myslider = $('#ex1').slider()
   .on('slide', updateMinsAgo)
   .data('slider');
 
 
 var RGBChange = function() {
-  minsAgo = slider.getValue();
+  minsAgo = myslider.getValue();
 };
 
   function cleanTXS() {
