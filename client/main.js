@@ -7,14 +7,7 @@ var d3 = require('d3-3');
 var minsAgo = 0.5;
 var nextClean = new Date();
 
-var myslider = $('#ex1').slider()
-  .on('slide', updateMinsAgo)
-  .data('slider');
 
-
-var RGBChange = function() {
-  minsAgo = myslider.getValue();
-};
 
   function cleanTXS() {
     if(new Date() > nextClean) {
@@ -52,6 +45,14 @@ Template.registerHelper('navClassName', function (page) {
 
 Template.vis.rendered = function () {
 
+  var myslider = $('#ex1').slider()
+    .on('slide', updateMinsAgo)
+    .data('slider');
+
+
+  var RGBChange = function() {
+    minsAgo = myslider.getValue();
+  };
 
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
