@@ -7,6 +7,15 @@ var d3 = require('d3-3');
 var minsAgo = 0.5;
 var nextClean = new Date();
 
+var slider = $('#ex1').slider()
+  .on('slide', updateMinsAgo)
+  .data('slider');
+
+
+var RGBChange = function() {
+  minsAgo = slider.getValue();
+};
+
   function cleanTXS() {
     if(new Date() > nextClean) {
       nextClean = new Date((new Date()).getTime() + 10000)
@@ -28,6 +37,12 @@ Router.route('/Stats');
 Router.route('/Contact');
 
 updated = new Date();
+
+Template.registerHelper('navClassName', function (page) {
+  if (Router.current()) {
+    return Router.current().route.getName() === page ? "active" : "";
+  }
+});
 
 Template.registerHelper('navClassName', function (page) {
   if (Router.current()) {

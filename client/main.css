@@ -25,6 +25,10 @@ rect {
   border: 1px solid #eee;
 }
 
+#ex1Slider .slider-selection {
+  background: #BABABA;
+}
+
 .box-header {
   border-bottom: 2px solid #ddd;
   padding: 1px 5px 6px;
