@@ -50,7 +50,7 @@ Template.vis.rendered = function () {
     .data('slider');
 
 
-  var RGBChange = function() {
+  var updateMinsAgo = function() {
     minsAgo = myslider.getValue();
   };
 
