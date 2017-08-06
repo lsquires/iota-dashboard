@@ -11,14 +11,13 @@ var nextClean = new Date();
     if(new Date() > nextClean) {
       nextClean = new Date((new Date()).getTime() + 10000)
       console.log("doing job cs");
-      var now = new Date((new Date()).getTime() - minsAgo*60000);
-      txs.remove({time: { $lt: now}});
+      var now = new Date((new Date()).getTime() - minsAgo * 60000);
+      txs.find().forEach(function (item) {
+        if (item.time < now) {
+          txs.remove(item._id);
+        }
+      })
     }
-    /*txs.find().forEach(function (item) {
-      if(item.time < now) {
-        txs.remove({_id: item._id});
-      }
-    });*/
   }
 
 Router.route('/', {name:"Home"},function () {
