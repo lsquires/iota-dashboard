@@ -225,14 +225,14 @@ Template.vis.rendered = function () {
           .call(force.drag)
           .on("mouseover", function (d) {
             hover.html(JSON.stringify(d.tx));
-            d3.select(this).transition()
-              .duration(500)
-              .attr("r", nodeRadius*2);
+            d3.select(this).attr("r", nodeRadius*2);
+            if(last) {
+              last.attr("r", nodeRadius);
+            }
+            var last = d3.select(this);
           })
           .on("mouseleave", function (d) {
-            d3.select(this).transition()
-              .duration(500)
-              .attr("r", nodeRadius);
+
           });
         node.style("fill", function (d) {
           return d.colour;
