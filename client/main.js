@@ -216,10 +216,7 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-      d3.selectAll("node").attr("r", nodeRadius);
-      if(selected && !d3.select("#a"+selected).empty()) {
-        d3.select("#a"+selected).attr("r", nodeRadius*2);
-      }
+
       node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
@@ -230,6 +227,7 @@ Template.vis.rendered = function () {
             if(selected && !d3.select("#a"+selected).empty()) {
               d3.select("#a"+selected).transition().duration(200).attr("r", nodeRadius);
             }
+            console.log(this);
             d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
             selected = d.id;
             hover.html(JSON.stringify(d.tx));
@@ -257,11 +255,6 @@ Template.vis.rendered = function () {
         link.exit()
           .remove();
         force.start();
-
-      d3.selectAll("node").attr("r", nodeRadius);
-      if(selected && !d3.select("#a"+selected).empty()) {
-        d3.select("#a"+selected).attr("r", nodeRadius*2);
-      }
 
     }
   }
