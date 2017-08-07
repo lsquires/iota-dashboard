@@ -227,7 +227,7 @@ Template.vis.rendered = function () {
             if(selected && !d3.select("#a"+selected).empty()) {
               d3.select("#a"+selected).transition().duration(200).attr("r", nodeRadius);
             }
-            console.log(d.id+" = "+this);
+            console.log(d.id+" = "+this.id);
             d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
             selected = d.id;
             hover.html(JSON.stringify(d.tx));
