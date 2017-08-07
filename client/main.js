@@ -33,10 +33,9 @@ Template.Home.events({
 
     if(selectValue > minsAgo) {
       minsAgo = selectValue;
-      try{
         //txshandler.stop();
         txshandler = Meteor.subscribe("txs", minsAgo);
-      } catch(err) {}
+
     } else {
       cleanTXS();
       minsAgo = selectValue;
