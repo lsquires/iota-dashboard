@@ -29,7 +29,7 @@ Template.registerHelper('navClassName', function (page) {
 
 Template.Home.events({
   "change #timePeriod": function(event, template){
-    var selectValue = template.$("#timePeriod").val();
+    var selectValue = parseInt(template.$("#timePeriod").val(),10);
 
     if(selectValue > minsAgo) {
       try{
@@ -40,7 +40,7 @@ Template.Home.events({
       }
     }
     minsAgo = selectValue;
-    //console.log(selectValue);
+    console.log(selectValue);
   }
 });
 
