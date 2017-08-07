@@ -37,7 +37,7 @@ Template.Home.events({
         txshandler = Meteor.subscribe("txs", minsAgo);
 
     } else {
-      cleanTXS();
+      forceCleanTXS();
       minsAgo = selectValue;
     }
 
@@ -56,6 +56,18 @@ function cleanTXS() {
       }
     })
   }
+}
+
+function forceCleanTXS() {
+    nextClean = new Date((new Date()).getTime() + 10000)
+    console.log("doing job cs "+minsAgo);
+    var now = new Date((new Date()).getTime() - minsAgo * 60000);
+    txs.find().forEach(function (item) {
+      if (item.time < now) {
+        txs._collection.remove(item._id);
+      }
+    })
+
 }
 
 Template.vis.rendered = function () {
