@@ -229,7 +229,9 @@ Template.vis.rendered = function () {
           })
           .on("mouseleave", function (d) {
             d3.select(this).transition().duration(200).attr("r", nodeRadius);
-            d3.select(this).style("fill", "blue");
+            if(selected != d.id) {
+              d3.select(this).style("fill", "blue");
+            }
           });
         node.style("fill", function (d) {
           return selected === d.id ? "black" : d.colour;
