@@ -4,7 +4,9 @@ import './main.html';
 txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3-3');
-
+txshandler;
+minsAgo = 5;
+nextClean = new Date();
 
 Router.route('/', {name:"Home"},function () {
   this.render('Home');
@@ -26,8 +28,7 @@ Template.registerHelper('navClassName', function (page) {
 });
 
 Template.vis.rendered = function () {
-  minsAgo = 5;
-  nextClean = new Date();
+
 
 
 
@@ -56,7 +57,7 @@ Template.vis.rendered = function () {
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
     var width = w,
-      height = 800,
+      height = 300,
       centerx = width / 2,
       centery = height / 2,
       nodeRadius = 5;
@@ -68,7 +69,7 @@ Template.vis.rendered = function () {
       .nodes([])
       .symmetricDiffLinkLengths(8)
       .avoidOverlaps(true)
-      .flowLayout("y", 30)
+      .flowLayout("x", 30)
       .on("tick", tick);
 
     var hover = d3.select("#graph_hover");
@@ -137,7 +138,7 @@ Template.vis.rendered = function () {
     }
 
     let initializing = true;
-    Meteor.subscribe("txs", minsAgo);
+    txshandler = Meteor.subscribe("txs", minsAgo);
     const handle = txs.find().observeChanges({
       added: function (id, fields) {
         cleanTXS();
