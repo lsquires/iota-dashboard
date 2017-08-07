@@ -216,7 +216,7 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-      if(selected) {
+      if(selected && !d3.select("#"+selected).empty()) {
         d3.select("#"+selected).transition().duration(200).attr("r", nodeRadius);
       }
 
@@ -228,10 +228,10 @@ Template.vis.rendered = function () {
           .attr("id", function(d) { return d.id; })
           .call(force.drag)
           .on("mouseover", function (d) {
-            if(last) {
-              last.transition().duration(200).attr("r", nodeRadius);
+            if(selected && !d3.select("#"+selected).empty()) {
+              d3.select("#"+selected).transition().duration(200).attr("r", nodeRadius);
             }
-            d3.select(this).transition().duration(200).attr("r", nodeRadius*1.5);
+            d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
             selected = d.id;
             hover.html(JSON.stringify(d.tx));
           })
