@@ -242,9 +242,7 @@ Template.vis.rendered = function () {
 
         node.exit()
           .remove();
-        if (last) {
-          last.attr("r", nodeRadius*2);
-        }
+
 
         link = link.data(links);
         link.enter().append('svg:path')
@@ -252,6 +250,10 @@ Template.vis.rendered = function () {
         link.exit()
           .remove();
         force.start();
+
+      if (last) {
+        last.attr("r", nodeRadius*2);
+      }
 
     }
   }
