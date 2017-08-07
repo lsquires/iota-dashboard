@@ -221,7 +221,9 @@ Template.vis.rendered = function () {
           /*.attr("r", function (d) {
             return d.radius;
           })*/
-          .attr("r", nodeRadius)
+          .attr("r",  function (d) {
+            return Math.floor(Math.random() * 20);
+          })
           .call(force.drag)
           .on("mouseover", function (d) {
             hover.html(JSON.stringify(d.tx));
