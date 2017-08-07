@@ -4,7 +4,7 @@ import './main.html';
 txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3-3');
-txshandler;
+var txshandler;
 minsAgo = 5;
 nextClean = new Date();
 
