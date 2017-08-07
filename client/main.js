@@ -221,20 +221,14 @@ Template.vis.rendered = function () {
           /*.attr("r", function (d) {
             return d.radius;
           })*/
-          .attr("r",  function (d) {
-            return Math.floor(Math.random() * 20);
-          })
+          .attr("r", nodeRadius)
           .call(force.drag)
           .on("mouseover", function (d) {
             hover.html(JSON.stringify(d.tx));
-            d3.select(this).select("circle").transition()
-              .duration(750)
-              .attr("r", 15);
+            d3.select(this).select("circle").style("outline", "#00FF00 solid thick")
           })
           .on("mouseleave", function (d) {
-            d3.select(this).select("circle").transition()
-              .duration(750)
-              .attr("r", nodeRadius);
+            d3.select(this).select("circle").style("outline", "none")
           });
         node.style("fill", function (d) {
           return d.colour;
