@@ -29,12 +29,12 @@ Template.registerHelper('navClassName', function (page) {
 
 Template.Home.events({
   "change #timePeriod": function(event, template){
-    var selectValue = parseInt(template.$("#timePeriod").val(),10);
+    let selectValue = parseInt(template.$("#timePeriod").val(),10);
 
     if(selectValue > minsAgo) {
       minsAgo = selectValue;
       try{
-        txshandler.stop();
+        //txshandler.stop();
         txshandler = Meteor.subscribe("txs", minsAgo);
       } catch(err) {}
     } else {
@@ -60,11 +60,6 @@ function cleanTXS() {
 }
 
 Template.vis.rendered = function () {
-
-
-
-
-
 
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
@@ -212,17 +207,20 @@ Template.vis.rendered = function () {
         node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
+          /*.attr("r", function (d) {
+            return d.radius;
+          })*/
           .attr("r", nodeRadius)
           .call(force.drag)
           .on("mouseover", function (d) {
             hover.html(JSON.stringify(d.tx));
             d3.select(this).select("circle").transition()
-              .duration(250)
+              .duration(750)
               .attr("r", 15);
           })
           .on("mouseleave", function (d) {
             d3.select(this).select("circle").transition()
-              .duration(250)
+              .duration(750)
               .attr("r", nodeRadius);
           });
         node.style("fill", function (d) {
