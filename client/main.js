@@ -34,7 +34,7 @@ Template.Home.events({
     if(selectValue > minsAgo) {
       minsAgo = selectValue;
         //txshandler.stop();
-        txs._collection.remove({});
+        txs = new Mongo.Collection('txs');
         txshandler = Meteor.subscribe("txs", minsAgo);
     } else {
       forceCleanTXS();
