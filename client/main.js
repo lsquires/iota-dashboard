@@ -72,7 +72,7 @@ function forceCleanTXS() {
 
 Template.vis.rendered = function () {
   var last;
-  var dlast;
+  var selected;
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
     var width = w,
