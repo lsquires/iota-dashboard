@@ -30,7 +30,15 @@ Template.registerHelper('navClassName', function (page) {
 Template.Home.events({
   "change #timePeriod": function(event, template){
     var selectValue = template.$("#timePeriod").val();
-    console.log(selectValue);
+
+    if(selectValue > minsAgo) {
+      try{
+        txshandler.stop();
+        txshandler = Meteor.subscribe("txs", minsAgo);
+      }
+    }
+    minsAgo = selectValue;
+    //console.log(selectValue);
   }
 });
 
