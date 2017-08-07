@@ -223,7 +223,7 @@ Template.vis.rendered = function () {
             return d.radius;
           })*/
           .attr("r", function(d) {
-            console.log("reset");
+            console.log("reset: "+d.id+" with "+selected);
             return d.id === selected ? nodeRadius*2 : nodeRadius;
           })
           .call(force.drag)
