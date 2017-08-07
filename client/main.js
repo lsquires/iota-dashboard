@@ -222,10 +222,7 @@ Template.vis.rendered = function () {
           /*.attr("r", function (d) {
             return d.radius;
           })*/
-          .attr("r", function(d) {
-            console.log("reset: "+d.id+" with "+selected);
-            return d.id === selected ? nodeRadius*2 : nodeRadius;
-          })
+          .attr("r", nodeRadius)
           .call(force.drag)
           .on("mouseover", function (d) {
             if (last) {
@@ -234,8 +231,6 @@ Template.vis.rendered = function () {
             last = d3.select(this);
             d3.select(this).attr("r", nodeRadius*2);
             selected = d.id;
-            console.log(d);
-
             hover.html(JSON.stringify(d.tx));
           })
           .on("mouseleave", function (d) {
@@ -244,8 +239,12 @@ Template.vis.rendered = function () {
         node.style("fill", function (d) {
           return d.colour;
         });
+
         node.exit()
           .remove();
+        if (last) {
+          last.attr("r", nodeRadius*2);
+        }
 
         link = link.data(links);
         link.enter().append('svg:path')
