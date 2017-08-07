@@ -230,10 +230,14 @@ Template.vis.rendered = function () {
             hover.html(JSON.stringify(d.tx));
             d3.select(this).attr("r", nodeRadius*2);
             selected = d.id;
-            if(last) {
-              last.attr("r", nodeRadius);
+            console.log(d);
+            console.log(d3.select(this));
+            if(d) {
+              if (last) {
+                last.attr("r", nodeRadius);
+              }
+              last = d3.select(this);
             }
-           last = d3.select(this);
           })
           .on("mouseleave", function (d) {
 
