@@ -216,10 +216,7 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-      node.attr("r", nodeRadius);
-      if(selected && !d3.select("#a"+selected).empty()) {
-        d3.select("#a"+selected).attr("r", nodeRadius*2);
-      }
+
       node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
@@ -230,7 +227,7 @@ Template.vis.rendered = function () {
             if(selected && !d3.select("#a"+selected).empty()) {
               d3.select("#a"+selected).transition().duration(200).attr("r", nodeRadius);
             }
-            console.log(this);
+            console.log(d.id+" = "+this.attr("id"));
             d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
             selected = d.id;
             hover.html(JSON.stringify(d.tx));
@@ -247,10 +244,7 @@ Template.vis.rendered = function () {
 
         node.exit()
           .remove();
-     node.attr("r", nodeRadius);
-      if(selected && !d3.select("#a"+selected).empty()) {
-        d3.select("#a"+selected).attr("r", nodeRadius*2);
-      }
+
 
         link = link.data(links);
         link.enter().append('svg:path')
@@ -258,10 +252,7 @@ Template.vis.rendered = function () {
         link.exit()
           .remove();
         force.start();
-      node.attr("r", nodeRadius);
-      if(selected && !d3.select("#a"+selected).empty()) {
-        d3.select("#a"+selected).attr("r", nodeRadius*2);
-      }
+
     }
   }
 
