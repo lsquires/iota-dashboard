@@ -218,8 +218,9 @@ Template.vis.rendered = function () {
     function restart() {
 
       node = node.data(nodes);
-        node.enter().insert("circle", ".cursor")
-          .attr("class", "node")
+      node.exit()
+        .remove();
+        node.enter().append("circle")
           .attr("r", nodeRadius)
           .attr("id", function(d) { return "a"+d.id; })
           .call(force.drag)
@@ -234,23 +235,17 @@ Template.vis.rendered = function () {
           })
           .on("mouseleave", function (d) {
 
-          });
-
-      node.style("fill", function (d) {
-        return getColour(d.tx);
-      });
-
-
-
-        node.exit()
-          .remove();
-
+          })
+          .style("fill", function (d) {
+            return getColour(d.tx);
+          }).merge(node);
 
         link = link.data(links);
+      link.exit()
+        .remove();
         link.enter().append('svg:path')
           .attr("class", "link");
-        link.exit()
-          .remove();
+
         force.start();
 
     }
