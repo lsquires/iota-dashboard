@@ -27,6 +27,13 @@ Template.registerHelper('navClassName', function (page) {
   }
 });
 
+Template.Home.events({
+  "change #timePeriod": function(event, template){
+    var selectValue = template.$("#timePeriod").val();
+    console.log(selectValue);
+  }
+});
+
 Template.vis.rendered = function () {
 
 
@@ -44,15 +51,6 @@ Template.vis.rendered = function () {
       })
     }
   }
-
-  var myslider = $('#ex1').slider()
-    .on('slide', updateMinsAgo)
-    .data('slider');
-
-
-  var updateMinsAgo = function() {
-    minsAgo = myslider.getValue();
-  };
 
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {

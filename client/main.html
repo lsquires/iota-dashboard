@@ -12,14 +12,14 @@
       <section class="map under-navbar">
         <div class="profile-body">
           <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Time Period
-              <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a href="#">1 Minute</a></li>
-              <li><a href="#">2 Minutes</a></li>
-              <li><a href="#">5 Minutes</a></li>
-              <li><a href="#">10 Minutes</a></li>
-            </ul>
+            <td>
+              <select id="timePeriod">
+                <option value="1">1 Minute</option>
+                <option value="2">2 Minutes</option>
+                <option value="5">5 Minutes</option>
+                <option value="10">10 Minutes</option>
+              </select>
+            </td>
           </div>
          {{> vis}}
         </div>
