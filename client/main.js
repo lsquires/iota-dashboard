@@ -32,35 +32,39 @@ Template.Home.events({
     var selectValue = parseInt(template.$("#timePeriod").val(),10);
 
     if(selectValue > minsAgo) {
+      minsAgo = selectValue;
       try{
         txshandler.stop();
         txshandler = Meteor.subscribe("txs", minsAgo);
-      } catch(err) {
-
-      }
+      } catch(err) {}
+    } else {
+      cleanTXS();
+      minsAgo = selectValue;
     }
-    minsAgo = selectValue;
+
     console.log(selectValue);
   }
 });
+
+function cleanTXS() {
+  if(new Date() > nextClean) {
+    nextClean = new Date((new Date()).getTime() + 10000)
+    console.log("doing job cs "+minsAgo);
+    var now = new Date((new Date()).getTime() - minsAgo * 60000);
+    txs.find().forEach(function (item) {
+      if (item.time < now) {
+        txs._collection.remove(item._id);
+      }
+    })
+  }
+}
 
 Template.vis.rendered = function () {
 
 
 
 
-  function cleanTXS() {
-    if(new Date() > nextClean) {
-      nextClean = new Date((new Date()).getTime() + 10000)
-      console.log("doing job cs "+minsAgo);
-      var now = new Date((new Date()).getTime() - minsAgo * 60000);
-      txs.find().forEach(function (item) {
-        if (item.time < now) {
-          txs._collection.remove(item._id);
-        }
-      })
-    }
-  }
+
 
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
