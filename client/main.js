@@ -72,6 +72,7 @@ function forceCleanTXS() {
 
 Template.vis.rendered = function () {
   var last;
+  var dlast;
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
     var width = w,
@@ -221,15 +222,23 @@ Template.vis.rendered = function () {
           /*.attr("r", function (d) {
             return d.radius;
           })*/
-          .attr("r", nodeRadius)
+          .attr("r", function(d) {
+            return d.selected ? nodeRadius*2 : nodeRadius;
+          })
           .call(force.drag)
           .on("mouseover", function (d) {
             hover.html(JSON.stringify(d.tx));
             d3.select(this).attr("r", nodeRadius*2);
+            d.selected = true;
             if(last) {
               last.attr("r", nodeRadius);
             }
            last = d3.select(this);
+
+            if(dlast) {
+              dlast.selected = false;
+            }
+            dlast = d;
           })
           .on("mouseleave", function (d) {
 
