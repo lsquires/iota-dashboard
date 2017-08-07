@@ -222,8 +222,9 @@ Template.vis.rendered = function () {
           .attr("r", nodeRadius)
           .call(force.drag)
           .on("mouseover", function (d) {
-            d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
-            d3.select(this).style("fill", "green");
+            d3.select(this).transition().duration(200).attr("r", nodeRadius*1.5);
+            d3.select(this).style("fill", "black");
+            selected = d.id;
             hover.html(JSON.stringify(d.tx));
           })
           .on("mouseleave", function (d) {
