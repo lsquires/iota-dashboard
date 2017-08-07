@@ -219,22 +219,14 @@ Template.vis.rendered = function () {
         node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
-          .attr("r", function (d) {
-            console.log("reset "+d.id)
-            return nodeRadius;
-          })
+          .attr("r", nodeRadius)
           .call(force.drag)
           .on("mouseover", function (d) {
-            if (last) {
-              last.attr("r", nodeRadius);
-            }
-            last = d3.select(this);
             d3.select(this).attr("r", nodeRadius*2);
-            selected = d.id;
             hover.html(JSON.stringify(d.tx));
           })
           .on("mouseleave", function (d) {
-
+            d3.select(this).attr("r", nodeRadius);
           });
         node.style("fill", function (d) {
           return d.colour;
