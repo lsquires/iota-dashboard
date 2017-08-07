@@ -216,6 +216,9 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
+      if(selected && !d3.select("#a"+selected).empty()) {
+        d3.select("#a"+selected).attr("r", nodeRadius*2);
+      }
       node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
