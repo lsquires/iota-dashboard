@@ -222,14 +222,16 @@ Template.vis.rendered = function () {
           .attr("r", nodeRadius)
           .call(force.drag)
           .on("mouseover", function (d) {
-            d3.select(this).attr("r", nodeRadius*2);
+            d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
+            d3.select(this).style("fill", "green");
             hover.html(JSON.stringify(d.tx));
           })
           .on("mouseleave", function (d) {
-            d3.select(this).attr("r", nodeRadius);
+            d3.select(this).transition().duration(200).attr("r", nodeRadius);
+            d3.select(this).style("fill", "blue");
           });
         node.style("fill", function (d) {
-          return d.colour;
+          return selected === d.id ? "black" : d.colour;
         });
 
         node.exit()
