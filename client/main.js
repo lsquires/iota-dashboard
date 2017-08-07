@@ -216,29 +216,34 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-        node = node.data(nodes);
+      if(selected) {
+        d3.select("#"+selected).transition().duration(200).attr("r", nodeRadius);
+      }
+
+
+      node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
           .attr("r", nodeRadius)
+          .attr("id", function(d) { return d.id; })
           .call(force.drag)
           .on("mouseover", function (d) {
             if(last) {
-              last.style("outline", "none");
+              last.transition().duration(200).attr("r", nodeRadius);
             }
             d3.select(this).transition().duration(200).attr("r", nodeRadius*1.5);
-            last = d3.select(this).style("outline", "solid black");
             selected = d.id;
             hover.html(JSON.stringify(d.tx));
           })
           .on("mouseleave", function (d) {
-            d3.select(this).transition().duration(200).attr("r", nodeRadius);
+
           });
-        node.style("outline", function (d) {
-          return selected === d.id ? "solid black" : "none";
-        });
+
       node.style("fill", function (d) {
         return getColour(d.tx);
       });
+
+
 
         node.exit()
           .remove();
