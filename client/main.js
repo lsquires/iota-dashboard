@@ -35,6 +35,8 @@ Template.Home.events({
       try{
         txshandler.stop();
         txshandler = Meteor.subscribe("txs", minsAgo);
+      } catch(err) {
+
       }
     }
     minsAgo = selectValue;
