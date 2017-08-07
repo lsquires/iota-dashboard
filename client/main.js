@@ -71,7 +71,7 @@ function forceCleanTXS() {
 }
 
 Template.vis.rendered = function () {
-
+  var last;
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
     var width = w,
@@ -229,7 +229,7 @@ Template.vis.rendered = function () {
             if(last) {
               last.attr("r", nodeRadius);
             }
-            var last = d3.select(this);
+           last = d3.select(this);
           })
           .on("mouseleave", function (d) {
 
