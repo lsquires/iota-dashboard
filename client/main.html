@@ -11,7 +11,16 @@
     <div class="container profile">
       <section class="map under-navbar">
         <div class="profile-body">
-          <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="30" data-slider-step="1" data-slider-value="2"/>
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Time Period
+              <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#">1 Minute</a></li>
+              <li><a href="#">2 Minutes</a></li>
+              <li><a href="#">5 Minutes</a></li>
+              <li><a href="#">10 Minutes</a></li>
+            </ul>
+          </div>
          {{> vis}}
         </div>
       </section>

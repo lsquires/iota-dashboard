@@ -69,7 +69,7 @@ Template.vis.rendered = function () {
       .nodes([])
       .symmetricDiffLinkLengths(8)
       .avoidOverlaps(true)
-      .flowLayout("x", -30)
+      .flowLayout("x", 30)
       .on("tick", tick);
 
     var hover = d3.select("#graph_hover");
@@ -115,17 +115,17 @@ Template.vis.rendered = function () {
 
     function tick() {
       link.attr('d', function (d) {
-        var deltaX = d.target.x - d.source.x,
-          deltaY = d.target.y - d.source.y,
+        var deltaX = d.source.x - d.target.x,
+          deltaY = d.source.y - d.target.y,
           dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
           normX = deltaX / dist,
           normY = deltaY / dist,
           sourcePadding = nodeRadius,
           targetPadding = nodeRadius + 2,
-          sourceX = d.source.x + (sourcePadding * normX),
-          sourceY = d.source.y + (sourcePadding * normY),
-          targetX = d.target.x - (targetPadding * normX),
-          targetY = d.target.y - (targetPadding * normY);
+          sourceX = d.target.x + (sourcePadding * normX),
+          sourceY = d.target.y + (sourcePadding * normY),
+          targetX = d.source.x - (targetPadding * normX),
+          targetY = d.source.y - (targetPadding * normY);
         return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
       });
 
@@ -146,7 +146,7 @@ Template.vis.rendered = function () {
         nodes.push(node);
         nodes.forEach(function (target) {
           if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
-            links.push({source: node, target: target});
+            links.push({source: target, target: node});
           }
         });
         if (!initializing) {
