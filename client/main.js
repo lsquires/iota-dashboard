@@ -219,10 +219,10 @@ Template.vis.rendered = function () {
         node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
-          /*.attr("r", function (d) {
-            return d.radius;
-          })*/
-          .attr("r", nodeRadius)
+          .attr("r", function (d) {
+            console.log("reset "+d.id)
+            return nodeRadius;
+          })
           .call(force.drag)
           .on("mouseover", function (d) {
             if (last) {
@@ -251,9 +251,6 @@ Template.vis.rendered = function () {
           .remove();
         force.start();
 
-      if (last) {
-        last.attr("r", nodeRadius*2);
-      }
 
     }
   }
