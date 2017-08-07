@@ -227,14 +227,15 @@ Template.vis.rendered = function () {
           })
           .call(force.drag)
           .on("mouseover", function (d) {
-            if (last) {
+            /*if (last) {
               last.attr("r", nodeRadius);
             }
             last = d3.select(this);
-            hover.html(JSON.stringify(d.tx));
-            d3.select(this).attr("r", nodeRadius*2);
+            d3.select(this).attr("r", nodeRadius*2);*/
             selected = d.id;
             console.log(d);
+
+            hover.html(JSON.stringify(d.tx));
           })
           .on("mouseleave", function (d) {
 
