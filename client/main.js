@@ -216,7 +216,10 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-
+      d3.selectAll(".node").attr("r", nodeRadius);
+      if(selected && !d3.select("#a"+selected).empty()) {
+        d3.select("#a"+selected).attr("r", nodeRadius*2);
+      }
       node = node.data(nodes);
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
@@ -244,7 +247,7 @@ Template.vis.rendered = function () {
 
         node.exit()
           .remove();
-      d3.selectAll("node").attr("r", nodeRadius);
+      d3.selectAll(".node").attr("r", nodeRadius);
       if(selected && !d3.select("#a"+selected).empty()) {
         d3.select("#a"+selected).attr("r", nodeRadius*2);
       }
@@ -255,7 +258,10 @@ Template.vis.rendered = function () {
         link.exit()
           .remove();
         force.start();
-
+      d3.selectAll(".node").attr("r", nodeRadius);
+      if(selected && !d3.select("#a"+selected).empty()) {
+        d3.select("#a"+selected).attr("r", nodeRadius*2);
+      }
     }
   }
 
