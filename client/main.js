@@ -223,15 +223,16 @@ Template.vis.rendered = function () {
             return d.radius;
           })*/
           .attr("r", function(d) {
+            console.log("reset");
             return d.id === selected ? nodeRadius*2 : nodeRadius;
           })
           .call(force.drag)
           .on("mouseover", function (d) {
-            /*if (last) {
+            if (last) {
               last.attr("r", nodeRadius);
             }
             last = d3.select(this);
-            d3.select(this).attr("r", nodeRadius*2);*/
+            d3.select(this).attr("r", nodeRadius*2);
             selected = d.id;
             console.log(d);
 
