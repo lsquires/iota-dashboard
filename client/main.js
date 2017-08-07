@@ -246,7 +246,10 @@ Template.vis.rendered = function () {
 
         node.exit()
           .remove();
-
+      d3.selectAll("node").attr("r", nodeRadius);
+      if(selected && !d3.select("#a"+selected).empty()) {
+        d3.select("#a"+selected).attr("r", nodeRadius*2);
+      }
 
         link = link.data(links);
         link.enter().append('svg:path')
