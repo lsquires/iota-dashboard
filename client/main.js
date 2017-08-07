@@ -5,7 +5,7 @@ txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3-3');
 txshandler = {};
-minsAgo = 5;
+minsAgo = 1;
 nextClean = new Date();
 
 Router.route('/', {name:"Home"},function () {
