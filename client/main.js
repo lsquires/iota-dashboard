@@ -4,7 +4,7 @@ import './main.html';
 txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3-3');
-var txshandler;
+txshandler = {};
 minsAgo = 5;
 nextClean = new Date();
 
@@ -69,7 +69,7 @@ Template.vis.rendered = function () {
       .nodes([])
       .symmetricDiffLinkLengths(8)
       .avoidOverlaps(true)
-      .flowLayout("x", 30)
+      .flowLayout("x", -30)
       .on("tick", tick);
 
     var hover = d3.select("#graph_hover");
