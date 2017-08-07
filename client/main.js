@@ -223,7 +223,7 @@ Template.vis.rendered = function () {
             return d.radius;
           })*/
           .attr("r", function(d) {
-            return d.id == selected ? nodeRadius*2 : nodeRadius;
+            return d.id === selected ? nodeRadius*2 : nodeRadius;
           })
           .call(force.drag)
           .on("mouseover", function (d) {
