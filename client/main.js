@@ -222,20 +222,23 @@ Template.vis.rendered = function () {
           .attr("r", nodeRadius)
           .call(force.drag)
           .on("mouseover", function (d) {
+            if(last) {
+              last.style("outline", "none");
+            }
             d3.select(this).transition().duration(200).attr("r", nodeRadius*1.5);
-            d3.select(this).style("fill", "black");
+            last = d3.select(this).style("outline", "solid black");
             selected = d.id;
             hover.html(JSON.stringify(d.tx));
           })
           .on("mouseleave", function (d) {
             d3.select(this).transition().duration(200).attr("r", nodeRadius);
-            if(selected != d.id) {
-              d3.select(this).style("fill", "blue");
-            }
           });
-        node.style("fill", function (d) {
-          return selected === d.id ? "black" : d.colour;
+        node.style("outline", function (d) {
+          return selected === d.id ? "solid black" : "none";
         });
+      node.style("fill", function (d) {
+        return getColour(d.tx);
+      });
 
         node.exit()
           .remove();
