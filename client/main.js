@@ -5,7 +5,7 @@ txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3-3');
 txshandler = {};
-minsAgo = 1;
+minsAgo = 2;
 nextClean = new Date();
 
 Router.route('/', {name:"Home"},function () {
@@ -101,6 +101,8 @@ Template.vis.rendered = function () {
       .append("g")
       .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom))
       .append("g");
+
+    svg.style("cursor","move");
 
     var rect = svg.append("rect")
       .attr("width", width)
@@ -235,6 +237,7 @@ Template.vis.rendered = function () {
           .attr("id", function(d) { return "a"+d.id; })
           .call(force.drag)
           .on("mouseover", function (d) {
+            svg.style("cursor","pointer");
             if(selected && !d3.select("#a"+selected).empty()) {
               d3.select("#a"+selected).transition().duration(200).attr("r", nodeRadius);
             }
@@ -242,11 +245,14 @@ Template.vis.rendered = function () {
             selected = d.id;
             hover.html(JSON.stringify(d.tx));
           }).on("mousedown", function(d) {
+          d3.event.stopPropagation()
           focused = d;
           isFocused = true;
           node.style("opacity", function(o) {
             console.log("circle check")
             return isFocused ? (isConnected(focused, o) ? 1 : 0.1) : 1;
+          }).on("mouseleave", function(d) {
+            svg.style("cursor","move");
           });
           link.style("opacity", function(o) {
             return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 1 : 0.1) : 0.4;
