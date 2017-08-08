@@ -53,7 +53,7 @@ Template.transactioninfo.onCreated(function () {
   txvalue = new ReactiveVar(0);
 });
 
-Template.yourbet.helpers({
+Template.transactioninfo.helpers({
   txhash: function () {
     return txhash.get();
   },
