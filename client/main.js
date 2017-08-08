@@ -45,6 +45,32 @@ Template.Home.events({
   }
 });
 
+Template.transactioninfo.onCreated(function () {
+  txhash = new ReactiveVar("");
+  txtimestamp = new ReactiveVar("");
+  txtag = new ReactiveVar("");
+  txaddress = new ReactiveVar("");
+  txvalue = new ReactiveVar(0);
+});
+
+Template.yourbet.helpers({
+  txhash: function () {
+    return txhash.get();
+  },
+  txtimestamp: function () {
+    return txtimestamp.get();
+  },
+  txtag: function () {
+    return txtag.get();
+  },
+  txaddress: function () {
+    return txaddress.get();
+  },
+  txvalue: function () {
+    return txvalue.get();
+  }
+});
+
 function cleanTXS() {
   if(new Date() > nextClean) {
     nextClean = new Date((new Date()).getTime() + 10000)
@@ -243,7 +269,15 @@ Template.vis.rendered = function () {
             }
             d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
             selected = d.id;
+
+
             hover.html(JSON.stringify(d.tx));
+            txhash.set(d.tx.hash);
+            txtimestamp.set((new Date(d.tx.timestamp*1000)).toLocaleString());
+            txtag.set(d.tx.tag);
+            txaddress.set(d.tx.address);
+            txvalue.set(d.tx.value);
+
           }).on("mousedown", function(d) {
           d3.event.stopPropagation()
           focused = d;

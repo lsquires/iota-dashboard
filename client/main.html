@@ -22,6 +22,7 @@
             </td>
           </div>
          {{> vis}}
+          {{> transactioninfo}}
         </div>
       </section>
     </div>
@@ -38,7 +39,7 @@
 </template>
 
 <template name="vis">
-  <div class="row margin-bottom-10">
+  <div class="row margin-bottom-12">
     <div class="col-sm-12">
       <div class="floating-box shadow-box">
         <div class=inside-floating-box id="outernodebox">
@@ -47,19 +48,31 @@
       </div>
     </div>
   </div>
-  <div class="row margin-bottom-10">
-    <div class="col-sm-4">
-      <div class="floating-box shadow-box">
-        <div class=inside-floating-box id="graph_hover">
-        </div>
-      </div>
-    </div>
-  </div>
   <br>
-
-
 </template>
 
+<template name="transactioninfo">
+  <div class="floating-box shadow-box">
+    <div class=inside-floating-box id="graph_hover">
+      <div class="col-sm-3">TxHash:</div>
+      <div class="col-sm-9">{{txhash}}</div>
+
+      <div class="col-sm-3">Timestamp:</div>
+      <div class="col-sm-9">{{txtimestamp}}</div>
+
+      <div class="col-sm-3">Tag:</div>
+      <div class="col-sm-9">{{txtag}}</div>
+
+      <div class="col-sm-3">Address:</div>
+      <div class="col-sm-9">{{txaddress}}</div>
+
+      <div class="col-sm-3">Value:</div>
+      <div class="col-sm-9">{{txvalue}}</div>
+
+
+    </div>
+  </div>
+</template>
 <template name="Nav">
   <div class="header">
     <div class="container">
