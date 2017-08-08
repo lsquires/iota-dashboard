@@ -269,9 +269,7 @@ Template.vis.rendered = function () {
             }
             d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
             selected = d.id;
-
-
-            hover.html(JSON.stringify(d.tx));
+            
             txhash.set(d.tx.hash);
             txtimestamp.set((new Date(d.tx.timestamp*1000)).toLocaleString());
             txtag.set(d.tx.tag);
