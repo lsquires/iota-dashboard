@@ -241,13 +241,13 @@ Template.vis.rendered = function () {
           }).on("mousedown", function(d) {
           focused = d;
           isFocused = true;
-          node.style("opacity", function(o) {
+          /*node.style("opacity", function(o) {
             console.log("circle check")
             return isFocused ? (isConnected(d, o) ? 1 : 0.1) : 1;
           });
           link.style("opacity", function(o) {
             return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 1 : 0.1) : 0.4;
-          });
+          });*/
 
         });
 
@@ -265,8 +265,8 @@ Template.vis.rendered = function () {
       d3.select(window).on("mouseup",
         function() {
           isFocused = false;
-          //link.style("opacity", 0.4);
-          //node.style("opacity", 1);
+          link.style("opacity", 0.4);
+          node.style("opacity", 1);
         });
 
 
