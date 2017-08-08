@@ -272,6 +272,7 @@ Template.vis.rendered = function () {
       d3.select(window).on("mouseup",
         function() {
           isFocused = false;
+          svg.style("cursor","move");
           link.style("opacity", 0.4);
           node.style("opacity", 1);
         });
