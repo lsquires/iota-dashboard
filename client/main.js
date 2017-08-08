@@ -226,6 +226,9 @@ Template.vis.rendered = function () {
     function restart() {
 
       node = node.data(nodes, function(d) { return d.id;});
+      link = link.data(links, function(d) { return d.source.id + "-" + d.target.id;} );
+
+      
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
           .attr("r", nodeRadius)
@@ -255,9 +258,7 @@ Template.vis.rendered = function () {
         console.log("circle check")
         return isFocused ? (isConnected(focused, o) ? 1 : 0.1) : 1;
       });
-      link.style("opacity", function(o) {
-        return isFocused ? (o.source.id == focused.id  || o.target.id == focused.id  ? 1 : 0.1) : 0.4;
-      });
+
       node.style("fill", function (d) {
         return getColour(d.tx);
       });
@@ -274,11 +275,17 @@ Template.vis.rendered = function () {
           .remove();
 
 
-        link = link.data(links, function(d) { return d.source.id + "-" + d.target.id;} );
+
         link.enter().append('svg:path')
           .attr("class", "link");
+        link.style("opacity", function(o) {
+          return isFocused ? (o.source.id == focused.id  || o.target.id == focused.id  ? 1 : 0.1) : 0.4;
+        });
+
         link.exit()
           .remove();
+
+
         force.start();
 
     }
