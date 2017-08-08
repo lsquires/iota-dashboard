@@ -80,7 +80,7 @@ Template.vis.rendered = function () {
       height = 300,
       centerx = width / 2,
       centery = height / 2,
-      nodeRadius = 5;
+      nodeRadius = 8;
 
     var fill = d3.scale.category20();
 
@@ -228,7 +228,7 @@ Template.vis.rendered = function () {
       node = node.data(nodes, function(d) { return d.id;});
       link = link.data(links, function(d) { return d.source.id + "-" + d.target.id;} );
 
-      
+
         node.enter().insert("circle", ".cursor")
           .attr("class", "node")
           .attr("r", nodeRadius)
