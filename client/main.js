@@ -71,7 +71,7 @@ function forceCleanTXS() {
 }
 
 Template.vis.rendered = function () {
-  var last;
+  var focused;
   var selected;
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
@@ -214,6 +214,13 @@ Template.vis.rendered = function () {
       var zoom = d3.event;
       svg.attr("transform", "translate(" + zoom.translate + ")scale(" + zoom.scale + ")");
     }
+    function isConnected(a, b) {
+      return a.tx.hash == b.tx.branchTransaction ||
+        a.tx.hash == b.tx.trunkTransaction ||
+        b.tx.hash == a.tx.branchTransaction ||
+        b.tx.hash == a.tx.trunkTransaction ||
+        a.id == b.id;
+    }
 
     function restart() {
 
@@ -227,19 +234,29 @@ Template.vis.rendered = function () {
             if(selected && !d3.select("#a"+selected).empty()) {
               d3.select("#a"+selected).transition().duration(200).attr("r", nodeRadius);
             }
-            console.log(d.id+" = "+this.id);
             d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
             selected = d.id;
             hover.html(JSON.stringify(d.tx));
-          })
-          .on("mouseleave", function (d) {
-
+          }).on("mousedown", function(d) {
+          focused = d.id;
+          circle.style("opacity", function(o) {
+            return isConnected(d, o) ? 1 : 0.2;
           });
+          link.style("opacity", function(o) {
+            return o.source.id == focused || o.target.id == focused ? 1 : 0.2;
+          });
+
+        });
 
       node.style("fill", function (d) {
         return getColour(d.tx);
       });
 
+      d3.select(window).on("mouseup",
+        function() {
+          link.style("opacity", 1);
+          node.style("opacity", 1);
+        });
 
 
         node.exit()
