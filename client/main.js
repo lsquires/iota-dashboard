@@ -75,6 +75,7 @@ Template.vis.rendered = function () {
   var selected;
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
+    var isFocused = false;
     var width = w,
       height = 300,
       centerx = width / 2,
@@ -249,7 +250,7 @@ Template.vis.rendered = function () {
           });
 
         });
-        
+
       node.style("opacity", function(o) {
         console.log("circle check")
         return isFocused ? (isConnected(d, o) ? 1 : 0.1) : 1;
