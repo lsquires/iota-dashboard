@@ -240,10 +240,11 @@ Template.vis.rendered = function () {
           }).on("mousedown", function(d) {
           focused = d.id;
           circle.style("opacity", function(o) {
-            return isConnected(d, o) ? 1 : 0.2;
+            console.log("circle check")
+            return isConnected(d, o) ? 1 : 0.1;
           });
           link.style("opacity", function(o) {
-            return o.source.id == focused || o.target.id == focused ? 1 : 0.2;
+            return o.source.id == focused || o.target.id == focused ? 1 : 0.1;
           });
 
         });
@@ -254,7 +255,7 @@ Template.vis.rendered = function () {
 
       d3.select(window).on("mouseup",
         function() {
-          link.style("opacity", 1);
+          link.style("opacity", 0.4);
           node.style("opacity", 1);
         });
 
