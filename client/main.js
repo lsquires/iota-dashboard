@@ -189,16 +189,18 @@ Template.vis.rendered = function () {
     txshandler = Meteor.subscribe("txs", minsAgo);
     const handle = txs.find().observeChanges({
       added: function (id, fields) {
-        cleanTXS();
-        var node = {x: centerx, y: centery, tx: fields, id: id, colour: getColour(fields)};
-        nodes.push(node);
-        nodes.forEach(function (target) {
-          if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
-            links.push({source: target, target: node});
+        if(new Date(fields.timestamp*1000) > new Date((new Date()).getTime() - 2 * minsAgo * 60000) ) {
+          cleanTXS();
+          var node = {x: centerx, y: centery, tx: fields, id: id, colour: getColour(fields)};
+          nodes.push(node);
+          nodes.forEach(function (target) {
+            if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
+              links.push({source: target, target: node});
+            }
+          });
+          if (!initializing) {
+            restart();
           }
-        });
-        if (!initializing) {
-          restart();
         }
       },
       changed: function (id, fields) {
