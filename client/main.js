@@ -239,7 +239,7 @@ Template.vis.rendered = function () {
             hover.html(JSON.stringify(d.tx));
           }).on("mousedown", function(d) {
           focused = d.id;
-          circle.style("opacity", function(o) {
+          node.style("opacity", function(o) {
             console.log("circle check")
             return isConnected(d, o) ? 1 : 0.1;
           });
