@@ -246,7 +246,7 @@ Template.vis.rendered = function () {
             return isFocused ? (isConnected(focused, o) ? 1 : 0.1) : 1;
           });
           link.style("opacity", function(o) {
-            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 1 : 0.1) : 0.4;
+            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 1 : 0.4) : 0.4;
           });
 
         });
@@ -256,7 +256,7 @@ Template.vis.rendered = function () {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.1) : 1;
       });
       link.style("opacity", function(o) {
-        return isFocused ? (o.source.id == focused.id  || o.target.id == focused.id  ? 1 : 0.1) : 0.4;
+        return isFocused ? (o.source.id == focused.id  || o.target.id == focused.id  ? 1 : 0.4) : 0.4;
       });
       node.style("fill", function (d) {
         return getColour(d.tx);
