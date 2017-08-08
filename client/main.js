@@ -239,24 +239,33 @@ Template.vis.rendered = function () {
             hover.html(JSON.stringify(d.tx));
           }).on("mousedown", function(d) {
           focused = d.id;
+          isFocused = true;
           node.style("opacity", function(o) {
             console.log("circle check")
-            return isConnected(d, o) ? 1 : 0.1;
+            return isFocused ? (isConnected(d, o) ? 1 : 0.1) : 1;
           });
           link.style("opacity", function(o) {
-            return o.source.id == focused || o.target.id == focused ? 1 : 0.1;
+            return isFocused ? (o.source.id == focused || o.target.id == focused ? 1 : 0.1) : 0.4;
           });
 
         });
-
+        
+      node.style("opacity", function(o) {
+        console.log("circle check")
+        return isFocused ? (isConnected(d, o) ? 1 : 0.1) : 1;
+      });
+      link.style("opacity", function(o) {
+        return isFocused ? (o.source.id == focused || o.target.id == focused ? 1 : 0.1) : 0.4;
+      });
       node.style("fill", function (d) {
         return getColour(d.tx);
       });
 
       d3.select(window).on("mouseup",
         function() {
-          link.style("opacity", 0.4);
-          node.style("opacity", 1);
+          isFocused = false;
+          //link.style("opacity", 0.4);
+          //node.style("opacity", 1);
         });
 
 
