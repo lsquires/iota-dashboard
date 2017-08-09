@@ -274,32 +274,38 @@ Template.vis.rendered = function () {
           .call(force.drag)
           .on("mouseover", function (d) {
             svg.style("cursor","pointer");
-            if(selected && !d3.select("#a"+selected).empty()) {
-              d3.select("#a"+selected).transition().duration(200).attr("r", nodeRadius);
-            }
-            d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
-            selected = d.id;
-
-            txhash.set(d.tx.hash);
-            txtimestamp.set((new Date(d.tx.timestamp*1000)).toLocaleString());
-            txtag.set(d.tx.tag);
-            txaddress.set(d.tx.address);
-            txvalue.set(d.tx.value);
-            txbundle.set(d.tx.bundle)
-            txmessage.set(d.tx.signatureMessageFragment);
+            focused = d;
+            isFocused = true;
+            node.style("opacity", function(o) {
+              console.log("circle check")
+              return isFocused ? (isConnected(focused, o) ? 1 : 0.1) : 1;
+            }).on("mouseleave", function(d) {
+              svg.style("cursor","move");
+              isFocused = false;
+              svg.style("cursor","move");
+              link.style("opacity", 0.4);
+              node.style("opacity", 1);
+            });
+            link.style("opacity", function(o) {
+              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 1 : 0.1) : 0.4;
+            });
           }).on("mousedown", function(d) {
           d3.event.stopPropagation()
-          focused = d;
-          isFocused = true;
-          node.style("opacity", function(o) {
-            console.log("circle check")
-            return isFocused ? (isConnected(focused, o) ? 1 : 0.1) : 1;
-          }).on("mouseleave", function(d) {
-            svg.style("cursor","move");
-          });
-          link.style("opacity", function(o) {
-            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 1 : 0.1) : 0.4;
-          });
+          if(selected && !d3.select("#a"+selected).empty()) {
+            d3.select("#a"+selected).transition().duration(200).attr("r", nodeRadius);
+          }
+          d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
+          selected = d.id;
+
+          txhash.set(d.tx.hash);
+          txtimestamp.set((new Date(d.tx.timestamp*1000)).toLocaleString());
+          txtag.set(d.tx.tag);
+          txaddress.set(d.tx.address);
+          txvalue.set(d.tx.value);
+          txbundle.set(d.tx.bundle)
+          txmessage.set(d.tx.signatureMessageFragment);
+
+
 
         });
 
@@ -312,13 +318,13 @@ Template.vis.rendered = function () {
         return getColour(d.tx);
       });
 
-      d3.select(window).on("mouseup",
+      /*d3.select(window).on("mouseup",
         function() {
           isFocused = false;
           svg.style("cursor","move");
           link.style("opacity", 0.4);
           node.style("opacity", 1);
-        });
+        });*/
 
 
         node.exit()

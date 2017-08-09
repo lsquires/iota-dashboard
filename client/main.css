@@ -34,7 +34,9 @@ rect {
   padding: 1px 5px 6px;
   margin-bottom: 10px;
 }
-
+.txinfo {
+  margin-bottom: 12px;
+}
 .info-box {
   padding: 10px;
 }
