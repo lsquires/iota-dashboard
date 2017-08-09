@@ -15,7 +15,7 @@
             <td>
               <select id="timePeriod">
                 <option value="1">1 Minute</option>
-                <option value="2"  class="active">2 Minutes</option>
+                <option value="2" selected>2 Minutes</option>
                 <option value="4">4 Minutes</option>
                 <option value="8">8 Minutes</option>
               </select>
@@ -70,8 +70,18 @@
             <div class="col-sm-3">Address:</div>
             <div class="col-sm-9">{{txaddress}}</div>
 
+            <div class="col-sm-3">Bundle:</div>
+            <div class="col-sm-9">{{txbundle}}</div>
+
             <div class="col-sm-3">Value:</div>
             <div class="col-sm-9">{{txvalue}}</div>
+
+            <div class="col-sm-3">Message:</div>
+            <div class="col-sm-9">
+              <textarea readonly="" spellcheck="false" style="width: 90%; font-size: small; font-family: Monospace; padding: 8px; background-color: #EEEEEE;" rows="4">
+                {{txmessage}}
+              </textarea>
+            </div>
           </div>
         </div>
       </div>

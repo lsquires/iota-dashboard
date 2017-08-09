@@ -51,6 +51,8 @@ Template.transactioninfo.onCreated(function () {
   txtag = new ReactiveVar("");
   txaddress = new ReactiveVar("");
   txvalue = new ReactiveVar(0);
+  txbundle = new ReactiveVar("");
+  txmessage = new ReactiveVar("");
 });
 
 Template.transactioninfo.helpers({
@@ -68,6 +70,12 @@ Template.transactioninfo.helpers({
   },
   txvalue: function () {
     return txvalue.get();
+  },
+  txbundle: function () {
+    return txbundle.get();
+  },
+  txmessage: function () {
+    return txmessage.get();
   }
 });
 
@@ -277,7 +285,8 @@ Template.vis.rendered = function () {
             txtag.set(d.tx.tag);
             txaddress.set(d.tx.address);
             txvalue.set(d.tx.value);
-
+            txbundle.set(d.tx.bundle)
+            txmessage.set(d.tx.signatureMessageFragment);
           }).on("mousedown", function(d) {
           d3.event.stopPropagation()
           focused = d;
