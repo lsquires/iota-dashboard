@@ -278,7 +278,7 @@ Template.vis.rendered = function () {
             isFocused = true;
             node.style("opacity", function(o) {
               console.log("circle check")
-              return isFocused ? (isConnected(focused, o) ? 1 : 0.4) : 1;
+              return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
             }).on("mouseleave", function(d) {
               svg.style("cursor","move");
               isFocused = false;
@@ -311,7 +311,7 @@ Template.vis.rendered = function () {
 
       node.style("opacity", function(o) {
         console.log("circle check")
-        return isFocused ? (isConnected(focused, o) ? 1 : 0.4) : 1;
+        return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
 
       node.style("fill", function (d) {
