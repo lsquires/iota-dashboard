@@ -278,7 +278,7 @@ Template.vis.rendered = function () {
             isFocused = true;
             node.style("opacity", function(o) {
               console.log("circle check")
-              return isFocused ? (isConnected(focused, o) ? 1 : 0.1) : 1;
+              return isFocused ? (isConnected(focused, o) ? 1 : 0.4) : 1;
             }).on("mouseleave", function(d) {
               svg.style("cursor","move");
               isFocused = false;
@@ -287,14 +287,14 @@ Template.vis.rendered = function () {
               node.style("opacity", 1);
             });
             link.style("opacity", function(o) {
-              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 1 : 0.1) : 0.4;
+              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.2) : 0.4;
             });
           }).on("mousedown", function(d) {
           d3.event.stopPropagation()
           if(selected && !d3.select("#a"+selected).empty()) {
             d3.select("#a"+selected).transition().duration(200).attr("r", nodeRadius);
           }
-          d3.select(this).transition().duration(200).attr("r", nodeRadius*2);
+          d3.select(this).transition().duration(200).attr("r", nodeRadius*1.5);
           selected = d.id;
 
           txhash.set(d.tx.hash);
@@ -311,7 +311,7 @@ Template.vis.rendered = function () {
 
       node.style("opacity", function(o) {
         console.log("circle check")
-        return isFocused ? (isConnected(focused, o) ? 1 : 0.1) : 1;
+        return isFocused ? (isConnected(focused, o) ? 1 : 0.4) : 1;
       });
 
       node.style("fill", function (d) {
@@ -335,7 +335,7 @@ Template.vis.rendered = function () {
         link.enter().append('svg:path')
           .attr("class", "link");
         link.style("opacity", function(o) {
-          return isFocused ? (o.source.id == focused.id  || o.target.id == focused.id  ? 1 : 0.1) : 0.4;
+          return isFocused ? (o.source.id == focused.id  || o.target.id == focused.id  ? 0.8 : 0.2) : 0.4;
         });
 
         link.exit()
