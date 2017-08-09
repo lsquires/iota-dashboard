@@ -202,7 +202,8 @@ Template.vis.rendered = function () {
           var node = {x: centerx, y: centery, tx: fields, id: id, colour: getColour(fields)};
           nodes.push(node);
           nodes.forEach(function (target) {
-            if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
+            if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction ||
+              fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
               links.push({source: target, target: node});
             }
           });
@@ -287,7 +288,7 @@ Template.vis.rendered = function () {
               node.style("opacity", 1);
             });
             link.style("opacity", function(o) {
-              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.2) : 0.4;
+              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
             });
           }).on("mousedown", function(d) {
           d3.event.stopPropagation()
@@ -335,7 +336,7 @@ Template.vis.rendered = function () {
         link.enter().append('svg:path')
           .attr("class", "link");
         link.style("opacity", function(o) {
-          return isFocused ? (o.source.id == focused.id  || o.target.id == focused.id  ? 0.8 : 0.2) : 0.4;
+          return isFocused ? (o.source.id == focused.id  || o.target.id == focused.id  ? 0.8 : 0.12) : 0.4;
         });
 
         link.exit()
