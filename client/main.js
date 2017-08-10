@@ -9,6 +9,7 @@ dbwatcher = {};
 minsAgo = 1;
 filterConfirmed = false;
 nextClean = new Date();
+toRestart = true;
 
 Router.route('/', {name:"Home"},function () {
   this.render('Home');
@@ -222,20 +223,18 @@ Template.vis.rendered = function () {
               links.push({source: node, target: target});
             }
           });
-          if (!initializing) {
-            restart();
-          }
+         schedulerestart();
+
       },
       changed: function (id, fields) {
         for (var i = nodes.length - 1; i >= 0; i--) {
           if (nodes[i].id === id) {
             nodes[i].tx.confirmed = true;
             nodes[i].colour = getColour(nodes[i].tx);
+            schedulerestart();
             break;
           }
         }
-        restart();
-
       },
       removed: function (id) {
         console.log("removed id");
@@ -248,10 +247,10 @@ Template.vis.rendered = function () {
               }
             }
             nodes.splice(i, 1);
+            schedulerestart();
             break;
           }
         }
-        restart();
       }
     });
     console.log(dbwatcher);
@@ -279,6 +278,16 @@ Template.vis.rendered = function () {
         b.tx.hash == a.tx.branchTransaction ||
         b.tx.hash == a.tx.trunkTransaction ||
         a.id == b.id;
+    }
+    Meteor.setInterval(function() {
+      if(toRestart) {
+        toRestart = false;
+        restart();
+      }
+    }, 5*1000);
+
+    function schedulerestart() {
+      toRestart = true;
     }
 
     function restart() {
