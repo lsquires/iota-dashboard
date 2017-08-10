@@ -33,7 +33,7 @@ Meteor.startup(() => {
      }*/
     console.log("new sub")
     this.autorun(function() {
-      console.log("updated sub")
+      console.log("updated sub: "+txs.find({}).count());
       return txs.find({ time: { $gte: currentTime.get() - (60*60*1000)} });
     });
   });
