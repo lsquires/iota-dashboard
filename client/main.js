@@ -234,13 +234,28 @@ Template.vis.rendered = function () {
       },
       changed: function (id, fields) {
         console.log("changed");
-        nodes.forEach(function (target) {
+        console.log(fields)
+
+        for (var i = nodes.length - 1; i >= 0; i--) {
+          if (nodes[i].id === id) {
+            console.log("changed reflected");
+            var node = nodes[i];
+            node.colour = getColour(fields);
+            node.tx = fields;
+            nodes.splice(i, 1);
+            nodes.push(node);
+            break;
+          }
+        }
+        restart();
+        /*nodes.forEach(function (target) {
           if (target.tx.hash == fields.hash) {
+            console.log("changed reflected");
             target.colour = getColour(fields);
             target.tx = fields;
+            restart();
           }
-        });
-        restart();
+        });*/
       },
       removed: function (id) {
         console.log("removed id");
@@ -334,7 +349,6 @@ Template.vis.rendered = function () {
         });
 
       node.style("opacity", function(o) {
-        console.log("circle check")
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
 
