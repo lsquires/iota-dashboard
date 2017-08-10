@@ -38,7 +38,7 @@ Meteor.startup(() => {
 	  if(filterConfirmed) {
       return txs.find({$and: [
           {"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}},
-          {"tx.confirmed": { $eq: true}}
+          {"confirmed": { $eq: true}}
         ]});
     } else {
       return txs.find({"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}});
@@ -80,11 +80,11 @@ function setDescendantsConfirmed(tx) {
   let tx1 = txs.findOne({hash: tx.branchTransaction});
   let tx2 = txs.findOne({hash: tx.trunkTransaction});
   if(tx1) {
-    txs.update({_id: tx1._id}, { $set: {'tx.confirmed': true}});
+    txs.update({_id: tx1._id}, { $set: {'confirmed': true}});
     setDescendantsConfirmed(tx1);
   }
   if(tx2) {
-    txs.update({_id: tx2._id}, { $set: {'tx.confirmed': true}});
+    txs.update({_id: tx2._id}, { $set: {'confirmed': true}});
     setDescendantsConfirmed(tx2);
   }
 }
