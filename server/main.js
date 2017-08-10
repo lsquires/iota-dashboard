@@ -33,7 +33,7 @@ Meteor.startup(() => {
     var self = this;
     self.autorun(function() {
       var minsago = self.data('minsago') || 1;
-      check(limit, Number);
+      check(minsago, Number);
 
       var confirmedonly = self.data('confirmedonly') || false;
       check(confirmedonly, Boolean);
