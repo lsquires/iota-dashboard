@@ -27,7 +27,7 @@ Template.Home.events({
   "change #timePeriod": function(event, template){
     let selectValue = parseInt(template.$("#timePeriod").val(),10);
     console.log(selectValue);
-    txshandler.setData('limit', selectValue);
+    txshandler.setData('minsago', selectValue);
   },
   "change #filter": function(event, template){
     let selectValue = template.$("#filter").val();
