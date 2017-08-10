@@ -6,14 +6,14 @@ var IOTA = require('iota.lib.js');
 var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU';
 var txs = new Mongo.Collection('txs');
 var files = new Mongo.Collection('files');
-let cutoffTimestamp = new ReactiveVar();
+let currentTime = new ReactiveVar(new Date().valueOf());
 
 
 txs.remove({});
 files.remove({});
 
 Meteor.setInterval(function() {
-  cutoffTimestamp.set(Date.now() - 60*1000);
+  currentTime.set(Date.now().valueOf());
 }, 5*1000);
 
 Meteor.publish('txs', function (minsAgo, filterConfirmed) {
@@ -25,8 +25,8 @@ Meteor.publish('txs', function (minsAgo, filterConfirmed) {
    } else {
    return txs.find({"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}});
    }*/
-  this.autorun(function() {
-    return txs.find({ time: { $gte: cutoffTimestamp.get() } });
+  this.autorun(function(computation) {
+    return txs.find({ time: { $gte: currentTime.get() - (60*60*1000)} });
   });
 });
 
