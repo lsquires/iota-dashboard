@@ -216,9 +216,10 @@ Template.vis.rendered = function () {
           var node = {x: centerx, y: centery, tx: fields, id: id, colour: getColour(fields)};
           nodes.push(node);
           nodes.forEach(function (target) {
-            if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction ||
-              fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
+            if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
               links.push({source: target, target: node});
+            } else if(fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
+              links.push({source: node, target: target});
             }
           });
           if (!initializing) {
