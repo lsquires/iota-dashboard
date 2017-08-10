@@ -279,17 +279,9 @@ Template.vis.rendered = function () {
         b.tx.hash == a.tx.trunkTransaction ||
         a.id == b.id;
     }
-    Meteor.setInterval(function() {
-      if(toRestart) {
-        toRestart = false;
-        //restart();
-        force.start();
-      }
-    }, 500);
 
     function schedulerestart() {
       restart();
-      toRestart = true;
     }
 
     function restart() {
@@ -371,7 +363,7 @@ Template.vis.rendered = function () {
           .remove();
 
 
-
+      force.start();
 
     }
   }
