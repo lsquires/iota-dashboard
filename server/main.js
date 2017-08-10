@@ -33,7 +33,7 @@ Meteor.startup(() => {
      }*/
     console.log("new sub")
     this.autorun(function() {
-      console.log("updated sub: "+txs.find({ "time": { $gte: currentTime.get() - (60*60*1000)} }).count());
+      console.log("updated sub: "+(currentTime.get() - (60*60*1000)));
       return txs.find({ "time": { $gte: currentTime.get() - (60*60*1000)} });
     });
   });
@@ -80,7 +80,7 @@ Meteor.startup(() => {
   });
 
   watcher.on('add',Meteor.bindEnvironment(function(path) {
-    console.log(path);
+    //console.log(path);
     newFile=fs.readFileSync(path,'utf8');
     let split = newFile.split(/\r?\n/);
     let tx = iota.utils.transactionObject(split[1]);
@@ -107,8 +107,8 @@ function setDescendantsConfirmed(tx) {
 }
 
 function addTX(tx, path) {
-  console.log("adding tx");
   tx.time = new Date();
+  console.log("adding tx: "+tx.time);
   tx.confirmed = false;
   if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
     tx.confirmed = true;
