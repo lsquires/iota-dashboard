@@ -254,7 +254,7 @@ Template.vis.rendered = function () {
       }
     });
     console.log(dbwatcher);
-    initializing = false;
+    toRestart = true;
     restart();
 
 
@@ -282,11 +282,13 @@ Template.vis.rendered = function () {
     Meteor.setInterval(function() {
       if(toRestart) {
         toRestart = false;
-        restart();
+        //restart();
+        force.start();
       }
-    }, 5*1000);
+    }, 500);
 
     function schedulerestart() {
+      restart();
       toRestart = true;
     }
 
@@ -369,7 +371,7 @@ Template.vis.rendered = function () {
           .remove();
 
 
-        force.start();
+
 
     }
   }
