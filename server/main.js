@@ -6,7 +6,7 @@ var IOTA = require('iota.lib.js');
 var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU';
 var txs = new Mongo.Collection('txs');
 var files = new Mongo.Collection('files');
-let currentTime = new ReactiveVar(new Date().valueOf());
+let currentTime = new ReactiveVar(new Date());
 
 
 txs.remove({});
@@ -19,7 +19,7 @@ Meteor.startup(() => {
 
   Meteor.setInterval(function() {
     console.log("updated time")
-    currentTime.set(new Date().valueOf());
+    currentTime.set(new Date());
   }, 1000);
 
   Meteor.publish('txs', function () {
