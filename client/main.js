@@ -29,7 +29,7 @@ Template.Home.events({
 
     if(selectValue > minsAgo) {
         minsAgo = selectValue;
-        txs._collection.remove({});
+        //txs._collection.remove({});
         try {txshandler.stop();} catch(e){}
         txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
     } else {
@@ -45,14 +45,14 @@ Template.Home.events({
     if(selectValue == "all") {
       if(filterConfirmed) {
         filterConfirmed = false;
-        txs._collection.remove({});
+        //txs._collection.remove({});
         try {txshandler.stop();} catch(e){}
         txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
       }
     } else if(selectValue == "confirmed"){
       if(!filterConfirmed) {
         filterConfirmed = true;
-        txs._collection.remove({});
+        //txs._collection.remove({});
         try {txshandler.stop();} catch(e){}
         txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
       }
