@@ -6,7 +6,7 @@ var IOTA = require('iota.lib.js');
 var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU';
 var txs = new Mongo.Collection('txs');
 var files = new Mongo.Collection('files');
-let currentTime = new ReactiveVar(new Date());
+let currentTime = new ReactiveVar(new Date().valueOf());
 
 
 txs.remove({});
@@ -19,7 +19,7 @@ Meteor.startup(() => {
 
   Meteor.setInterval(function() {
     console.log("updated time")
-    currentTime.set(new Date());
+    currentTime.set(new Date().valueOf());
   }, 1000);
 
   Meteor.publish('txs', function () {
@@ -107,7 +107,7 @@ function setDescendantsConfirmed(tx) {
 }
 
 function addTX(tx, path) {
-  tx.time = new Date();
+  tx.time = new Date().valueOf();
   console.log("adding tx: "+tx.time);
   tx.confirmed = false;
   if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
@@ -115,6 +115,6 @@ function addTX(tx, path) {
     setDescendantsConfirmed(tx);
   }
   var doc = txs.upsert({hash: tx.hash}, tx);
-  files.insert({txid: doc.insertedId, path: path, time: new Date()});
+  files.insert({txid: doc.insertedId, path: path, time: new Date().valueOf()});
 }
 
