@@ -5,7 +5,8 @@ txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3-3');
 txshandler = {};
-minsAgo = 2;
+minsAgo = 1;
+filterConfirmed = false;
 nextClean = new Date();
 
 Router.route('/', {name:"Home"},function () {
@@ -21,12 +22,6 @@ Template.registerHelper('navClassName', function (page) {
   }
 });
 
-Template.registerHelper('navClassName', function (page) {
-  if (Router.current()) {
-    return Router.current().route.getName() === page ? "active" : "";
-  }
-});
-
 Template.Home.events({
   "change #timePeriod": function(event, template){
     let selectValue = parseInt(template.$("#timePeriod").val(),10);
@@ -35,10 +30,31 @@ Template.Home.events({
         minsAgo = selectValue;
         try {txshandler.stop();} catch(e){}
         txs._collection.remove({});
-        txshandler = Meteor.subscribe("txs", minsAgo);
+        txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
     } else {
       minsAgo = selectValue;
       forceCleanTXS();
+    }
+
+    console.log(selectValue);
+  },
+  "change #filter": function(event, template){
+    let selectValue = template.$("#filter").val();
+
+    if(selectValue == "all") {
+      if(filterConfirmed) {
+        filterConfirmed = false;
+        try {txshandler.stop();} catch(e){}
+        txs._collection.remove({});
+        txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
+      }
+    } else if(selectValue == "filter"){
+      if(!filterConfirmed) {
+        filterConfirmed = true;
+        try {txshandler.stop();} catch(e){}
+        txs._collection.remove({});
+        txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
+      }
     }
 
     console.log(selectValue);
@@ -194,7 +210,7 @@ Template.vis.rendered = function () {
     }
 
     let initializing = true;
-    txshandler = Meteor.subscribe("txs", minsAgo);
+    txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
     const handle = txs.find().observeChanges({
       added: function (id, fields) {
         if(new Date(fields.timestamp*1000) > new Date((new Date()).getTime() - 2 * minsAgo * 60000) ) {
@@ -246,8 +262,11 @@ Template.vis.rendered = function () {
     function getColour(tx) {
       if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
         return "red";
+      } else if (tx.confirmed) {
+        return "orange";
+      } else {
+        return "blue";
       }
-      return "blue";
     }
 
     function zoom() {
@@ -278,7 +297,6 @@ Template.vis.rendered = function () {
             focused = d;
             isFocused = true;
             node.style("opacity", function(o) {
-              console.log("circle check")
               return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
             }).on("mouseleave", function(d) {
               svg.style("cursor","move");

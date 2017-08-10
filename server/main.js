@@ -34,8 +34,15 @@ Meteor.startup(() => {
     }
   });
 
-	Meteor.publish('txs', function (minsAgo) {
-    return txs.find({"time":{$gt: (new Date((new Date()).getTime() - minsAgo*60000))}});
+	Meteor.publish('txs', function (minsAgo, filterConfirmed) {
+	  if(filterConfirmed) {
+      return txs.find({$and: [
+          {"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}},
+          {"tx.confirmed": { $eq: true}}
+        ]});
+    } else {
+      return txs.find({"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}});
+    }
   });
   var iota = new IOTA({
 	'host': 'http://localhost',
@@ -69,9 +76,27 @@ Meteor.startup(() => {
 
 });
 
+function setDescendantsConfirmed(tx) {
+  let tx1 = txs.findOne({hash: tx.branchTransaction});
+  let tx2 = txs.findOne({hash: tx.trunkTransaction});
+  if(tx1) {
+    txs.update({_id: tx1._id}, { $set: {'tx.confirmed': true}});
+    setDescendantsConfirmed(tx1);
+  }
+  if(tx2) {
+    txs.update({_id: tx2._id}, { $set: {'tx.confirmed': true}});
+    setDescendantsConfirmed(tx2);
+  }
+}
+
 function addTX(tx, path) {
   console.log("adding tx");
   tx.time = new Date();
+  tx.confirmed = false;
+  if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
+    tx.confirmed = true;
+    setDescendantsConfirmed(tx);
+  }
   var doc = txs.upsert({hash: tx.hash}, tx);
   files.insert({txid: doc.insertedId, path: path, time: new Date()});
 }
