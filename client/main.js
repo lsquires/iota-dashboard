@@ -48,7 +48,7 @@ Template.Home.events({
         txs._collection.remove({});
         txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
       }
-    } else if(selectValue == "filter"){
+    } else if(selectValue == "confirmed"){
       if(!filterConfirmed) {
         filterConfirmed = true;
         try {txshandler.stop();} catch(e){}
