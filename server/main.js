@@ -18,7 +18,6 @@ Meteor.startup(() => {
   console.log("server");
 
   Meteor.setInterval(function() {
-    console.log("updated time")
     currentTime.set(new Date().valueOf());
   }, 1000);
 
@@ -31,10 +30,22 @@ Meteor.startup(() => {
      } else {
      return txs.find({"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}});
      }*/
-    console.log("new sub")
-    this.autorun(function() {
-      console.log("updated sub: "+(currentTime.get() - (60*60*1000)));
-      return txs.find({ "time": { $gte: currentTime.get() - (60*60*1000)} });
+    var self = this;
+    self.autorun(function() {
+      var minsago = self.data('minsago') || 1;
+      check(limit, Number);
+
+      var confirmedonly = self.data('confirmedonly') || false;
+      check(confirmedonly, Boolean);
+
+      if(confirmedonly) {
+        return txs.find({$and: [
+          { "time": { $gte: currentTime.get() - (minsago*60000)}},
+          {"confirmed": { $eq: true}}]});
+      } else {
+        return txs.find({ "time": { $gte: currentTime.get() - (minsago*60000)} });
+      }
+
     });
   });
 

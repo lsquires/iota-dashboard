@@ -22,22 +22,12 @@ Template.registerHelper('navClassName', function (page) {
     return Router.current().route.getName() === page ? "active" : "";
   }
 });
-/*
+
 Template.Home.events({
   "change #timePeriod": function(event, template){
     let selectValue = parseInt(template.$("#timePeriod").val(),10);
-
-    if(selectValue > minsAgo) {
-        minsAgo = selectValue;
-        //txs._collection.remove({});
-        try {txshandler.stop();} catch(e){}
-        txshandler = Meteor.subscribe("txs");
-    } else {
-      minsAgo = selectValue;
-      forceCleanTXS();
-    }
-
     console.log(selectValue);
+    txshandler.setData('limit', selectValue);
   },
   "change #filter": function(event, template){
     let selectValue = template.$("#filter").val();
@@ -45,23 +35,19 @@ Template.Home.events({
     if(selectValue == "all") {
       if(filterConfirmed) {
         filterConfirmed = false;
-        //txs._collection.remove({});
-        try {txshandler.stop();} catch(e){}
-        txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
+        txshandler.setData('confirmedonly', false);
       }
     } else if(selectValue == "confirmed"){
       if(!filterConfirmed) {
         filterConfirmed = true;
-        //txs._collection.remove({});
-        try {txshandler.stop();} catch(e){}
-        txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
+        txshandler.setData('confirmedonly', true);
       }
     }
 
     console.log(selectValue);
   }
 });
-*/
+
 Template.transactioninfo.onCreated(function () {
   txhash = new ReactiveVar("");
   txtimestamp = new ReactiveVar("");
@@ -216,10 +202,9 @@ Template.vis.rendered = function () {
 
     let initializing = true;
     txshandler = Meteor.subscribe("txs");
+
     dbwatcher = txs.find().observeChanges({
       added: function (id, fields) {
-        if(new Date(fields.timestamp*1000) > new Date((new Date()).getTime() - 2 * minsAgo * 60000) ) {
-          cleanTXS();
           var node = {x: centerx, y: centery, tx: fields, id: id, colour: getColour(fields)};
           nodes.push(node);
           nodes.forEach(function (target) {
@@ -231,29 +216,17 @@ Template.vis.rendered = function () {
           if (!initializing) {
             restart();
           }
-        }
       },
       changed: function (id, fields) {
-        console.log("changed");
-        console.log(fields)
-
         for (var i = nodes.length - 1; i >= 0; i--) {
           if (nodes[i].id === id) {
-            console.log("changed reflected");
             nodes[i].tx.confirmed = true;
             nodes[i].colour = getColour(nodes[i].tx);
             break;
           }
         }
         restart();
-       /* nodes.forEach(function (target) {
-          if (target.tx.hash == fields.hash) {
-            console.log("changed reflected");
-            target.colour = getColour(fields);
-            target.tx = fields;
-            restart();
-          }
-        });*/
+
       },
       removed: function (id) {
         console.log("removed id");
@@ -269,7 +242,6 @@ Template.vis.rendered = function () {
             break;
           }
         }
-        //d3.event.stopPropagation();
         restart();
       }
     });
