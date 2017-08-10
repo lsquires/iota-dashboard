@@ -5,6 +5,7 @@ txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3-3');
 txshandler = {};
+dbwatcher = {};
 minsAgo = 1;
 filterConfirmed = false;
 nextClean = new Date();
@@ -28,8 +29,8 @@ Template.Home.events({
 
     if(selectValue > minsAgo) {
         minsAgo = selectValue;
-        try {txshandler.stop();} catch(e){}
         txs._collection.remove({});
+        try {txshandler.stop();} catch(e){}
         txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
     } else {
       minsAgo = selectValue;
@@ -44,15 +45,15 @@ Template.Home.events({
     if(selectValue == "all") {
       if(filterConfirmed) {
         filterConfirmed = false;
-        try {txshandler.stop();} catch(e){}
         txs._collection.remove({});
+        try {txshandler.stop();} catch(e){}
         txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
       }
     } else if(selectValue == "confirmed"){
       if(!filterConfirmed) {
         filterConfirmed = true;
-        try {txshandler.stop();} catch(e){}
         txs._collection.remove({});
+        try {txshandler.stop();} catch(e){}
         txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
       }
     }
@@ -215,7 +216,7 @@ Template.vis.rendered = function () {
 
     let initializing = true;
     txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
-    const handle = txs.find().observeChanges({
+    dbwatcher = txs.find().observeChanges({
       added: function (id, fields) {
         if(new Date(fields.timestamp*1000) > new Date((new Date()).getTime() - 2 * minsAgo * 60000) ) {
           cleanTXS();
@@ -272,6 +273,7 @@ Template.vis.rendered = function () {
         restart();
       }
     });
+    console.log(dbwatcher);
     initializing = false;
     restart();
 
