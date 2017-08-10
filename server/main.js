@@ -75,7 +75,7 @@ Meteor.startup(function() {
     ignored: /[\/\\]\./, persistent: true
   });
 
-  watcher.on('add', Meteor.bindEnvironment(function(path) {
+  /*watcher.on('add', Meteor.bindEnvironment(function(path) {
     console.log(path);
     newFile=fs.readFileSync(path,'utf8');
     let split = newFile.split(/\r?\n/);
@@ -83,7 +83,7 @@ Meteor.startup(function() {
 
 	  addTX(tx, path);
 
-  }));
+  }));*/
 
   SyncedCron.start();
 
