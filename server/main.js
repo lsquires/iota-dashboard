@@ -12,23 +12,23 @@ let currentTime = new ReactiveVar(new Date().valueOf());
 txs.remove({});
 files.remove({});
 
-Meteor.setInterval(function() {
+/*Meteor.setInterval(function() {
   currentTime.set(Date.now().valueOf());
 }, 5*1000);
 
 Meteor.publish('txs', function (minsAgo, filterConfirmed) {
-  /*if(filterConfirmed) {
+  if(filterConfirmed) {
    return txs.find({$and: [
    {"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}},
    {"confirmed": { $eq: true}}
    ]});
    } else {
    return txs.find({"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}});
-   }*/
+   }
   this.autorun(function(computation) {
     return txs.find({ time: { $gte: currentTime.get() - (60*60*1000)} });
   });
-});
+});*/
 
 Meteor.startup(function() {
   console.log("server");
