@@ -69,6 +69,7 @@ Template.transactioninfo.onCreated(function () {
   txvalue = new ReactiveVar(0);
   txbundle = new ReactiveVar("");
   txmessage = new ReactiveVar("");
+  txconfirmed = new ReactiveVar(false);
 });
 
 Template.transactioninfo.helpers({
@@ -92,6 +93,9 @@ Template.transactioninfo.helpers({
   },
   txmessage: function () {
     return txmessage.get();
+  },
+  txconfirmed: function () {
+    return txconfirmed.get();
   }
 });
 
@@ -233,6 +237,7 @@ Template.vis.rendered = function () {
         nodes.forEach(function (target) {
           if (nodes.tx.hash = fields.hash) {
             nodes.colour = getColour(fields);
+            nodes.tx = fields;
           }
         });
         restart();
@@ -323,7 +328,7 @@ Template.vis.rendered = function () {
           txvalue.set(d.tx.value);
           txbundle.set(d.tx.bundle)
           txmessage.set(d.tx.signatureMessageFragment);
-
+          txconfirmed.set(d.tx.confirmed);
 
 
         });
