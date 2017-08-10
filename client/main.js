@@ -22,7 +22,7 @@ Template.registerHelper('navClassName', function (page) {
     return Router.current().route.getName() === page ? "active" : "";
   }
 });
-
+/*
 Template.Home.events({
   "change #timePeriod": function(event, template){
     let selectValue = parseInt(template.$("#timePeriod").val(),10);
@@ -31,7 +31,7 @@ Template.Home.events({
         minsAgo = selectValue;
         //txs._collection.remove({});
         try {txshandler.stop();} catch(e){}
-        txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
+        txshandler = Meteor.subscribe("txs");
     } else {
       minsAgo = selectValue;
       forceCleanTXS();
@@ -61,7 +61,7 @@ Template.Home.events({
     console.log(selectValue);
   }
 });
-
+*/
 Template.transactioninfo.onCreated(function () {
   txhash = new ReactiveVar("");
   txtimestamp = new ReactiveVar("");
@@ -215,7 +215,7 @@ Template.vis.rendered = function () {
     }
 
     let initializing = true;
-    txshandler = Meteor.subscribe("txs", minsAgo, filterConfirmed);
+    txshandler = Meteor.subscribe("txs");
     dbwatcher = txs.find().observeChanges({
       added: function (id, fields) {
         if(new Date(fields.timestamp*1000) > new Date((new Date()).getTime() - 2 * minsAgo * 60000) ) {

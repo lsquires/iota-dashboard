@@ -18,10 +18,11 @@ Meteor.startup(() => {
   console.log("server");
 
   Meteor.setInterval(function() {
+    console.log("updated time")
     currentTime.set(new Date().valueOf());
   }, 1000);
 
-  Meteor.publish('txs', function (minsAgo, filterConfirmed) {
+  Meteor.publish('txs', function () {
     /*if(filterConfirmed) {
      return txs.find({$and: [
      {"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}},
@@ -30,7 +31,9 @@ Meteor.startup(() => {
      } else {
      return txs.find({"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}});
      }*/
+    console.log("new sub")
     this.autorun(function() {
+      console.log("updated sub")
       return txs.find({ time: { $gte: currentTime.get() - (60*60*1000)} });
     });
   });
