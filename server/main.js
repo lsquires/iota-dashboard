@@ -107,19 +107,12 @@ Meteor.startup(() => {
 function setDescendantsConfirmed(tx) {
   let tx1 = txs.findOne({hash: tx.branchTransaction});
   let tx2 = txs.findOne({hash: tx.trunkTransaction});
-  var count;
   if(tx1) {
-    count = txs.update({hash: tx.branchTransaction}, { $set: {'confirmed': true}});
-    if(count != 1) {
-      console.log("noooooooooooooooooo")
-    }
+    txs.update({_id: tx1._id}, { $set: {'confirmed': true}});
     setDescendantsConfirmed(tx1);
   }
   if(tx2) {
-    count = txs.update({hash: tx.trunkTransaction}, { $set: {'confirmed': true}});
-    if(count != 1) {
-      console.log("noooooooooooooooooo")
-    }
+    txs.update({_id: tx2._id}, { $set: {'confirmed': true}});
     setDescendantsConfirmed(tx2);
   }
 }
@@ -131,7 +124,7 @@ function addTX(tx, path) {
   if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
     console.log("new coor message!!!!")
     tx.confirmed = true;
-    //setDescendantsConfirmed(tx);
+    setDescendantsConfirmed(tx);
   }
   var doc = txs.upsert({hash: tx.hash}, tx);
   files.insert({txid: doc.insertedId, path: path, time: new Date().valueOf()});
