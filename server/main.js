@@ -6,6 +6,9 @@ var IOTA = require('iota.lib.js');
 var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU';
 var txs = new Mongo.Collection('txs');
 var files = new Mongo.Collection('files');
+let cutoffTimestamp = new ReactiveVar();
+
+
 txs.remove({});
 files.remove({});
 function deleteBeforeMilestone() {
@@ -13,6 +16,11 @@ function deleteBeforeMilestone() {
 
 Meteor.startup(() => {
   console.log("server");
+
+  Meteor.setInterval(function() {
+    cutoffTimestamp.set(Date.now() - 60*1000);
+  }, 5*1000);
+
 
   SyncedCron.add({
     name: 'Clean export of bad files',
@@ -35,14 +43,18 @@ Meteor.startup(() => {
   });
 
 	Meteor.publish('txs', function (minsAgo, filterConfirmed) {
-	  if(filterConfirmed) {
+	  /*if(filterConfirmed) {
       return txs.find({$and: [
           {"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}},
           {"confirmed": { $eq: true}}
         ]});
     } else {
       return txs.find({"time": {$gt: (new Date((new Date()).getTime() - minsAgo * 60000))}});
-    }
+    }*/
+    this.autorun(function() {
+      return txs.find({ time: { $gte: cutoffTimestamp.get() } });
+    });
+
   });
   var iota = new IOTA({
 	'host': 'http://localhost',
@@ -97,7 +109,7 @@ function addTX(tx, path) {
     tx.confirmed = true;
     setDescendantsConfirmed(tx);
   }
-  var doc = txs.upsert({hash: tx.hash}, tx);
-  files.insert({txid: doc.insertedId, path: path, time: new Date()});
+  var doc = txs.insert({hash: tx.hash}, tx);
+  files.insert({txid: doc, path: path, time: new Date()});
 }
 

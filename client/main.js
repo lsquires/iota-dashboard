@@ -101,7 +101,7 @@ Template.transactioninfo.helpers({
 });
 
 function cleanTXS() {
-  if(new Date() > nextClean) {
+  /*if(new Date() > nextClean) {
     nextClean = new Date((new Date()).getTime() + 10000)
     console.log("doing job cs "+minsAgo);
     var now = new Date((new Date()).getTime() - minsAgo * 60000);
@@ -110,18 +110,18 @@ function cleanTXS() {
         txs._collection.remove(item._id);
       }
     })
-  }
+  }*/
 }
 
 function forceCleanTXS() {
-    nextClean = new Date((new Date()).getTime() + 10000)
+    /*nextClean = new Date((new Date()).getTime() + 10000)
     console.log("doing job cs "+minsAgo);
     var now = new Date((new Date()).getTime() - minsAgo * 60000);
     txs.find().forEach(function (item) {
       if (item.time < now) {
         txs._collection.remove(item._id);
       }
-    })
+    })*/
 
 }
 
