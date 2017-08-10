@@ -14,7 +14,7 @@ files.remove({});
 function deleteBeforeMilestone() {
 } 
 
-Meteor.startup(() => {
+Meteor.startup(function() {
   console.log("server");
 
   Meteor.setInterval(function() {
