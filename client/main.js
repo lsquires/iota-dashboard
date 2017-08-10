@@ -235,7 +235,7 @@ Template.vis.rendered = function () {
       changed: function (id, fields) {
         console.log("changed");
         nodes.forEach(function (target) {
-          if (nodes.tx.hash = fields.hash) {
+          if (nodes.tx.hash == fields.hash) {
             nodes.colour = getColour(fields);
             nodes.tx = fields;
           }
