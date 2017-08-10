@@ -57,6 +57,8 @@ Template.transactioninfo.onCreated(function () {
   txbundle = new ReactiveVar("");
   txmessage = new ReactiveVar("");
   txconfirmed = new ReactiveVar("");
+  txbranch = new ReactiveVar("");
+  txtrunk = new ReactiveVar("");
 });
 
 Template.transactioninfo.helpers({
@@ -83,6 +85,12 @@ Template.transactioninfo.helpers({
   },
   txconfirmed: function () {
     return txconfirmed.get();
+  },
+  txtrunk: function () {
+    return txtrunk.get();
+  },
+  txbranch: function () {
+    return txbranch.get();
   }
 });
 
@@ -315,8 +323,8 @@ Template.vis.rendered = function () {
           txbundle.set(d.tx.bundle)
           txmessage.set(d.tx.signatureMessageFragment);
           txconfirmed.set(d.tx.confirmed ? "true" : "false");
-
-
+          txbranch.set(d.tx.branchTransaction)
+          txtrunk.set(d.tx.trunkTransaction)
         });
 
       node.style("opacity", function(o) {

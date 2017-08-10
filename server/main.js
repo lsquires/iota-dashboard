@@ -131,7 +131,7 @@ function addTX(tx, path) {
   if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
     console.log("new coor message!!!!")
     tx.confirmed = true;
-    setDescendantsConfirmed(tx);
+    //setDescendantsConfirmed(tx);
   }
   var doc = txs.upsert({hash: tx.hash}, tx);
   files.insert({txid: doc.insertedId, path: path, time: new Date().valueOf()});
