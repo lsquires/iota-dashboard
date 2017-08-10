@@ -63,6 +63,7 @@
         <div class=inside-floating-box>
           <h2 class="box-header" style="margin-top: 0px">Transaction Details</h2>
           <div class="row margin-bottom-20">
+            {{#if havetx}}
             <div class="col-sm-3">TxHash:</div>
             <div class="col-sm-9 txinfo">{{txhash}}</div>
 
@@ -96,6 +97,7 @@
                 {{txmessage}}
               </textarea>
             </div>
+          {{/if}}
           </div>
         </div>
       </div>

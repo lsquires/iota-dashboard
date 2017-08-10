@@ -63,6 +63,9 @@ Template.transactioninfo.onCreated(function () {
 });
 
 Template.transactioninfo.helpers({
+  havetx: function () {
+    return txhash.get() !== "";
+  },
   txhash: function () {
     return txhash.get();
   },
