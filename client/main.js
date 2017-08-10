@@ -69,7 +69,7 @@ Template.transactioninfo.onCreated(function () {
   txvalue = new ReactiveVar(0);
   txbundle = new ReactiveVar("");
   txmessage = new ReactiveVar("");
-  txconfirmed = new ReactiveVar(false);
+  txconfirmed = new ReactiveVar("");
 });
 
 Template.transactioninfo.helpers({
@@ -328,7 +328,7 @@ Template.vis.rendered = function () {
           txvalue.set(d.tx.value);
           txbundle.set(d.tx.bundle)
           txmessage.set(d.tx.signatureMessageFragment);
-          txconfirmed.set(d.tx.confirmed);
+          txconfirmed.set(d.tx.confirmed ? "true" : "false");
 
 
         });
