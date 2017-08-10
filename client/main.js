@@ -239,16 +239,13 @@ Template.vis.rendered = function () {
         for (var i = nodes.length - 1; i >= 0; i--) {
           if (nodes[i].id === id) {
             console.log("changed reflected");
-            var node = nodes[i];
-            node.colour = getColour(fields);
-            node.tx = fields;
-            nodes.splice(i, 1);
-            nodes.push(node);
+            nodes[i].tx.confirmed = true;
+            nodes[i].colour = getColour(nodes[i].tx);
             break;
           }
         }
         restart();
-        /*nodes.forEach(function (target) {
+       /* nodes.forEach(function (target) {
           if (target.tx.hash == fields.hash) {
             console.log("changed reflected");
             target.colour = getColour(fields);
