@@ -16,12 +16,16 @@ files.remove({});
 Meteor.startup(() => {
 
   function deleteFilesInFolder(path) {
+    var deleteBy = (new Date()).valueOf() - 120*60*1000;
     if( fs.existsSync(path) ) {
       fs.readdirSync(path).forEach(function(file,index){
         var curPath = path + "/" + file;
-        if(!fs.lstatSync(curPath).isDirectory()) {
+        console.log("comparing "+parseInt(file.split('.')[0])+","+deleteBy);
+        if(parseInt(file.split('.')[0]) < deleteBy) {
           fs.unlinkSync(curPath);
         }
+
+
       });
     }
   }
