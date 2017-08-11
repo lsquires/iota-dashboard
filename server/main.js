@@ -16,7 +16,7 @@ files.remove({});
 Meteor.startup(() => {
 
   function deleteFilesInFolder(path) {
-    var deleteBy = (new Date()).valueOf() - 120*60*1000;
+    var deleteBy = ((new Date()).valueOf() - 120*60*1000)*1000;
     if( fs.existsSync(path) ) {
       fs.readdirSync(path).forEach(function(file,index){
         var curPath = path + "/" + file;
@@ -45,7 +45,6 @@ Meteor.startup(() => {
 
       var confirmedonly = self.data('confirmedonly') || false;
       check(confirmedonly, Boolean);
-
       if (confirmedonly) {
         return txs.find({
           $and: [
