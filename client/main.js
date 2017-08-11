@@ -115,7 +115,9 @@ Template.vis.rendered = function () {
     var force = cola.d3adaptor(d3)
       .size([width, height])
       .nodes([])
-      .linkDistance(20)
+      .linkDistance(function(l) {
+        return l.length ? l.length : 40;
+      })
       .avoidOverlaps(true)
       .flowLayout("x", 30)
       .on("tick", tick);
@@ -198,13 +200,22 @@ Template.vis.rendered = function () {
         nodes.push(node);
         nodes.forEach(function (target) {
           if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
-            links.push({source: target, target: node});
+            if(target.tx.bundle === fields.bundle) {
+              links.push({source: target, target: node, length: 5});
+            } else {
+              links.push({source: target, target: node});
+            }
+
             if (target.tip) {
               target.tip = false;
               setColour(target);
             }
           } else if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
-            links.push({source: node, target: target});
+            if(target.tx.bundle === fields.bundle) {
+              links.push({source: node, target: target, length: 5});
+            } else {
+              links.push({source: node, target: target});
+            }
             node.tip = false;
           }
         });
