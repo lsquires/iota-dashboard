@@ -19,11 +19,11 @@ Meteor.startup(() => {
     var deleteBy = ((new Date()).valueOf() - 120*60*1000)*1000;
     if( fs.existsSync(path) ) {
       fs.readdirSync(path).forEach(function(file,index){
-        var curPath = path + "/" + file;
-        console.log("comparing "+parseInt(file.split('.')[0])+","+deleteBy);
-        if(parseInt(file.split('.')[0]) < deleteBy) {
+        //var curPath = path + "/" + file;
+        //console.log("comparing "+parseInt(file.split('.')[0])+","+deleteBy);
+        //if(parseInt(file.split('.')[0]) < deleteBy) {
           fs.unlinkSync(curPath);
-        }
+        //}
 
 
       });
