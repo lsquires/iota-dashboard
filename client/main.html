@@ -105,7 +105,44 @@
   <div class="wrapper">
     {{> Nav}}
     <div class="container profile">
-      STATS
+      <section class="map under-navbar">
+        <div class="profile-body">
+          {{> graphs}}
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<template name="graphs">
+  <div class="row margin-bottom-10">
+    <div class="col-sm-6">
+      <div class="floating-box  shadow-box">
+        <div class=inside-floating-box>
+          <h2 style="margin-top: 0px">TX/s </h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="floating-box  shadow-box">
+        <div class=inside-floating-box>
+          <h2 style="margin-top: 0px">CTX/s</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="floating-box  shadow-box">
+        <div class=inside-floating-box>
+          <h2 style="margin-top: 0px">TX %s</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="floating-box  shadow-box">
+        <div class=inside-floating-box>
+          <h2 style="margin-top: 0px">CTX time</h2>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -128,7 +165,7 @@
       <div class="container">
         <ul class="nav navbar-nav">
           <li id="LI_home" class="{{navClassName 'Home'}}"><a href="/">Tangle Visualization</a></li>
-          <li id="LI_about" class="{{navClassName 'Stats'}}"><a href="/stats">IOTA Statistics</a></li>
+          <li id="LI_about" class="{{navClassName 'Stats'}}"><a href="/stats">Tangle Statistics</a></li>
           <li id="LI_about" class="{{navClassName 'About'}}"><a href="/about">About</a></li>
         </ul>
       </div>
