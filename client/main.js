@@ -414,3 +414,8 @@ Template.vis.rendered = function () {
 
 
 }
+
+Template.vis.destroyed = function () {
+  dbwatcher.stop();
+  txshandler.stop();
+}
