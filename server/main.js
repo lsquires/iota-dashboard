@@ -14,6 +14,19 @@ files.remove({});
 
 
 Meteor.startup(() => {
+
+  function deleteFilesInFolder(path) {
+    if( fs.existsSync(path) ) {
+      fs.readdirSync(path).forEach(function(file,index){
+        var curPath = path + "/" + file;
+        if(!fs.lstatSync(curPath).isDirectory()) {
+          fs.unlinkSync(curPath);
+        }
+      });
+    }
+  }
+
+  deleteFilesInFolder('/home/lsquires/iri/target/export/');
   console.log("server");
 
   Meteor.setInterval(function () {
@@ -52,7 +65,7 @@ Meteor.startup(() => {
 
       //Cleaning DB
       console.log("doing job");
-      var now = (new Date()).valueOf() - 1 * 60000;
+      var now = (new Date()).valueOf() - 120 * 60000;
       files.find().forEach(function (item) {
         if (item.time < now) {
           console.log("removing:" + item.txid);

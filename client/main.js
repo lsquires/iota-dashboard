@@ -55,6 +55,7 @@ Template.Home.events({
 Template.transactioninfo.onCreated(function () {
   txhash = new ReactiveVar("");
   txtimestamp = new ReactiveVar("");
+  txnodetimestamp = new ReactiveVar("");
   txtag = new ReactiveVar("");
   txaddress = new ReactiveVar("");
   txvalue = new ReactiveVar(0);
@@ -74,6 +75,9 @@ Template.transactioninfo.helpers({
   },
   txtimestamp: function () {
     return txtimestamp.get();
+  },
+  txnodetimestamp: function () {
+    return txnodetimestamp.get();
   },
   txtag: function () {
     return txtag.get();
@@ -333,6 +337,7 @@ Template.vis.rendered = function () {
 
         txhash.set(d.tx.hash);
         txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+        txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
         txtag.set(d.tx.tag);
         txaddress.set(d.tx.address);
         txvalue.set(d.tx.value);
