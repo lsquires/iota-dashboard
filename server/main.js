@@ -52,7 +52,7 @@ Meteor.startup(() => {
 
       //Cleaning DB
       console.log("doing job");
-      var now = new Date((new Date()).getTime() - 120 * 60000);
+      var now = new Date((new Date()).getTime() - 5 * 60000);
       files.find().forEach(function (item) {
         if (item.time < now) {
           console.log("removing:" + item.txid);
