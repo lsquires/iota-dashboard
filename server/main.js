@@ -59,7 +59,7 @@ Meteor.startup(() => {
   SyncedCron.add({
     name: 'Clean export of bad files and graph data',
     schedule: function (parser) {
-      return parser.text('every 10 minutes');
+      return parser.text('every 10 minutes starting on the 120th minute');
     },
     job: function () {
 
