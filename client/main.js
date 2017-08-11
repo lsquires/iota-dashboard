@@ -115,11 +115,14 @@ Template.vis.rendered = function () {
     var force = cola.d3adaptor(d3)
       .size([width, height])
       .nodes([])
-      .linkDistance(function(l) {
-        return l.length ? l.length : 30;
-      })
+      .symmetricDiffLinkLengths(8)
+      /*.linkDistance(function(l) {
+        return l.length ? l.length : 40;
+      })*/
       .avoidOverlaps(true)
-      .flowLayout("x", 30)
+      .flowLayout("x", function(l) {
+        return l.bundle ? 0 : 30;
+      })
       .on("tick", tick);
 
     var hover = d3.select("#graph_hover");
@@ -201,7 +204,7 @@ Template.vis.rendered = function () {
         nodes.forEach(function (target) {
           if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
             if(target.tx.bundle === fields.bundle) {
-              links.push({source: target, target: node, length: 5});
+              links.push({source: target, target: node, bundle: true});
             } else {
               links.push({source: target, target: node});
             }
@@ -212,7 +215,7 @@ Template.vis.rendered = function () {
             }
           } else if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
             if(target.tx.bundle === fields.bundle) {
-              links.push({source: node, target: target, length: 5});
+              links.push({source: node, target: target, bundle: true});
             } else {
               links.push({source: node, target: target});
             }
