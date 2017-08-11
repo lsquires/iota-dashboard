@@ -215,7 +215,7 @@ Template.vis.rendered = function () {
     let initializing = true;
     txshandler = Meteor.subscribe("txs");
 
-    function setDescendantsConfirmed(node) {
+    /*function setDescendantsConfirmed(node) {
       nodes.filter(function(target){
         return !target.confirmed && (target.tx.hash == node.tx.branchTransaction || target.tx.hash == node.tx.trunkTransaction);
       }).forEach(function (target) {
@@ -232,47 +232,39 @@ Template.vis.rendered = function () {
         target.tip = false;
         setColour(target);
       });
-    }
+    }*/
 
     dbwatcher = txs.find().observeChanges({
       added: function (id, fields) {
 
-          var node = {x: centerx, y: centery, tx: fields, id: id, confirmed: false, tip: true};
-
-          setDescendantsNotTipped(node);
-          if (fields.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
-            node.confirmed = true;
-          }
+          var node = {x: centerx, y: centery, tx: fields, id: id, tip: true};
 
           nodes.push(node);
           nodes.forEach(function (target) {
             if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
               links.push({source: target, target: node});
+              if(target.tip) {
+                target.tip = false;
+                setColour(target);
+              }
             } else if(fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
               links.push({source: node, target: target});
               node.tip = false;
-              if(target.confirmed) {
-                node.confirmed = true;
-              }
             }
           });
-          if(node.confirmed) {
-            setDescendantsConfirmed(node);
-          }
           setColour(node);
           schedulerestart();
 
       },
       changed: function (id, fields) {
-        /*for (var i = nodes.length - 1; i >= 0; i--) {
+        for (var i = nodes.length - 1; i >= 0; i--) {
           if (nodes[i].id === id) {
             nodes[i].tx.confirmed = true;
-            nodes[i].colour = getColour(nodes[i].tx);
+            setColour(nodes[i]);
             schedulerestart();
             break;
           }
-        }*/
-        console.log("changed?")
+        }
       },
       removed: function (id) {
         console.log("removed id");
@@ -298,13 +290,13 @@ Template.vis.rendered = function () {
 
     function setColour(node) {
       if (node.tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
-        return "#FF4500";
-      } else if (node.confirmed) {
-        return "#FFA500";
+        node.colour = "#FF4500";
+      } else if (node.tx.confirmed) {
+        node.colour = "#FFA500";
       } else if (node.tip) {
-        return "#4AC0F2";
+        node.colour = "#4AC0F2";
       } else {
-        return "#6495ED";
+        node.colour = "#6495ED";
       }
     }
 

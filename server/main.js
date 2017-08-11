@@ -104,7 +104,7 @@ Meteor.startup(() => {
 
 });
 
-/*function setDescendantsConfirmed(tx) {
+function setDescendantsConfirmed(tx) {
   let tx1 = txs.findOne({hash: tx.branchTransaction});
   let tx2 = txs.findOne({hash: tx.trunkTransaction});
   if(tx1 && !tx1.confirmed) {
@@ -115,31 +115,24 @@ Meteor.startup(() => {
     txs.update({_id: tx2._id}, { $set: {'confirmed': true}});
     setDescendantsConfirmed(tx2);
   }
-}*/
-
-/*function setDescendantsNonTip(tx) {
-  txs.update({hash: tx.branchTransaction}, { $set: {'tip': false}});
-  txs.update({hash: tx.trunkTransaction}, { $set: {'tip': false}});
-}*/
+}
 
 function addTX(tx, path) {
   tx.time = new Date().valueOf();
   console.log("adding tx: "+tx.time);
-  /*tx.confirmed = false;
-  //tx.tip = true;
+  tx.confirmed = false;
 
   var coor = false;
   if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
     coor = true;
     tx.confirmed = true;
-  }*/
+  }
   var doc = txs.upsert({hash: tx.hash}, tx);
   files.insert({txid: doc.insertedId, path: path, time: new Date().valueOf()});
-  /*
+
   if(coor) {
     console.log("new coor message!!!!")
     setDescendantsConfirmed(tx);
-  }*/
-  //setDescendantsNonTip(tx);
+  }
 }
 
