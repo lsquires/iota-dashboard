@@ -64,6 +64,7 @@ Meteor.startup(() => {
     job: function () {
 
       //Cleaning DB
+      var doMetrics = false;
       console.log("doing job");
       var now = (new Date()).valueOf() - 120 * 60000;
       files.find().forEach(function (item) {
@@ -72,11 +73,14 @@ Meteor.startup(() => {
           fs.unlinkSync(item.path);
           txs.remove({_id: item.txid});
           files.remove({txid: item.txid});
+          doMetrics = true;
         }
       });
 
       //Record metrics
+      if(doMetrics) {
 
+      }
     }
   });
 
