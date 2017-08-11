@@ -19,36 +19,10 @@ Router.route('/', {name: "Home"}, function () {
 });
 Router.route('/About');
 Router.route('/Stats');
-Router.route('/Contact');
 
 Template.registerHelper('navClassName', function (page) {
   if (Router.current()) {
     return Router.current().route.getName() === page ? "active" : "";
-  }
-});
-
-Template.Home.events({
-  "change #timePeriod": function (event, template) {
-    let selectValue = parseInt(template.$("#timePeriod").val(), 10);
-    console.log(selectValue);
-    txshandler.setData('minsago', selectValue);
-  },
-  "change #filter": function (event, template) {
-    let selectValue = template.$("#filter").val();
-
-    if (selectValue == "all") {
-      if (filterConfirmed) {
-        filterConfirmed = false;
-        txshandler.setData('confirmedonly', false);
-      }
-    } else if (selectValue == "confirmed") {
-      if (!filterConfirmed) {
-        filterConfirmed = true;
-        txshandler.setData('confirmedonly', true);
-      }
-    }
-
-    console.log(selectValue);
   }
 });
 
@@ -102,6 +76,31 @@ Template.transactioninfo.helpers({
   },
   txbranch: function () {
     return txbranch.get();
+  }
+});
+
+Template.vis.events({
+  "change #timePeriod": function (event, template) {
+    let selectValue = parseInt(template.$("#timePeriod").val(), 10);
+    console.log(selectValue);
+    txshandler.setData('minsago', selectValue);
+  },
+  "change #filter": function (event, template) {
+    let selectValue = template.$("#filter").val();
+
+    if (selectValue == "all") {
+      if (filterConfirmed) {
+        filterConfirmed = false;
+        txshandler.setData('confirmedonly', false);
+      }
+    } else if (selectValue == "confirmed") {
+      if (!filterConfirmed) {
+        filterConfirmed = true;
+        txshandler.setData('confirmedonly', true);
+      }
+    }
+
+    console.log(selectValue);
   }
 });
 

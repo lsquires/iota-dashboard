@@ -1,5 +1,5 @@
 <head>
-  <title>webapp</title>
+  <title>IOTA Vis</title>
 </head>
 
 <body>
@@ -11,6 +11,19 @@
     <div class="container profile">
       <section class="map under-navbar">
         <div class="profile-body">
+          {{> vis}}
+          {{> transactioninfo}}
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
+
+<template name="vis">
+  <div class="row margin-bottom-12">
+    <div class="col-sm-12">
+      <div class="floating-box shadow-box">
+        <div class=inside-floating-box id="outernodebox">
           <div class="dropdown">
             <td>
               <select id="timePeriod">
@@ -26,28 +39,6 @@
               </select>
             </td>
           </div>
-          {{> vis}}
-          {{> transactioninfo}}
-        </div>
-      </section>
-    </div>
-  </div>
-</template>
-
-<template name="About">
-  <div class="wrapper">
-    {{> Nav}}
-    <div class="container profile">
-      ABOUT
-    </div>
-  </div>
-</template>
-
-<template name="vis">
-  <div class="row margin-bottom-12">
-    <div class="col-sm-12">
-      <div class="floating-box shadow-box">
-        <div class=inside-floating-box id="outernodebox">
           <div id="nodebox"></div>
         </div>
       </div>
@@ -110,6 +101,24 @@
   </div>
 </template>
 
+<template name="Stats">
+  <div class="wrapper">
+    {{> Nav}}
+    <div class="container profile">
+      STATS
+    </div>
+  </div>
+</template>
+
+<template name="About">
+  <div class="wrapper">
+    {{> Nav}}
+    <div class="container profile">
+      ABOUT
+    </div>
+  </div>
+</template>
+
 <template name="Nav">
   <div class="header">
     <div class="container">
@@ -118,7 +127,8 @@
     <div class="collapse navbar-collapse mega-menu navbar-responsive-collapse">
       <div class="container">
         <ul class="nav navbar-nav">
-          <li id="LI_home" class="{{navClassName 'Home'}}"><a href="/">Home</a></li>
+          <li id="LI_home" class="{{navClassName 'Home'}}"><a href="/">Tangle Visualization</a></li>
+          <li id="LI_about" class="{{navClassName 'Stats'}}"><a href="/stats">IOTA Statistics</a></li>
           <li id="LI_about" class="{{navClassName 'About'}}"><a href="/about">About</a></li>
         </ul>
       </div>
