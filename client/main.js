@@ -1,5 +1,5 @@
-import { Template } from 'meteor/templating';
-import { Mongo } from 'meteor/mongo';
+import {Template} from 'meteor/templating';
+import {Mongo} from 'meteor/mongo';
 import './main.html';
 txs = new Mongo.Collection('txs');
 var cola = require("webcola");
@@ -11,7 +11,7 @@ filterConfirmed = false;
 nextClean = new Date();
 toRestart = true;
 
-Router.route('/', {name:"Home"},function () {
+Router.route('/', {name: "Home"}, function () {
   this.render('Home');
 });
 Router.route('/About');
@@ -25,21 +25,21 @@ Template.registerHelper('navClassName', function (page) {
 });
 
 Template.Home.events({
-  "change #timePeriod": function(event, template){
-    let selectValue = parseInt(template.$("#timePeriod").val(),10);
+  "change #timePeriod": function (event, template) {
+    let selectValue = parseInt(template.$("#timePeriod").val(), 10);
     console.log(selectValue);
     txshandler.setData('minsago', selectValue);
   },
-  "change #filter": function(event, template){
+  "change #filter": function (event, template) {
     let selectValue = template.$("#filter").val();
 
-    if(selectValue == "all") {
-      if(filterConfirmed) {
+    if (selectValue == "all") {
+      if (filterConfirmed) {
         filterConfirmed = false;
         txshandler.setData('confirmedonly', false);
       }
-    } else if(selectValue == "confirmed"){
-      if(!filterConfirmed) {
+    } else if (selectValue == "confirmed") {
+      if (!filterConfirmed) {
         filterConfirmed = true;
         txshandler.setData('confirmedonly', true);
       }
@@ -98,31 +98,6 @@ Template.transactioninfo.helpers({
   }
 });
 
-function cleanTXS() {
-  /*if(new Date() > nextClean) {
-    nextClean = new Date((new Date()).getTime() + 10000)
-    console.log("doing job cs "+minsAgo);
-    var now = new Date((new Date()).getTime() - minsAgo * 60000);
-    txs.find().forEach(function (item) {
-      if (item.time < now) {
-        txs._collection.remove(item._id);
-      }
-    })
-  }*/
-}
-
-function forceCleanTXS() {
-    /*nextClean = new Date((new Date()).getTime() + 10000)
-    console.log("doing job cs "+minsAgo);
-    var now = new Date((new Date()).getTime() - minsAgo * 60000);
-    txs.find().forEach(function (item) {
-      if (item.time < now) {
-        txs._collection.remove(item._id);
-      }
-    })*/
-
-}
-
 Template.vis.rendered = function () {
   var focused;
   var selected;
@@ -140,7 +115,7 @@ Template.vis.rendered = function () {
     var force = cola.d3adaptor(d3)
       .size([width, height])
       .nodes([])
-      .symmetricDiffLinkLengths(8)
+      .linkDistance(20)
       .avoidOverlaps(true)
       .flowLayout("x", 30)
       .on("tick", tick);
@@ -155,7 +130,7 @@ Template.vis.rendered = function () {
       .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom))
       .append("g");
 
-    svg.style("cursor","move");
+    svg.style("cursor", "move");
 
     var rect = svg.append("rect")
       .attr("width", width)
@@ -177,11 +152,11 @@ Template.vis.rendered = function () {
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', '#000');
 
-    $(window).resize(function() {
+    $(window).resize(function () {
       console.log("resized");
       width = document.getElementById('nodebox').clientWidth;
       centerx = width / 2,
-      force.size([width, height]);
+        force.size([width, height]);
       svg.attr("width", width)
         .attr("height", height);
       rect.attr("width", width)
@@ -215,45 +190,26 @@ Template.vis.rendered = function () {
     let initializing = true;
     txshandler = Meteor.subscribe("txs");
 
-    /*function setDescendantsConfirmed(node) {
-      nodes.filter(function(target){
-        return !target.confirmed && (target.tx.hash == node.tx.branchTransaction || target.tx.hash == node.tx.trunkTransaction);
-      }).forEach(function (target) {
-          target.confirmed = true;
-          setColour(target);
-          setDescendantsConfirmed(target);
-      });
-    }
-
-    function setDescendantsNotTipped(node) {
-      nodes.filter(function(target){
-        return target.tip && (target.tx.hash == node.tx.branchTransaction || target.tx.hash == node.tx.trunkTransaction);
-      }).forEach(function (target) {
-        target.tip = false;
-        setColour(target);
-      });
-    }*/
-
     dbwatcher = txs.find().observeChanges({
       added: function (id, fields) {
 
-          var node = {x: centerx, y: centery, tx: fields, id: id, tip: true};
+        var node = {x: centerx, y: centery, tx: fields, id: id, tip: true};
 
-          nodes.push(node);
-          nodes.forEach(function (target) {
-            if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
-              links.push({source: target, target: node});
-              if(target.tip) {
-                target.tip = false;
-                setColour(target);
-              }
-            } else if(fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
-              links.push({source: node, target: target});
-              node.tip = false;
+        nodes.push(node);
+        nodes.forEach(function (target) {
+          if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
+            links.push({source: target, target: node});
+            if (target.tip) {
+              target.tip = false;
+              setColour(target);
             }
-          });
-          setColour(node);
-          schedulerestart();
+          } else if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
+            links.push({source: node, target: target});
+            node.tip = false;
+          }
+        });
+        setColour(node);
+        schedulerestart();
 
       },
       changed: function (id, fields) {
@@ -304,6 +260,7 @@ Template.vis.rendered = function () {
       var zoom = d3.event;
       svg.attr("transform", "translate(" + zoom.translate + ")scale(" + zoom.scale + ")");
     }
+
     function isConnected(a, b) {
       return a.tx.hash == b.tx.branchTransaction ||
         a.tx.hash == b.tx.trunkTransaction ||
@@ -318,53 +275,58 @@ Template.vis.rendered = function () {
 
     function restart() {
 
-      node = node.data(nodes, function(d) { return d.id;});
-      link = link.data(links, function(d) { return d.source.id + "-" + d.target.id;} );
+      node = node.data(nodes, function (d) {
+        return d.id;
+      });
+      link = link.data(links, function (d) {
+        return d.source.id + "-" + d.target.id;
+      });
 
 
-        node.enter().insert("circle", ".cursor")
-          .attr("class", "node")
-          .attr("r", nodeRadius)
-          .attr("id", function(d) { return "a"+d.id; })
-          .call(force.drag)
-          .on("mouseover", function (d) {
-            svg.style("cursor","pointer");
-            focused = d;
-            isFocused = true;
-            node.style("opacity", function(o) {
-              return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-            }).on("mouseleave", function(d) {
-              svg.style("cursor","move");
-              isFocused = false;
-              svg.style("cursor","move");
-              link.style("opacity", 0.4);
-              node.style("opacity", 1);
-            });
-            link.style("opacity", function(o) {
-              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-            });
-          }).on("mousedown", function(d) {
-          d3.event.stopPropagation()
-          if(selected && !d3.select("#a"+selected).empty()) {
-            d3.select("#a"+selected).transition().duration(200).attr("r", nodeRadius);
-          }
-          d3.select(this).transition().duration(200).attr("r", nodeRadius*1.5);
-          selected = d.id;
+      node.enter().insert("circle", ".cursor")
+        .attr("class", "node")
+        .attr("r", nodeRadius)
+        .attr("id", function (d) {
+          return "a" + d.id;
+        })
+        .call(force.drag)
+        .on("mouseover", function (d) {
+          svg.style("cursor", "pointer");
+          focused = d;
+          isFocused = true;
+          node.style("opacity", function (o) {
+            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+          }).on("mouseleave", function (d) {
+            svg.style("cursor", "move");
+            isFocused = false;
+            svg.style("cursor", "move");
+            link.style("opacity", 0.4);
+            node.style("opacity", 1);
+          });
+          link.style("opacity", function (o) {
+            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+          });
+        }).on("mousedown", function (d) {
+        d3.event.stopPropagation()
+        if (selected && !d3.select("#a" + selected).empty()) {
+          d3.select("#a" + selected).transition().duration(200).attr("r", nodeRadius);
+        }
+        d3.select(this).transition().duration(200).attr("r", nodeRadius * 1.5);
+        selected = d.id;
 
-          txhash.set(d.tx.hash);
-          txtimestamp.set((new Date(d.tx.timestamp*1000)).toLocaleString());
-          txtag.set(d.tx.tag);
-          txaddress.set(d.tx.address);
-          txvalue.set(d.tx.value);
-          txbundle.set(d.tx.bundle)
-          txmessage.set(d.tx.signatureMessageFragment);
-          txconfirmed.set(d.confirmed ? "true" : "false");
-          txconfirmed.set(d.tip ? "true" : "false");
-          txbranch.set(d.tx.branchTransaction)
-          txtrunk.set(d.tx.trunkTransaction)
-        });
+        txhash.set(d.tx.hash);
+        txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+        txtag.set(d.tx.tag);
+        txaddress.set(d.tx.address);
+        txvalue.set(d.tx.value);
+        txbundle.set(d.tx.bundle)
+        txmessage.set(d.tx.signatureMessageFragment);
+        txconfirmed.set(d.tx.confirmed ? "true" : "false");
+        txbranch.set(d.tx.branchTransaction)
+        txtrunk.set(d.tx.trunkTransaction)
+      });
 
-      node.style("opacity", function(o) {
+      node.style("opacity", function (o) {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
 
@@ -372,28 +334,18 @@ Template.vis.rendered = function () {
         return d.colour;
       });
 
-      /*d3.select(window).on("mouseup",
-        function() {
-          isFocused = false;
-          svg.style("cursor","move");
-          link.style("opacity", 0.4);
-          node.style("opacity", 1);
-        });*/
+      node.exit()
+        .remove();
 
 
-        node.exit()
-          .remove();
+      link.enter().append('svg:path')
+        .attr("class", "link");
+      link.style("opacity", function (o) {
+        return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+      });
 
-
-
-        link.enter().append('svg:path')
-          .attr("class", "link");
-        link.style("opacity", function(o) {
-          return isFocused ? (o.source.id == focused.id  || o.target.id == focused.id  ? 0.8 : 0.12) : 0.4;
-        });
-
-        link.exit()
-          .remove();
+      link.exit()
+        .remove();
 
 
       force.start();
