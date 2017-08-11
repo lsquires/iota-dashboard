@@ -207,7 +207,7 @@ Template.vis.rendered = function () {
 
         var node = {x: centerx, y: centery, tx: fields, id: id, tip: true, confirmed: false};
 
-        if (fields.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
+        if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
           node.confirmed = true;
         }
         //Check parents and add parents link
