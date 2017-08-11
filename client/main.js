@@ -116,7 +116,7 @@ Template.vis.rendered = function () {
       .size([width, height])
       .nodes([])
       .linkDistance(function(l) {
-        return l.length ? l.length : 40;
+        return l.length ? l.length : 30;
       })
       .avoidOverlaps(true)
       .flowLayout("x", 30)
