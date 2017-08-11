@@ -46,13 +46,23 @@ Meteor.startup(() => {
       var confirmedonly = self.data('confirmedonly') || false;
       check(confirmedonly, Boolean);
       if (confirmedonly) {
-        return txs.find({
+        return txs.find(
+          {
           $and: [
             {"time": {$gte: currentTime.get() - (minsago * 60000)}},
             {"confirmed": {$eq: true}}]
-        });
+          },
+          {
+            fields: { tip: 0, confirmed: 0}
+          });
       } else {
-        return txs.find({"time": {$gte: currentTime.get() - (minsago * 60000)}});
+        return txs.find(
+          {
+            "time": {$gte: currentTime.get() - (minsago * 60000)}
+          },
+          {
+            fields: { tip: 0, confirmed: 0}
+          });
       }
 
     });
@@ -118,35 +128,70 @@ Meteor.startup(() => {
 
 });
 
-function setDescendantsConfirmed(tx) {
+function setChildrenConfirmed(tx) {
   let tx1 = txs.findOne({hash: tx.branchTransaction});
   let tx2 = txs.findOne({hash: tx.trunkTransaction});
   if (tx1 && !tx1.confirmed) {
     txs.update({_id: tx1._id}, {$set: {'confirmed': true}});
-    setDescendantsConfirmed(tx1);
+    setChildrenConfirmed(tx1);
   }
   if (tx2 && !tx2.confirmed) {
     txs.update({_id: tx2._id}, {$set: {'confirmed': true}});
-    setDescendantsConfirmed(tx2);
+    setChildrenConfirmed(tx2);
   }
+}
+
+function setChildren(tx) {
+  let tx1 = txs.findOne({hash: tx.branchTransaction});
+  let tx2 = txs.findOne({hash: tx.trunkTransaction});
+
+  if (tx1) {
+    txs.update({_id: tx1._id}, {$set: {'tip': false}});
+  }
+  if (tx2) {
+    txs.update({_id: tx2._id}, {$set: {'tip': false}});
+  }
+
+  if(tx.confirmed) {
+    if (tx1 && !tx1.confirmed) {
+      txs.update({_id: tx1._id}, {$set: {'confirmed': true}});
+      setChildrenConfirmed(tx1);
+    }
+    if (tx2 && !tx2.confirmed) {
+      txs.update({_id: tx2._id}, {$set: {'confirmed': true}});
+      setChildrenConfirmed(tx2);
+    }
+  }
+}
+
+function checkParents(tx) {
+  let parents = txs.find({ $or : [
+    {branchTransaction: tx.hash},
+    {trunkTransaction: tx.hash}
+    ]});
+  parents.forEach((parent) => {
+    tx.tip = false;
+    if(parent.confirmed) {
+      tx.confirmed = true;
+    }
+  })
 }
 
 function addTX(tx, path) {
   tx.time = new Date().valueOf();
   console.log("adding tx: " + tx.time);
   tx.confirmed = false;
+  tx.tip = true;
 
-  var coor = false;
+  checkParents(tx);
+
   if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
-    coor = true;
     tx.confirmed = true;
+    console.log("new coor message!!!!")
   }
   var doc = txs.upsert({hash: tx.hash}, tx);
   files.insert({txid: doc.insertedId, path: path, time: new Date().valueOf()});
 
-  if (coor) {
-    console.log("new coor message!!!!")
-    setDescendantsConfirmed(tx);
-  }
+  setChildren(tx);
 }
 

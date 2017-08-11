@@ -205,9 +205,28 @@ Template.vis.rendered = function () {
     dbwatcher = txs.find().observeChanges({
       added: function (id, fields) {
 
-        var node = {x: centerx, y: centery, tx: fields, id: id, tip: true};
+        var node = {x: centerx, y: centery, tx: fields, id: id, tip: true, confirmed: false};
 
-        nodes.push(node);
+        if (fields.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
+          node.confirmed = true;
+        }
+        //Check parents and add parents link
+        nodes.forEach(function (target) {
+          if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
+            node.tip = false;
+            if(target.confirmed) {
+              node.confirmed = true;
+            }
+
+            if(target.tx.bundle == fields.bundle) {
+              links.push({source: node, target: target, bundle: true});
+            } else {
+              links.push({source: node, target: target});
+            }
+          }
+        });
+
+        //Correct children
         nodes.forEach(function (target) {
           if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
             if(target.tx.bundle == fields.bundle) {
@@ -216,32 +235,51 @@ Template.vis.rendered = function () {
               links.push({source: target, target: node});
             }
 
+            if(node.confirmed && !target.confirmed) {
+              target.confirmed = true;
+              setColour(target);
+              setChildren(target);
+            }
+
             if (target.tip) {
               target.tip = false;
               setColour(target);
             }
-          } else if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
-            if(target.tx.bundle == fields.bundle) {
-              links.push({source: node, target: target, bundle: true});
-            } else {
-              links.push({source: node, target: target});
-            }
-            node.tip = false;
           }
         });
+
+        function setChildren(n) {
+          nodes.forEach(function (target) {
+            if (target.tx.hash == n.tx.branchTransaction || target.tx.hash == n.tx.trunkTransaction) {
+              if (!target.confirmed) {
+                target.confirmed = true;
+                setColour(target);
+                setChildren(target);
+              }
+            }
+          });
+        }
+
+
+
+
         setColour(node);
+        nodes.push(node);
+
+
         schedulerestart();
 
       },
       changed: function (id, fields) {
-        for (var i = nodes.length - 1; i >= 0; i--) {
+       /* for (var i = nodes.length - 1; i >= 0; i--) {
           if (nodes[i].id === id) {
             nodes[i].tx.confirmed = true;
             setColour(nodes[i]);
             schedulerestart();
             break;
           }
-        }
+        }*/
+       console.log("changed??")
       },
       removed: function (id) {
         console.log("removed id");
@@ -268,7 +306,7 @@ Template.vis.rendered = function () {
     function setColour(node) {
       if (node.tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
         node.colour = "#FF4500";
-      } else if (node.tx.confirmed) {
+      } else if (node.confirmed) {
         node.colour = "#FFA500";
       } else if (node.tip) {
         node.colour = "#4AC0F2";
@@ -343,7 +381,7 @@ Template.vis.rendered = function () {
         txvalue.set(d.tx.value);
         txbundle.set(d.tx.bundle)
         txmessage.set(d.tx.signatureMessageFragment);
-        txconfirmed.set(d.tx.confirmed ? "true" : "false");
+        txconfirmed.set(d.confirmed ? "true" : "false");
         txbranch.set(d.tx.branchTransaction)
         txtrunk.set(d.tx.trunkTransaction)
       });
