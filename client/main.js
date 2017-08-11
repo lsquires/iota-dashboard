@@ -7,6 +7,8 @@ var d3 = require('d3-3');
 txshandler = {};
 dbwatcher = {};
 minsAgo = 1;
+xclosure = 50;
+linklength = 12
 filterConfirmed = false;
 nextClean = new Date();
 toRestart = true;
@@ -115,13 +117,13 @@ Template.vis.rendered = function () {
     var force = cola.d3adaptor(d3)
       .size([width, height])
       .nodes([])
-      .symmetricDiffLinkLengths(12)
+      .symmetricDiffLinkLengths(linklength)
       /*.symmetricDiffLinkLengths(function(l) {
         return l.bundle ? 2 : 8;
       })*/
       .avoidOverlaps(true)
       .flowLayout("x", function(l) {
-        return l.bundle ? 0 : 40;
+        return l.bundle ? 0 : xclosure;
       })
       .on("tick", tick);
 
