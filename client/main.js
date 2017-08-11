@@ -115,10 +115,10 @@ Template.vis.rendered = function () {
     var force = cola.d3adaptor(d3)
       .size([width, height])
       .nodes([])
-      //.symmetricDiffLinkLengths(8)
-      .symmetricDiffLinkLengths(function(l) {
+      .symmetricDiffLinkLengths(8)
+      /*.symmetricDiffLinkLengths(function(l) {
         return l.bundle ? 2 : 8;
-      })
+      })*/
       .avoidOverlaps(true)
       .flowLayout("x", function(l) {
         return l.bundle ? 0 : 30;
