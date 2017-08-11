@@ -7,7 +7,8 @@ var d3 = require('d3-3');
 txshandler = {};
 dbwatcher = {};
 minsAgo = 1;
-xclosure = 50;
+xclosure = 70;
+xclosuresmall = 10
 linklength = 12
 filterConfirmed = false;
 nextClean = new Date();
@@ -123,7 +124,7 @@ Template.vis.rendered = function () {
       })*/
       .avoidOverlaps(true)
       .flowLayout("x", function(l) {
-        return l.bundle ? 0 : xclosure;
+        return l.bundle ? xclosuresmall : xclosure;
       })
       .on("tick", tick);
 
