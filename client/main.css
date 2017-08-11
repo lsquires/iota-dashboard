@@ -34,6 +34,10 @@ rect {
   padding: 1px 5px 6px;
   margin-bottom: 10px;
 }
+
+.box-end {
+  margin-bottom: 10px;
+}
 .txinfo {
   margin-bottom: 12px;
 }
