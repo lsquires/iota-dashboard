@@ -4,7 +4,7 @@ import './main.html';
 txs = new Mongo.Collection('txs');
 var cola = require("webcola");
 var d3 = require('d3');
-
+var coorNumber = 0;
 console.log(d3);
 txshandler = {};
 dbwatcher = {};
@@ -204,7 +204,12 @@ Template.vis.rendered = function () {
 
         if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
           node.confirmed = true;
+          coorNumber++;
         }
+        node.fx = centerx + coorNumber* 2 * xclosure;
+        node.x = node.fx;
+        node.fy = centery;
+        node.y = node.fy;
         //Check parents and add parents link
         nodes.forEach(function (target) {
           if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
