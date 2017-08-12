@@ -178,7 +178,7 @@ Template.vis.rendered = function () {
           dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
           normX = deltaX / dist,
           normY = deltaY / dist,
-          sourcePadding = ((selected === d.target.id) ? nodeRadius + 6 : nodeRadius + 2),
+          sourcePadding = ((selected === d.target.id) ? nodeRadius + 4 : nodeRadius ,
           targetPadding = ((selected === d.source.id) ? nodeRadius + 6 : nodeRadius + 2),
           sourceX = d.target.x + (sourcePadding * normX),
           sourceY = d.target.y + (sourcePadding * normY),
