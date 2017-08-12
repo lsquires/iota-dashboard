@@ -205,7 +205,7 @@ Template.vis.rendered = function () {
         if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
           node.confirmed = true;
           node.fixed = true;
-          node.fx = centerx + coorNumber* 2 * xclosure;
+          /*node.fx = centerx + coorNumber* 2 * xclosure;
           node.x = node.fx;
           node.px = node.fx;
 
@@ -213,7 +213,7 @@ Template.vis.rendered = function () {
           node.y = node.fy;
           node.py = node.fy;
 
-          coorNumber++;
+          coorNumber++;*/
         }
 
 
