@@ -118,7 +118,7 @@ Template.vis.rendered = function () {
       centery = height / 2,
       nodeRadius = 8;
 
-    var fill = d3.scale.category20();
+    var fill = d3.scaleOrdinal(d3.schemeCategory20);
 
     var force = cola.d3adaptor(d3)
       .size([width, height])
