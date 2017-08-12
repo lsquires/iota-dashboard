@@ -130,12 +130,13 @@ Template.vis.rendered = function () {
       })
       .on("tick", tick);
 
-    var svg = d3.select("#nodebox").append("svg")
+    var basesvg = d3.select("#nodebox").append("svg")
       .attr("width", "100%")
       .attr("height", height)
       .attr("id", "canvas")
-      .call(d3.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed))
-      .append("g");
+      .call(d3.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed));
+
+    var svg = basesvg.append("g");
 
 
     svg.style("cursor", "move");
@@ -438,7 +439,7 @@ Template.vis.rendered = function () {
       });
       node = nodeenter.merge(node);
 
-      svg.on("click", function (d) {
+      basesvg.on("click", function (d) {
         isFocused = false;
         link.style("opacity", 0.4);
         node.style("opacity", 1);
