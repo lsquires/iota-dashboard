@@ -116,7 +116,9 @@ Template.vis.rendered = function () {
       height = 300,
       centerx = width / 2,
       centery = height / 2,
-      nodeRadius = 12;
+      nodeRadius = 12,
+      borderwidth = 1,
+      bordercolour = "#aaa";
 
     var fill = d3.scaleOrdinal(d3.schemeCategory20);
 
@@ -134,8 +136,20 @@ Template.vis.rendered = function () {
       .attr("width", "100%")
       .attr("height", height)
       .attr("id", "canvas")
+      .attr("border", borderwidth)
       .call(d3.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed))
       .append("g");
+
+
+    var borderPath = svg.append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("height", height)
+      .attr("width", "100%")
+      .style("stroke", bordercolour)
+      .style("fill", "none")
+      .style("stroke-width", borderwidth);
+
 
     svg.style("cursor", "move");
 
@@ -376,8 +390,13 @@ Template.vis.rendered = function () {
         d3.event.stopPropagation();
         if (selected && !d3.select("#a" + selected).empty()) {
           d3.select("#a" + selected).transition().duration(200).attr("r", nodeRadius);
+          d3.select("#a" + selected).transition().duration(200).attr("stroke", "#fff");
         }
-        d3.select(this).transition().duration(200).attr("r", nodeRadius * 1.5);
+        d3.select(this).transition().duration(200).attr("r", nodeRadius * 1.2);
+        d3.select(this).transition().duration(200).attr("stroke", "#000");
+       // d3.select(this).transition().duration(200).attr("r", nodeRadius * 1.2);
+          //stroke: #fff;
+          //stroke-width: 1.5px;
         selected = d.id;
 
         txhash.set(d.tx.hash);
