@@ -207,8 +207,12 @@ Template.vis.rendered = function () {
           node.fixed = true;
           node.fx = centerx + coorNumber* 2 * xclosure;
           node.x = node.fx;
+          node.px = node.fx;
+
           node.fy = centery;
           node.y = node.fy;
+          node.py = node.fy;
+
           coorNumber++;
         }
 
