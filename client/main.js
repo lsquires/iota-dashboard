@@ -178,8 +178,8 @@ Template.vis.rendered = function () {
           dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
           normX = deltaX / dist,
           normY = deltaY / dist,
-          sourcePadding = ((selected === d.target.id) ? nodeRadius + 4 : nodeRadius ),
-          targetPadding = ((selected === d.source.id) ? nodeRadius + 6 : nodeRadius + 2),
+          sourcePadding = ((selected === d.target.id) ? nodeRadius + 2 : nodeRadius ),
+          targetPadding = ((selected === d.source.id) ? nodeRadius + 4 : nodeRadius + 2),
           sourceX = d.target.x + (sourcePadding * normX),
           sourceY = d.target.y + (sourcePadding * normY),
           targetX = d.source.x - (targetPadding * normX),
@@ -369,7 +369,7 @@ Template.vis.rendered = function () {
           d3.select("#a" + selected).style("stroke", "#fff");
           //d3.select("#a" + selected).style(" stroke-width", "1.5px");
         }
-        d3.select(this).transition().duration(200).style("stroke-width", 6);
+        d3.select(this).transition().duration(200).style("stroke-width", 4);
         d3.select(this).style("stroke", "#000");
         //d3.select(this).style(" stroke-width", "3px");
        // d3.select(this).transition().duration(200).attr("r", nodeRadius * 1.2);
@@ -409,7 +409,7 @@ Template.vis.rendered = function () {
       });
       node = nodeenter.merge(node);
 
-      svg.on("mousedown", function (d) {
+      svg.on("click", function (d) {
         isFocused = false;
         link.style("opacity", 0.4);
         node.style("opacity", 1);
