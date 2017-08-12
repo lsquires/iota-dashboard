@@ -128,7 +128,8 @@ Template.vis.rendered = function () {
       .avoidOverlaps(true)
       .flowLayout("x", function(l) {
         return l.bundle ? xclosuresmall : xclosure;
-      });
+      })
+      .on("tick", tick);
 
     var hover = d3.select("#graph_hover");
     var svg = d3.select("#nodebox").append("svg")
@@ -145,8 +146,9 @@ Template.vis.rendered = function () {
       .attr("height", height);
 
     var nodes = force.nodes(),
-      links = force.links();
-
+      links = force.links(),
+      node = svg.selectAll(".node"),
+      link = svg.selectAll(".link");
 
     svg.append('svg:defs').append('svg:marker')
       .attr('id', 'end-arrow')
@@ -170,6 +172,29 @@ Template.vis.rendered = function () {
         .attr("height", height);
     });
 
+    function tick() {
+      link.attr('d', function (d) {
+        var deltaX = d.source.x - d.target.x,
+          deltaY = d.source.y - d.target.y,
+          dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
+          normX = deltaX / dist,
+          normY = deltaY / dist,
+          sourcePadding = nodeRadius,
+          targetPadding = nodeRadius + 2,
+          sourceX = d.target.x + (sourcePadding * normX),
+          sourceY = d.target.y + (sourcePadding * normY),
+          targetX = d.source.x - (targetPadding * normX),
+          targetY = d.source.y - (targetPadding * normY);
+        return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+      });
+
+      node.attr("cx", function (d) {
+        return d.x;
+      })
+        .attr("cy", function (d) {
+          return d.y;
+        });
+    }
 
     let initializing = true;
     txshandler = Meteor.subscribe("txs");
@@ -305,15 +330,16 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-      var node = svg.selectAll(".node").data(nodes, function (d) {
+
+      node = node.data(nodes, function (d) {
         return d.id;
       });
-      var link = svg.selectAll(".link").data(links, function (d) {
+      link = link.data(links, function (d) {
         return d.source.id + "-" + d.target.id;
       });
 
-
-      var nodeEnter = node.enter().append("circle")
+      node.exit().remove();
+       node.enter().append("circle")
         .attr("class", "node")
         .attr("r", nodeRadius)
         .attr("id", function (d) {
@@ -356,50 +382,29 @@ Template.vis.rendered = function () {
         txconfirmed.set(d.confirmed ? "true" : "false");
         txbranch.set(d.tx.branchTransaction)
         txtrunk.set(d.tx.trunkTransaction)
-      })
-        .style("opacity", function (o) {
-        return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
 
+      node.style("opacity", function (o) {
+        return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+      });
       node.style("fill", function (d) {
         return d.colour;
       });
       //node = nodeenter.merge(node);
 
-      node.exit().remove();
 
 
 
+      link.exit().remove();
       link.enter().append('svg:path')
         .attr("class", "link")
-        .style("opacity", function (o) {
+      
+      link.style("opacity", function (o) {
         return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
       });
-      link.exit().remove();
-      //link = linkenter.merge(link);
-      force.on("tick", function() {
-        link.attr('d', function (d) {
-          var deltaX = d.source.x - d.target.x,
-            deltaY = d.source.y - d.target.y,
-            dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-            normX = deltaX / dist,
-            normY = deltaY / dist,
-            sourcePadding = nodeRadius,
-            targetPadding = nodeRadius + 2,
-            sourceX = d.target.x + (sourcePadding * normX),
-            sourceY = d.target.y + (sourcePadding * normY),
-            targetX = d.source.x - (targetPadding * normX),
-            targetY = d.source.y - (targetPadding * normY);
-          return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
-        });
 
-        node.attr("cx", function (d) {
-          return d.x;
-        })
-          .attr("cy", function (d) {
-            return d.y;
-          });
-      });
+      //link = linkenter.merge(link);
+
       force.start();
 
     }
