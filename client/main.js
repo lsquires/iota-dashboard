@@ -138,7 +138,7 @@ Template.vis.rendered = function () {
       .attr("width", "100%")
       .attr("height", height)
       .attr("id", "canvas")
-      .call(d3.zoom().scaleExtent([0.1, 8]))
+      .call(d3.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed))
       .append("g");
 
     svg.style("cursor", "move");
@@ -314,9 +314,8 @@ Template.vis.rendered = function () {
       }
     }
 
-    function zoom() {
-      var zoom = d3.event;
-      svg.attr("transform", "translate(" + zoom.translate + ")scale(" + zoom.scale + ")");
+    function zoomed() {
+      svg.attr("transform",d3.event.transform);
     }
 
     function isConnected(a, b) {
