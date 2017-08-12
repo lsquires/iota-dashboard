@@ -384,7 +384,8 @@ Template.vis.rendered = function () {
         txconfirmed.set(d.confirmed ? "true" : "false");
         txbranch.set(d.tx.branchTransaction)
         txtrunk.set(d.tx.trunkTransaction)
-      });
+      })
+        .merge(node);
       node.style("opacity", function (o) {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
@@ -399,6 +400,7 @@ Template.vis.rendered = function () {
       link.exit().remove();
       link.enter().append('svg:path')
         .attr("class", "link")
+        .merge(link);
 
       link.style("opacity", function (o) {
         return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
