@@ -341,7 +341,7 @@ Template.vis.rendered = function () {
       });
 
       node.exit().remove();
-      node.enter().append("circle")
+      var nodeEnter = node.enter().append("circle")
         .attr("class", "node")
         .attr("r", nodeRadius)
         .attr("id", function (d) {
@@ -389,7 +389,7 @@ Template.vis.rendered = function () {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
 
-      node.style("fill", function (d) {
+      nodeEnter.style("fill", function (d) {
         return d.colour;
       });
       //node = nodeenter.merge(node);
