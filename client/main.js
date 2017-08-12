@@ -373,7 +373,8 @@ Template.vis.rendered = function () {
           });
         })
         .on("mousedown", function (d) {
-        d3.event.stopPropagation()
+          console.log("test");
+        d3.event.stopPropagation();
         if (selected && !d3.select("#a" + selected).empty()) {
           d3.select("#a" + selected).transition().duration(200).attr("r", nodeRadius);
         }
