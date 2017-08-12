@@ -382,14 +382,15 @@ Template.vis.rendered = function () {
       })
         .merge(node);
 
-      node = nodeenter.merge(node);
-
-      node.style("opacity", function (o) {
+      nodeenter.style("opacity", function (o) {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
-      node.style("fill", function (d) {
+      nodeenter.style("fill", function (d) {
         return d.colour;
       });
+      node = nodeenter.merge(node);
+
+
 
 
 
@@ -399,11 +400,12 @@ Template.vis.rendered = function () {
       var linkenter = link.enter().append('svg:path')
         .attr("class", "link");
 
-      link = linkenter.merge(link);
-
-      link.style("opacity", function (o) {
+      linkenter.style("opacity", function (o) {
         return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
       });
+      link = linkenter.merge(link);
+
+
 
       //link = linkenter.merge(link);
 
