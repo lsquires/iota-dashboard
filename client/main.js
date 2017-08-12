@@ -170,29 +170,6 @@ Template.vis.rendered = function () {
         .attr("height", height);
     });
 
-    function tick() {
-      link.attr('d', function (d) {
-        var deltaX = d.source.x - d.target.x,
-          deltaY = d.source.y - d.target.y,
-          dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-          normX = deltaX / dist,
-          normY = deltaY / dist,
-          sourcePadding = nodeRadius,
-          targetPadding = nodeRadius + 2,
-          sourceX = d.target.x + (sourcePadding * normX),
-          sourceY = d.target.y + (sourcePadding * normY),
-          targetX = d.source.x - (targetPadding * normX),
-          targetY = d.source.y - (targetPadding * normY);
-        return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
-      });
-
-      node.attr("cx", function (d) {
-        return d.x;
-      })
-        .attr("cy", function (d) {
-          return d.y;
-        });
-    }
 
     let initializing = true;
     txshandler = Meteor.subscribe("txs");
@@ -400,7 +377,31 @@ Template.vis.rendered = function () {
       });
       link.exit().remove();
       //link = linkenter.merge(link);
+      force.on("tick", tick)
 
+      var tick = function() {
+        link.attr('d', function (d) {
+          var deltaX = d.source.x - d.target.x,
+            deltaY = d.source.y - d.target.y,
+            dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
+            normX = deltaX / dist,
+            normY = deltaY / dist,
+            sourcePadding = nodeRadius,
+            targetPadding = nodeRadius + 2,
+            sourceX = d.target.x + (sourcePadding * normX),
+            sourceY = d.target.y + (sourcePadding * normY),
+            targetX = d.source.x - (targetPadding * normX),
+            targetY = d.source.y - (targetPadding * normY);
+          return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+        });
+
+        node.attr("cx", function (d) {
+          return d.x;
+        })
+          .attr("cy", function (d) {
+            return d.y;
+          });
+      }
       force.start();
 
     }
