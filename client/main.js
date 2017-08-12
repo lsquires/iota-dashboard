@@ -354,8 +354,8 @@ Template.vis.rendered = function () {
         .attr("id", function (d) {
           return "a" + d.id;
         })
-        .call(force.drag)
-        /*.on("mouseover", function (d) {
+        //.call(force.drag)
+        .on("mouseover", function (d) {
           svg.style("cursor", "pointer");
           focused = d;
           isFocused = true;
@@ -371,7 +371,7 @@ Template.vis.rendered = function () {
           link.style("opacity", function (o) {
             return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
           });
-        })*/
+        })
         .on("mousedown", function (d) {
           console.log("test");
         d3.event.stopPropagation();
