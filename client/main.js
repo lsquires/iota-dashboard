@@ -335,10 +335,7 @@ Template.vis.rendered = function () {
 
       node = node.data(nodes, function (d) {
         return d.id;
-      })
-        .style("fill", function (d) {
-          return d.colour;
-        });
+      });
       link = link.data(links, function (d) {
         return d.source.id + "-" + d.target.id;
       });
@@ -392,7 +389,9 @@ Template.vis.rendered = function () {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
 
-
+      node.style("fill", function (d) {
+        return d.colour;
+      });
       //node = nodeenter.merge(node);
 
 
