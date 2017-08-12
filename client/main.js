@@ -204,13 +204,15 @@ Template.vis.rendered = function () {
 
         if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
           node.confirmed = true;
+          node.fixed = true;
+          node.fx = centerx + coorNumber* 2 * xclosure;
+          node.x = node.fx;
+          node.fy = centery;
+          node.y = node.fy;
           coorNumber++;
         }
-        node.fx = centerx + coorNumber* 2 * xclosure;
-        node.x = node.fx;
-        node.fy = centery;
-        node.y = node.fy;
-        node.fixed = true;
+
+
         //Check parents and add parents link
         nodes.forEach(function (target) {
           if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
