@@ -138,8 +138,6 @@ Template.vis.rendered = function () {
       .attr("id", "canvas")
       .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom))
       .append("g")
-      .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom))
-      .append("g");
 
     svg.style("cursor", "move");
 
