@@ -354,7 +354,6 @@ Template.vis.rendered = function () {
         .attr("id", function (d) {
           return "a" + d.id;
         })
-        //.call(force.drag)
         .on("mouseover", function (d) {
           svg.style("cursor", "pointer");
           focused = d;
@@ -393,6 +392,7 @@ Template.vis.rendered = function () {
         txbranch.set(d.tx.branchTransaction)
         txtrunk.set(d.tx.trunkTransaction)
       })
+        .call(force.drag)
         .merge(node);
 
       nodeenter.style("opacity", function (o) {
