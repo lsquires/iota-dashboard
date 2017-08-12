@@ -116,7 +116,7 @@ Template.vis.rendered = function () {
       height = 300,
       centerx = width / 2,
       centery = height / 2,
-      nodeRadius = 8;
+      nodeRadius = 12;
 
     var fill = d3.scaleOrdinal(d3.schemeCategory20);
 
