@@ -340,8 +340,9 @@ Template.vis.rendered = function () {
         return d.source.id + "-" + d.target.id;
       });
 
-
-      node.enter().insert("circle", ".cursor")
+      node.exit()
+        .remove();
+      var nodeenter = node.enter().insert("circle", ".cursor")
         .attr("class", "node")
         .attr("r", nodeRadius)
         .attr("id", function (d) {
@@ -364,7 +365,8 @@ Template.vis.rendered = function () {
           link.style("opacity", function (o) {
             return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
           });
-        }).on("mousedown", function (d) {
+        })
+        .on("mousedown", function (d) {
         d3.event.stopPropagation()
         if (selected && !d3.select("#a" + selected).empty()) {
           d3.select("#a" + selected).transition().duration(200).attr("r", nodeRadius);
@@ -393,19 +395,20 @@ Template.vis.rendered = function () {
         return d.colour;
       });
 
-      node.exit()
+      node = nodeenter.merge(node);
+
+
+
+
+      link.exit()
         .remove();
-
-
-      link.enter().append('svg:path')
+      var linkenter = link.enter().append('svg:path')
         .attr("class", "link");
       link.style("opacity", function (o) {
         return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
       });
 
-      link.exit()
-        .remove();
-
+      link = linkenter.merge(link);
 
       force.start();
 
