@@ -162,8 +162,8 @@ Template.vis.rendered = function () {
     $(window).resize(function () {
       console.log("resized");
       width = document.getElementById('nodebox').clientWidth;
-      centerx = width / 2,
-        force.size([width, height]);
+      centerx = width / 2;
+      force.size([width, height]);
       svg.attr("width", width)
         .attr("height", height);
       rect.attr("width", width)
