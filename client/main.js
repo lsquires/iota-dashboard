@@ -3,7 +3,9 @@ import {Mongo} from 'meteor/mongo';
 import './main.html';
 txs = new Mongo.Collection('txs');
 var cola = require("webcola");
-var d3 = require('d3-3');
+var d3 = require('d3');
+
+console.log(d3);
 txshandler = {};
 dbwatcher = {};
 minsAgo = 1;
