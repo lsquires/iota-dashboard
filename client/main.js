@@ -398,6 +398,9 @@ Template.vis.rendered = function () {
             return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
           });
       })
+        .on("click", function (d) {
+          d3.event.stopPropagation();
+        })
         .call(force.drag)
         .merge(node);
 
