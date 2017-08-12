@@ -393,17 +393,15 @@ Template.vis.rendered = function () {
           isFocused = true;
           node.style("opacity", function (o) {
             return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+          }).on("mouseleave", function (d) {
+            isFocused = false;
+            link.style("opacity", 0.4);
+            node.style("opacity", 1);
           });
           link.style("opacity", function (o) {
             return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
           });
       })
-        .on("mouseup", function (d) {
-          console.log("up")
-          isFocused = false;
-          link.style("opacity", 0.4);
-          node.style("opacity", 1);
-        })
         .call(force.drag)
         .merge(node);
 
