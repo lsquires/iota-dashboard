@@ -339,7 +339,7 @@ Template.vis.rendered = function () {
       });
 
       node.exit().remove();
-       node.enter().append("circle")
+      node.enter().append("circle")
         .attr("class", "node")
         .attr("r", nodeRadius)
         .attr("id", function (d) {
@@ -383,7 +383,6 @@ Template.vis.rendered = function () {
         txbranch.set(d.tx.branchTransaction)
         txtrunk.set(d.tx.trunkTransaction)
       });
-
       node.style("opacity", function (o) {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
@@ -398,7 +397,7 @@ Template.vis.rendered = function () {
       link.exit().remove();
       link.enter().append('svg:path')
         .attr("class", "link")
-      
+
       link.style("opacity", function (o) {
         return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
       });
