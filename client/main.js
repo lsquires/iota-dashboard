@@ -139,6 +139,7 @@ Template.vis.rendered = function () {
     var svg = basesvg.append("g");
 
 
+    basesvg.style("cursor", "move");
     svg.style("cursor", "move");
 
     var rect = svg.append("rect")
