@@ -399,6 +399,7 @@ Template.vis.rendered = function () {
           });
       })
         .on("mouseup", function (d) {
+          console.log("up")
           isFocused = false;
           link.style("opacity", 0.4);
           node.style("opacity", 1);
