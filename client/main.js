@@ -128,8 +128,7 @@ Template.vis.rendered = function () {
       .avoidOverlaps(true)
       .flowLayout("x", function(l) {
         return l.bundle ? xclosuresmall : xclosure;
-      })
-      .on("tick", tick);
+      });
 
     var hover = d3.select("#graph_hover");
     var svg = d3.select("#nodebox").append("svg")
