@@ -178,8 +178,8 @@ Template.vis.rendered = function () {
           dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
           normX = deltaX / dist,
           normY = deltaY / dist,
-          sourcePadding = ((selected === d.target.id) ? nodeRadius*1.3 : nodeRadius),
-          targetPadding = ((selected === d.source.id) ? nodeRadius*1.3 + 3 : nodeRadius + 2),
+          sourcePadding = ((selected === d.target.id) ? nodeRadius + 6 : nodeRadius + 2),
+          targetPadding = ((selected === d.source.id) ? nodeRadius + 6 : nodeRadius + 2),
           sourceX = d.target.x + (sourcePadding * normX),
           sourceY = d.target.y + (sourcePadding * normY),
           targetX = d.source.x - (targetPadding * normX),
@@ -376,13 +376,13 @@ Template.vis.rendered = function () {
           console.log("test");
         d3.event.stopPropagation();
         if (selected && !d3.select("#a" + selected).empty()) {
-          d3.select("#a" + selected).transition().duration(200).attr("r", nodeRadius);
+          d3.select("#a" + selected).transition().duration(200).attr("stroke-width", 1.5);
           d3.select("#a" + selected).style("stroke", "#fff");
-          d3.select("#a" + selected).style(" stroke-width", "1.5px");
+          //d3.select("#a" + selected).style(" stroke-width", "1.5px");
         }
-        d3.select(this).transition().duration(200).attr("r", nodeRadius * 1.3);
+        d3.select(this).transition().duration(200).attr("stroke-width", 6);
         d3.select(this).style("stroke", "#000");
-       d3.select(this).style(" stroke-width", "3px");
+        //d3.select(this).style(" stroke-width", "3px");
        // d3.select(this).transition().duration(200).attr("r", nodeRadius * 1.2);
           //stroke: #fff;
           //stroke-width: 1.5px;
