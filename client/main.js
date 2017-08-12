@@ -342,7 +342,7 @@ Template.vis.rendered = function () {
 
       node.exit()
         .remove();
-      var nodeenter = node.enter().insert("circle", ".cursor")
+      node.enter().insert("circle", ".cursor")
         .attr("class", "node")
         .attr("r", nodeRadius)
         .attr("id", function (d) {
@@ -395,20 +395,20 @@ Template.vis.rendered = function () {
         return d.colour;
       });
 
-      node = nodeenter.merge(node);
+      //node = nodeenter.merge(node);
 
 
 
 
       link.exit()
         .remove();
-      var linkenter = link.enter().append('svg:path')
+      link.enter().append('svg:path')
         .attr("class", "link");
       link.style("opacity", function (o) {
         return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
       });
 
-      link = linkenter.merge(link);
+      //link = linkenter.merge(link);
 
       force.start();
 
