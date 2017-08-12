@@ -376,9 +376,7 @@ Template.vis.rendered = function () {
       });
       link.exit().remove();
       //link = linkenter.merge(link);
-      force.on("tick", tick)
-
-      var tick = function() {
+      force.on("tick", function() {
         link.attr('d', function (d) {
           var deltaX = d.source.x - d.target.x,
             deltaY = d.source.y - d.target.y,
@@ -400,7 +398,7 @@ Template.vis.rendered = function () {
           .attr("cy", function (d) {
             return d.y;
           });
-      }
+      });
       force.start();
 
     }
