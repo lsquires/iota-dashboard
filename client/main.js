@@ -385,12 +385,13 @@ Template.vis.rendered = function () {
         txbranch.set(d.tx.branchTransaction)
         txtrunk.set(d.tx.trunkTransaction)
       })
-        .style("opacity", function (o) {
-        return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-      })
         .style("fill", function (d) {
         return d.colour;
+      })
+        .style("opacity", function (o) {
+        return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
+        
 
       //node = nodeenter.merge(node);
 
