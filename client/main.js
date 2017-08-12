@@ -442,6 +442,10 @@ Template.vis.rendered = function () {
         isFocused = false;
         link.style("opacity", 0.4);
         node.style("opacity", 1);
+        if (selected && !d3.select("#a" + selected).empty()) {
+          d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
+          d3.select("#a" + selected).style("stroke", "#fff");
+        }
         selected = null;
       });
 
