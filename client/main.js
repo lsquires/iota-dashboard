@@ -340,9 +340,8 @@ Template.vis.rendered = function () {
         return d.source.id + "-" + d.target.id;
       });
 
-      node.exit()
-        .remove();
-      node.enter().insert("circle", ".cursor")
+      node.exit().remove();
+      node.enter().append("circle")
         .attr("class", "node")
         .attr("r", nodeRadius)
         .attr("id", function (d) {
@@ -385,13 +384,11 @@ Template.vis.rendered = function () {
         txconfirmed.set(d.confirmed ? "true" : "false");
         txbranch.set(d.tx.branchTransaction)
         txtrunk.set(d.tx.trunkTransaction)
-      });
-
-      node.style("opacity", function (o) {
+      })
+        .style("opacity", function (o) {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-      });
-
-      node.style("fill", function (d) {
+      })
+        .style("fill", function (d) {
         return d.colour;
       });
 
@@ -400,11 +397,10 @@ Template.vis.rendered = function () {
 
 
 
-      link.exit()
-        .remove();
+      link.exit().remove();
       link.enter().append('svg:path')
-        .attr("class", "link");
-      link.style("opacity", function (o) {
+        .attr("class", "link")
+        .style("opacity", function (o) {
         return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
       });
 
