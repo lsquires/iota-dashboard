@@ -376,11 +376,11 @@ Template.vis.rendered = function () {
           console.log("test");
         d3.event.stopPropagation();
         if (selected && !d3.select("#a" + selected).empty()) {
-          d3.select("#a" + selected).transition().duration(200).attr("stroke-width", 1.5);
+          d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
           d3.select("#a" + selected).style("stroke", "#fff");
           //d3.select("#a" + selected).style(" stroke-width", "1.5px");
         }
-        d3.select(this).transition().duration(200).attr("stroke-width", 6);
+        d3.select(this).transition().duration(200).style("stroke-width", 6);
         d3.select(this).style("stroke", "#000");
         //d3.select(this).style(" stroke-width", "3px");
        // d3.select(this).transition().duration(200).attr("r", nodeRadius * 1.2);
