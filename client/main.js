@@ -124,16 +124,12 @@ Template.vis.rendered = function () {
       .size([width, height])
       .nodes([])
       .symmetricDiffLinkLengths(linklength)
-      /*.symmetricDiffLinkLengths(function(l) {
-        return l.bundle ? 2 : 8;
-      })*/
       .avoidOverlaps(true)
       .flowLayout("x", function(l) {
         return l.bundle ? xclosuresmall : xclosure;
       })
       .on("tick", tick);
 
-    var hover = d3.select("#graph_hover");
     var svg = d3.select("#nodebox").append("svg")
       .attr("width", "100%")
       .attr("height", height)
@@ -340,7 +336,7 @@ Template.vis.rendered = function () {
       });
 
       node.exit().remove();
-      node.enter().append("circle")
+      var nodeenter = node.enter().append("circle")
         .attr("class", "node")
         .attr("r", nodeRadius)
         .attr("id", function (d) {
@@ -385,21 +381,25 @@ Template.vis.rendered = function () {
         txtrunk.set(d.tx.trunkTransaction)
       })
         .merge(node);
+
+      node = nodeenter.merge(node);
+
       node.style("opacity", function (o) {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
       node.style("fill", function (d) {
         return d.colour;
       });
-      //node = nodeenter.merge(node);
+
 
 
 
 
       link.exit().remove();
-      link.enter().append('svg:path')
-        .attr("class", "link")
-        .merge(link);
+      var linkenter = link.enter().append('svg:path')
+        .attr("class", "link");
+
+      link = linkenter.merge(link);
 
       link.style("opacity", function (o) {
         return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
