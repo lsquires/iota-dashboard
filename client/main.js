@@ -210,6 +210,7 @@ Template.vis.rendered = function () {
         node.x = node.fx;
         node.fy = centery;
         node.y = node.fy;
+        node.fixed = true;
         //Check parents and add parents link
         nodes.forEach(function (target) {
           if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
