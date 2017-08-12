@@ -339,46 +339,11 @@ Template.vis.rendered = function () {
       restart();
     }
 
+    function clickEvent(self) {
 
+    }
 
     function restart() {
-
-      function clickEvent(self) {
-        d3.event.stopPropagation();
-        if (selected && !d3.select("#a" + selected).empty()) {
-          d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
-          d3.select("#a" + selected).style("stroke", "#fff");
-          //d3.select("#a" + selected).style(" stroke-width", "1.5px");
-        }
-        d3.select(self).transition().duration(200).style("stroke-width", 4);
-        d3.select(self).style("stroke", "#000");
-        //d3.select(this).style(" stroke-width", "3px");
-        // d3.select(this).transition().duration(200).attr("r", nodeRadius * 1.2);
-        //stroke: #fff;
-        //stroke-width: 1.5px;
-        selected = d.id;
-
-        txhash.set(d.tx.hash);
-        txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
-        txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
-        txtag.set(d.tx.tag);
-        txaddress.set(d.tx.address);
-        txvalue.set(d.tx.value);
-        txbundle.set(d.tx.bundle)
-        txmessage.set(d.tx.signatureMessageFragment);
-        txconfirmed.set(d.confirmed ? "true" : "false");
-        txbranch.set(d.tx.branchTransaction)
-        txtrunk.set(d.tx.trunkTransaction)
-
-        focused = d;
-        isFocused = true;
-        node.style("opacity", function (o) {
-          return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-        });
-        link.style("opacity", function (o) {
-          return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-        });
-      }
 
       node = node.data(nodes, function (d) {
         return d.id;
@@ -401,10 +366,66 @@ Template.vis.rendered = function () {
           svg.style("cursor", "pointer");
         })
         .on("mousedown", function (d) {
-          clickEvent(this);
-        })
+        d3.event.stopPropagation();
+        if (selected && !d3.select("#a" + selected).empty()) {
+          d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
+          d3.select("#a" + selected).style("stroke", "#fff");
+        }
+        d3.select(this).transition().duration(200).style("stroke-width", 4);
+        d3.select(this).style("stroke", "#000");
+        selected = d.id;
+
+        txhash.set(d.tx.hash);
+        txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+        txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
+        txtag.set(d.tx.tag);
+        txaddress.set(d.tx.address);
+        txvalue.set(d.tx.value);
+        txbundle.set(d.tx.bundle)
+        txmessage.set(d.tx.signatureMessageFragment);
+        txconfirmed.set(d.confirmed ? "true" : "false");
+        txbranch.set(d.tx.branchTransaction)
+        txtrunk.set(d.tx.trunkTransaction)
+
+          focused = d;
+          isFocused = true;
+          node.style("opacity", function (o) {
+            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+          });
+          link.style("opacity", function (o) {
+            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+          });
+      })
         .on("click", function (d) {
-          clickEvent(this);
+          d3.event.stopPropagation();
+          if (selected && !d3.select("#a" + selected).empty()) {
+            d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
+            d3.select("#a" + selected).style("stroke", "#fff");
+          }
+          d3.select(this).transition().duration(200).style("stroke-width", 4);
+          d3.select(this).style("stroke", "#000");
+          selected = d.id;
+
+          txhash.set(d.tx.hash);
+          txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+          txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
+          txtag.set(d.tx.tag);
+          txaddress.set(d.tx.address);
+          txvalue.set(d.tx.value);
+          txbundle.set(d.tx.bundle)
+          txmessage.set(d.tx.signatureMessageFragment);
+          txconfirmed.set(d.confirmed ? "true" : "false");
+          txbranch.set(d.tx.branchTransaction)
+          txtrunk.set(d.tx.trunkTransaction)
+
+          focused = d;
+          isFocused = true;
+          node.style("opacity", function (o) {
+            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+          });
+          link.style("opacity", function (o) {
+            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+          });
         })
         .call(force.drag)
         .merge(node);
@@ -421,6 +442,7 @@ Template.vis.rendered = function () {
         isFocused = false;
         link.style("opacity", 0.4);
         node.style("opacity", 1);
+        selected = null;
       });
 
 
