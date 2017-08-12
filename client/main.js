@@ -355,22 +355,11 @@ Template.vis.rendered = function () {
         .attr("id", function (d) {
           return "a" + d.id;
         })
+        .on("mouseleave", function (d) {
+          svg.style("cursor", "move");
+        })
         .on("mouseover", function (d) {
           svg.style("cursor", "pointer");
-          focused = d;
-          isFocused = true;
-          node.style("opacity", function (o) {
-            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-          }).on("mouseleave", function (d) {
-            svg.style("cursor", "move");
-            isFocused = false;
-            svg.style("cursor", "move");
-            link.style("opacity", 0.4);
-            node.style("opacity", 1);
-          });
-          link.style("opacity", function (o) {
-            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-          });
         })
         .on("mousedown", function (d) {
           console.log("test");
@@ -399,6 +388,19 @@ Template.vis.rendered = function () {
         txconfirmed.set(d.confirmed ? "true" : "false");
         txbranch.set(d.tx.branchTransaction)
         txtrunk.set(d.tx.trunkTransaction)
+
+          focused = d;
+          isFocused = true;
+          node.style("opacity", function (o) {
+            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+          }).on("mouseup", function (d) {
+            isFocused = false;
+            link.style("opacity", 0.4);
+            node.style("opacity", 1);
+          });
+          link.style("opacity", function (o) {
+            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+          });
       })
         .call(force.drag)
         .merge(node);
