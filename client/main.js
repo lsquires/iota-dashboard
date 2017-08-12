@@ -136,8 +136,7 @@ Template.vis.rendered = function () {
       .attr("width", "100%")
       .attr("height", height)
       .attr("id", "canvas")
-      .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom))
-      .append("g")
+      .call(d3.behavior.zoom().scaleExtent([0.1, 8]).on("zoom", zoom));
 
     svg.style("cursor", "move");
 
@@ -146,9 +145,8 @@ Template.vis.rendered = function () {
       .attr("height", height);
 
     var nodes = force.nodes(),
-      links = force.links(),
-      node = svg.selectAll(".node"),
-      link = svg.selectAll(".link");
+      links = force.links();
+
 
     svg.append('svg:defs').append('svg:marker')
       .attr('id', 'end-arrow')
@@ -330,15 +328,14 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-
-      node = node.data(nodes, function (d) {
+      var node = svg.selectAll(".node").data(nodes, function (d) {
         return d.id;
       });
-      link = link.data(links, function (d) {
+      var link = svg.selectAll(".link").data(links, function (d) {
         return d.source.id + "-" + d.target.id;
       });
 
-      node.exit().remove();
+
       var nodeEnter = node.enter().append("circle")
         .attr("class", "node")
         .attr("r", nodeRadius)
@@ -387,21 +384,21 @@ Template.vis.rendered = function () {
         return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
       });
 
-      nodeEnter.style("fill", function (d) {
+      node.style("fill", function (d) {
         return d.colour;
       });
       //node = nodeenter.merge(node);
 
+      node.exit().remove();
 
 
 
-      link.exit().remove();
       link.enter().append('svg:path')
         .attr("class", "link")
         .style("opacity", function (o) {
         return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
       });
-
+      link.exit().remove();
       //link = linkenter.merge(link);
 
       force.start();
