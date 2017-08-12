@@ -200,11 +200,11 @@ Template.vis.rendered = function () {
     dbwatcher = txs.find().observeChanges({
       added: function (id, fields) {
 
-        var node = {x: centerx, y: centery, tx: fields, id: id, tip: true, confirmed: false};
+        var node = {tx: fields, id: id, tip: true, confirmed: false};
 
         if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
           node.confirmed = true;
-          node.fixed = true;
+          //node.fixed = true;
           /*node.fx = centerx + coorNumber* 2 * xclosure;
           node.x = node.fx;
           node.px = node.fx;
