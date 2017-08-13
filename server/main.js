@@ -16,16 +16,14 @@ files.remove({});
 Meteor.startup(() => {
 
   function deleteFilesInFolder(path) {
-    var deleteBy = ((new Date()).valueOf() - 120*60*1000)*1000;
+    var deleteBy = ((new Date()).valueOf() - 4*60*60*1000)*1000;
     if( fs.existsSync(path) ) {
       fs.readdirSync(path).forEach(function(file,index){
         var curPath = path + "/" + file;
-        //console.log("comparing "+parseInt(file.split('.')[0])+","+deleteBy);
-        //if(parseInt(file.split('.')[0]) < deleteBy) {
+        console.log("comparing "+parseInt(file.split('.')[0])+","+deleteBy);
+        if(parseInt(file.split('.')[0]) < deleteBy) {
           fs.unlinkSync(curPath);
-        //}
-
-
+        }
       });
     }
   }
@@ -78,8 +76,8 @@ Meteor.startup(() => {
 
       //Cleaning DB
       var doMetrics = false;
-      console.log("doing job");
-      var now = (new Date()).valueOf() - 120 * 60000;
+      console.log("doing job, db size: "+txs.find().count());
+      var now = (new Date()).valueOf() - 4 * 60 * 60000;
       files.find().forEach(function (item) {
         if (item.time < now) {
           console.log("removing:" + item.txid);
@@ -92,6 +90,7 @@ Meteor.startup(() => {
 
       //Record metrics
       if(doMetrics) {
+        console.log("doing metrics");
 
       }
     }
