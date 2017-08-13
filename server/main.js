@@ -6,12 +6,12 @@ var IOTA = require('iota.lib.js');
 var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU';
 var txs = new Mongo.Collection('txs');
 var stats = new Mongo.Collection('stats');
-var files = new Mongo.Collection('files');
+//var files = new Mongo.Collection('files');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-txs.remove({});
-files.remove({});
+//txs.remove({});
+//files.remove({});
 
 
 Meteor.startup(() => {
@@ -29,9 +29,10 @@ Meteor.startup(() => {
     }
   }
 
-  deleteFilesInFolder('/home/lsquires/iri/target/export/');
+  //deleteFilesInFolder('/home/lsquires/iri/target/export/');
   console.log("server");
-
+  console.log("loaded tx db of size: "+txs.find().count());
+  console.log("loaded stats db of size: "+stats.find().count());
   Meteor.setInterval(function () {
     currentTime.set(new Date().valueOf());
   }, 1000);
@@ -80,12 +81,12 @@ Meteor.startup(() => {
       var periodMinutes = 4 * 60;
       console.log("doing job, db size: "+txs.find().count());
       var now = startTime - periodMinutes * 60000;
-      files.find().forEach(function (item) {
+      txs.find().forEach(function (item) {
         if (item.time < now) {
-          console.log("removing:" + item.txid);
-          fs.unlinkSync(item.path);
-          txs.remove({_id: item.txid});
-          files.remove({txid: item.txid});
+          console.log("removing:" + item._id);
+          //fs.unlinkSync(item.path);
+          txs.remove({_id: item._id});
+          //files.remove({txid: item.txid});
           doMetrics = true;
         }
       });
@@ -243,8 +244,9 @@ function addTX(tx, path) {
     console.log("new coor message!!!!")
   }
   var doc = txs.upsert({hash: tx.hash}, tx);
-  files.insert({txid: doc.insertedId, path: path, time: new Date().valueOf()});
+  //files.insert({txid: doc.insertedId, path: path, time: new Date().valueOf()});
 
   setChildren(tx);
+  fs.unlinkSync(path);
 }
 
