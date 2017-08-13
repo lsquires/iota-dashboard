@@ -2,7 +2,8 @@ import {Template} from 'meteor/templating';
 import {Mongo} from 'meteor/mongo';
 import './main.html';
 txs = new Mongo.Collection('txs');
-var stats = new Mongo.Collection('stats');
+
+graphstats = new Mongo.Collection('stats');
 var cola = require("webcola");
 var d3 = require('d3');
 var coorNumber = 0;

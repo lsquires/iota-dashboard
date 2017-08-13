@@ -99,13 +99,13 @@ Meteor.startup(() => {
         console.log("doing metrics");
 
         var totalTX = txs.find({}).count();
-        var confirmedTX = txs.find({"confirmed": {$eq: true}},
-          {fields: {timestamp: 1, time: 1, ctime: 1, ctimestamp: 1}});
-        var totalConfirmedTX = confirmedTX.count();
+        var totalConfirmedTX = txs.find({"confirmed": {$eq: true}}).count();
         var totalTipTX = txs.find({"tip": {$eq: true}}).count();
         var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedTX - totalTipTX;
 
-        var rawtimes = confirmedTX.fetch();
+        var rawtimes = txs.find({"confirmed": {$eq: true}},
+          {fields: {timestamp: 1, time: 1, ctime: 1, ctimestamp: 1}}).fetch();
+
         var ctimes = rawtimes.map(function(element) {
           return element.ctime - element.time;
         });
@@ -121,8 +121,12 @@ Meteor.startup(() => {
           return sum / array.length;
         }
 
+        console.log(ctimes);
+        console.log(ctimestamp);
         var averagectime = average(ctimes);
         var averagectimestamp = average(ctimestamp);
+
+        //var confirmedPercent = totalConfirmedTX / totalTX;
 
         var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
         var cTXs = txs.find(
