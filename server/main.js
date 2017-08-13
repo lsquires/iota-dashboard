@@ -98,12 +98,21 @@ Meteor.startup(() => {
       if(doMetrics) {
         console.log("doing metrics");
 
-        var totalTX = txs.find({}).count();
-        var totalConfirmedTX = txs.find({"confirmed": {$eq: true}}).count();
-        var totalTipTX = txs.find({"tip": {$eq: true}}).count();
+        var totalTX = txs.find({"time": {$gte: now}}).count();
+        var totalConfirmedTX = txs.find({$and: [
+          {"time": {$gte: now}},
+          {"confirmed": {$eq: true}}]
+        }).count();
+        var totalTipTX = txs.find({$and: [
+          {"time": {$gte: now}},
+          {"tip": {$eq: true}}]
+        }).count();
         var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedTX - totalTipTX;
 
-        var rawtimes = txs.find({"confirmed": {$eq: true}},
+        var rawtimes = txs.find({$and: [
+            {"time": {$gte: now}},
+            {"confirmed": {$eq: true}}]
+          },
           {fields: {timestamp: 1, time: 1, ctime: 1, ctimestamp: 1}}).fetch();
 
         var ctimes = rawtimes.map(function(element) {
@@ -150,7 +159,7 @@ Meteor.startup(() => {
           TXs: TXs};
         stats.insert(toInsert);
 
-        console.log("NEW Metrics:");
+        console.log("NEW v2 Metrics:");
         console.log(toInsert);
       }
     }
