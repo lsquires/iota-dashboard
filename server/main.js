@@ -37,6 +37,9 @@ Meteor.startup(() => {
     currentTime.set(new Date().valueOf());
   }, 1000);
 
+  Meteor.publish('stats', function() {
+    return stats.find();
+  });
   Meteor.publish('txs', function () {
     var self = this;
     self.autorun(function () {
