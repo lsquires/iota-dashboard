@@ -75,7 +75,7 @@ Meteor.startup(() => {
   SyncedCron.add({
     name: 'Clean export of bad files and graph data',
     schedule: function (parser) {
-      return parser.recur().every(2).minute();
+      return parser.recur().every(10).minute();
     },
     job: function () {
       var startTime = (new Date()).valueOf();
@@ -109,7 +109,7 @@ Meteor.startup(() => {
         }).count();
         var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedTX - totalTipTX;
 
-        var rawtimes = txs.find({$and: [
+       /* var rawtimes = txs.find({$and: [
             {"time": {$gte: now}},
             {"confirmed": {$eq: true}}]
           }).fetch();
@@ -129,8 +129,6 @@ Meteor.startup(() => {
           return sum / array.length;
         }
 
-        console.log(ctimes);
-        console.log(ctimestamp);
         var averagectime = average(ctimes);
         var averagectimestamp = average(ctimestamp);
 
@@ -140,7 +138,7 @@ Meteor.startup(() => {
         var bucketctimes = bucket(ctimes);
         var bucketctimestamps = bucket(ctimestamp);
         //var confirmedPercent = totalConfirmedTX / totalTX;
-
+*/
         var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
         var cTXs = txs.find(
           {
@@ -157,8 +155,8 @@ Meteor.startup(() => {
           totalConfirmedTX: totalConfirmedTX,
           totalTipTX: totalTipTX,
           totalUnconfirmedNonTippedTX: totalUnconfirmedNonTippedTX,
-          averagectime: averagectime,
-          averagectimestamp: averagectimestamp,
+          //averagectime: averagectime,
+          //averagectimestamp: averagectimestamp,
           cTXs: cTXs,
           TXs: TXs};
         stats.insert(toInsert);
