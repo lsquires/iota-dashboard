@@ -38,7 +38,7 @@ Meteor.startup(() => {
   }, 1000);
 
   Meteor.publish('stats', function() {
-    return stats.find();
+    return stats.find({});
   });
   Meteor.publish('txs', function () {
     var self = this;

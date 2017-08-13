@@ -2,7 +2,7 @@ import {Template} from 'meteor/templating';
 import {Mongo} from 'meteor/mongo';
 import './main.html';
 txs = new Mongo.Collection('txs');
-stats = new Mongo.Collection('stats');
+var stats = new Mongo.Collection('stats');
 var cola = require("webcola");
 var d3 = require('d3');
 var coorNumber = 0;
@@ -483,5 +483,5 @@ Template.vis.destroyed = function () {
 }
 
 Template.graphs.rendered = function () {
-  Meteor.subscribe('stats');
+  Meteor.subscribe("stats");
 }
