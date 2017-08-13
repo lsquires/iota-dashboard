@@ -75,7 +75,7 @@ Meteor.startup(() => {
   SyncedCron.add({
     name: 'Clean export of bad files and graph data',
     schedule: function (parser) {
-      return parser.recur().every(10).minute();
+      return parser.recur().every(2).minute();
     },
     job: function () {
       var startTime = (new Date()).valueOf();
@@ -112,8 +112,7 @@ Meteor.startup(() => {
         var rawtimes = txs.find({$and: [
             {"time": {$gte: now}},
             {"confirmed": {$eq: true}}]
-          },
-          {fields: {timestamp: 1, time: 1, ctime: 1, ctimestamp: 1}}).fetch();
+          }).fetch();
 
         var ctimes = rawtimes.map(function(element) {
           return element.ctime - element.time;
@@ -135,6 +134,11 @@ Meteor.startup(() => {
         var averagectime = average(ctimes);
         var averagectimestamp = average(ctimestamp);
 
+        function bucket(array) {
+
+        }
+        var bucketctimes = bucket(ctimes);
+        var bucketctimestamps = bucket(ctimestamp);
         //var confirmedPercent = totalConfirmedTX / totalTX;
 
         var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
