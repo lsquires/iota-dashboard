@@ -20,10 +20,10 @@ Meteor.startup(() => {
     if( fs.existsSync(path) ) {
       fs.readdirSync(path).forEach(function(file,index){
         var curPath = path + "/" + file;
-        console.log("comparing "+parseInt(file.split('.')[0])+","+deleteBy);
-        if(parseInt(file.split('.')[0]) < deleteBy) {
+        //console.log("comparing "+parseInt(file.split('.')[0])+","+deleteBy);
+        //if(parseInt(file.split('.')[0]) < deleteBy) {
           fs.unlinkSync(curPath);
-        }
+        //}
       });
     }
   }
