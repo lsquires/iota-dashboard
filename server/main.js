@@ -10,8 +10,8 @@ var stats = new Mongo.Collection('stats');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-//txs.remove({});
-//files.remove({});
+txs.remove({});
+stats.remove({});
 
 
 Meteor.startup(() => {
@@ -109,7 +109,7 @@ Meteor.startup(() => {
         }).count();
         var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedTX - totalTipTX;
 
-       /* var rawtimes = txs.find({$and: [
+        var rawtimes = txs.find({$and: [
             {"time": {$gte: now}},
             {"confirmed": {$eq: true}}]
           }).fetch();
@@ -133,12 +133,26 @@ Meteor.startup(() => {
         var averagectimestamp = average(ctimestamp);
 
         function bucket(array) {
+          let bucketspacing = 20,
+            noBuckets = 30,
+            newarray = new Array(noBuckets + 1).fill(0);
 
+          for(let i = 0; i < array.length; i++) {
+            let bucket = array[i] / bucketspacing;
+            if(bucket >= noBuckets) {
+              newarray[noBuckets]++;
+            } else {
+              newarray[bucket]++;
+            }
+          }
+
+          return newarray;
         }
+
         var bucketctimes = bucket(ctimes);
         var bucketctimestamps = bucket(ctimestamp);
         //var confirmedPercent = totalConfirmedTX / totalTX;
-*/
+
         var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
         var cTXs = txs.find(
           {
@@ -155,13 +169,15 @@ Meteor.startup(() => {
           totalConfirmedTX: totalConfirmedTX,
           totalTipTX: totalTipTX,
           totalUnconfirmedNonTippedTX: totalUnconfirmedNonTippedTX,
-          //averagectime: averagectime,
-          //averagectimestamp: averagectimestamp,
+          averagectime: averagectime,
+          averagectimestamp: averagectimestamp,
           cTXs: cTXs,
-          TXs: TXs};
+          TXs: TXs,
+          bucketctimes: bucketctimes,
+          bucketctimestamps: bucketctimestamps};
         stats.insert(toInsert);
 
-        console.log("NEW v2 Metrics:");
+        console.log("NEW v3 Metrics:");
         console.log(toInsert);
       }
     }
@@ -243,6 +259,8 @@ function checkParents(tx) {
     tx.tip = false;
     if(parent.confirmed) {
       tx.confirmed = true;
+      tx.ctime = (tx.ctime) ? Math.min(tx.ctime, parent.ctime) : parent.ctime;
+      tx.ctimestamp = (tx.ctimestamp) ? Math.min(tx.ctimestamp, parent.ctimestamp) : parent.ctimestamp;
     }
   })
 }
