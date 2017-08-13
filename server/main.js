@@ -5,6 +5,7 @@ var fs = Npm.require('fs');
 var IOTA = require('iota.lib.js');
 var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU';
 var txs = new Mongo.Collection('txs');
+var stats = new Mongo.Collection('stats');
 var files = new Mongo.Collection('files');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
@@ -16,7 +17,7 @@ files.remove({});
 Meteor.startup(() => {
 
   function deleteFilesInFolder(path) {
-    var deleteBy = ((new Date()).valueOf() - 4*60*60*1000)*1000;
+    //var deleteBy = ((new Date()).valueOf() - 4*60*60*1000)*1000;
     if( fs.existsSync(path) ) {
       fs.readdirSync(path).forEach(function(file,index){
         var curPath = path + "/" + file;
@@ -51,7 +52,7 @@ Meteor.startup(() => {
             {"confirmed": {$eq: true}}]
           },
           {
-            fields: { tip: 0, confirmed: 0}
+            fields: { tip: 0, confirmed: 0, ctime: 0, ctimestamp: 0}
           });
       } else {
         return txs.find(
@@ -59,7 +60,7 @@ Meteor.startup(() => {
             "time": {$gte: currentTime.get() - (minsago * 60000)}
           },
           {
-            fields: { tip: 0, confirmed: 0}
+            fields: { tip: 0, confirmed: 0, ctime: 0, ctimestamp: 0}
           });
       }
 
@@ -73,11 +74,12 @@ Meteor.startup(() => {
       return parser.recur().every(10).minute();
     },
     job: function () {
-
+      var startTime = (new Date()).valueOf();
       //Cleaning DB
       var doMetrics = false;
+      var periodMinutes = 4 * 60;
       console.log("doing job, db size: "+txs.find().count());
-      var now = (new Date()).valueOf() - 4 * 60 * 60000;
+      var now = startTime - periodMinutes * 60000;
       files.find().forEach(function (item) {
         if (item.time < now) {
           console.log("removing:" + item.txid);
@@ -92,6 +94,56 @@ Meteor.startup(() => {
       if(doMetrics) {
         console.log("doing metrics");
 
+        var totalTX = txs.find({}).count();
+        var confirmedTX = txs.find({"confirmed": {$eq: true}},
+          {fields: {timestamp: 1, time: 1, ctime: 1, ctimestamp: 1}});
+        var totalConfirmedTX = confirmedTX.count();
+        var totalTipTX = txs.find({"tip": {$eq: true}}).count();
+        var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedTX - totalTipTX;
+
+        var rawtimes = confirmedTX.fetch();
+        var ctimes = rawtimes.map(function(element) {
+          return element.ctime - element.time;
+        });
+        var ctimestamp = rawtimes.map(function(element) {
+          return element.ctimestamp - element.timestamp;
+        });
+
+        function average(array) {
+          var sum = 0;
+          for (var i = 0; i < array.length; i++) {
+            sum += array[i];
+          }
+          return sum / array.length;
+        }
+
+        var averagectime = average(ctimes);
+        var averagectimestamp = average(ctimestamp);
+
+        var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
+        var cTXs = txs.find(
+          {
+            $and:
+              [
+              {"confirmed": {$eq: true}},
+              {"time": {$gte: startTime - (30 * 60000)}}
+              ]
+        }).count() / (30 * 60);
+
+        var toInsert = {date: startTime,
+          period: periodMinutes,
+          totalTX: totalTX,
+          totalConfirmedTX: totalConfirmedTX,
+          totalTipTX: totalTipTX,
+          totalUnconfirmedNonTippedTX: totalUnconfirmedNonTippedTX,
+          averagectime: averagectime,
+          averagectimestamp: averagectimestamp,
+          cTXs: cTXs,
+          TXs: TXs};
+        stats.insert(toInsert);
+
+        console.log("NEW Metrics:");
+        console.log(toInsert);
       }
     }
   });
@@ -153,11 +205,11 @@ function setChildren(tx) {
 
   if(tx.confirmed) {
     if (tx1 && !tx1.confirmed) {
-      txs.update({_id: tx1._id}, {$set: {'confirmed': true}});
+      txs.update({_id: tx1._id}, {$set: {'confirmed': true, 'ctime': tx.ctime, 'ctimestamp': tx.ctimestamp}});
       setChildrenConfirmed(tx1);
     }
     if (tx2 && !tx2.confirmed) {
-      txs.update({_id: tx2._id}, {$set: {'confirmed': true}});
+      txs.update({_id: tx2._id}, {$set: {'confirmed': true, 'ctime': tx.ctime, 'ctimestamp': tx.ctimestamp}});
       setChildrenConfirmed(tx2);
     }
   }
@@ -186,6 +238,8 @@ function addTX(tx, path) {
 
   if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
     tx.confirmed = true;
+    tx.ctime = tx.time;
+    tx.ctimestamp = tx.timestamp;
     console.log("new coor message!!!!")
   }
   var doc = txs.upsert({hash: tx.hash}, tx);
