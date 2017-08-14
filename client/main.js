@@ -529,7 +529,7 @@ Template.graphs.rendered = function () {
     }
   } );
 
-  var annotator = new Rickshaw.Graph.Annotate( {
+  /*var annotator = new Rickshaw.Graph.Annotate( {
     graph: graph,
     element: document.getElementById('timeline1')
   } );
@@ -537,7 +537,7 @@ Template.graphs.rendered = function () {
   var order = new Rickshaw.Graph.Behavior.Series.Order( {
     graph: graph,
     legend: legend
-  } );
+  } );*/
 
   var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
     graph: graph,
