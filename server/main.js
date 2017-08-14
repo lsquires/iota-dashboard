@@ -10,8 +10,8 @@ var stats = new Mongo.Collection('stats');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-//txs.remove({});
-//stats.remove({});
+txs.remove({});
+stats.remove({});
 
 
 Meteor.startup(() => {
@@ -95,7 +95,7 @@ Meteor.startup(() => {
       });
 
       //Record metrics
-      if(doMetrics) {
+      if(doMetrics || true) {
         console.log("doing metrics");
 
         var totalTX = txs.find({"time": {$gte: now}}).count();
@@ -117,7 +117,7 @@ Meteor.startup(() => {
         var ctimes = rawtimes.map(function(element) {
           return (element.ctime - element.time) / 1000;
         });
-        var ctimestamp = rawtimes.map(function(element) {
+        var ctimestamps = rawtimes.map(function(element) {
           return element.ctimestamp - element.timestamp;
         });
 
@@ -130,7 +130,7 @@ Meteor.startup(() => {
         }
 
         var averagectime = average(ctimes);
-        var averagectimestamp = average(ctimestamp);
+        var averagectimestamp = average(ctimestamps);
 
         function bucket(array) {
           let bucketspacing = 20,
@@ -150,7 +150,7 @@ Meteor.startup(() => {
         }
 
         var bucketctimes = bucket(ctimes);
-        var bucketctimestamps = bucket(ctimestamp);
+        var bucketctimestamps = bucket(ctimestamps);
         //var confirmedPercent = totalConfirmedTX / totalTX;
 
         var TXs =  txs.find({"time": {$gte: startTime - (5 * 60000)}}).count() / (5 * 60);
@@ -176,7 +176,7 @@ Meteor.startup(() => {
           bucketctimes: bucketctimes,
           bucketctimestamps: bucketctimestamps,
           ctimes: ctimes,
-          ctimestamp: ctimestamp};
+          ctimestamp: ctimestamps};
         stats.insert(toInsert);
 
         console.log("NEW v3 Metrics:");
@@ -221,11 +221,11 @@ function setChildrenConfirmed(tx, ctime, ctimestamp) {
   let tx2 = txs.findOne({hash: tx.trunkTransaction});
   if (tx1 && !tx1.confirmed) {
     txs.update({_id: tx1._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
-    setChildrenConfirmed(tx1);
+    setChildrenConfirmed(tx1, ctime, ctimestamp);
   }
   if (tx2 && !tx2.confirmed) {
     txs.update({_id: tx2._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
-    setChildrenConfirmed(tx2);
+    setChildrenConfirmed(tx2, ctime, ctimestamp);
   }
 }
 
