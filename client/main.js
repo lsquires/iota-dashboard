@@ -6,6 +6,7 @@ txs = new Mongo.Collection('txs');
 graphstats = new Mongo.Collection('stats');
 var cola = require("webcola");
 var d3 = require('d3');
+var Rickshaw = require('rickshaw');
 var coorNumber = 0;
 console.log(d3);
 txshandler = {};
