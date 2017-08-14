@@ -518,5 +518,18 @@ Template.graphs.rendered = function () {
       full_width: true,
       full_height: true
     });
+
+    MG.data_graphic({
+      title: "Average Confirmation Time",
+      description: "Shows the average time before confirmation in seconds",
+      data: data,
+      target: document.getElementById('chart3'),
+      x_accessor: 'date',
+      y_accessor: ['averagectime','averagectimestamp'],
+      legend: ['According to node time','According to transaction timestamp'],
+      legend_target: document.getElementById('legend3'),
+      full_width: true,
+      full_height: true
+    });
   });
 }
