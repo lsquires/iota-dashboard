@@ -531,5 +531,15 @@ Template.graphs.rendered = function () {
       full_width: true,
       full_height: true
     });
+
+    MG.data_graphic({
+      title: "Current Confirmation Time Chances",
+      description: "Shows the chance of confirmation at certain intervals",
+      data: data[data.length - 1].ctimestamp,
+      chart_type: 'histogram',
+      target: document.getElementById('chart4'),
+      full_width: true,
+      full_height: true
+    });
   });
 }
