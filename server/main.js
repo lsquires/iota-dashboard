@@ -115,7 +115,7 @@ Meteor.startup(() => {
           }).fetch();
 
         var ctimes = rawtimes.map(function(element) {
-          return element.ctime - element.time;
+          return (element.ctime - element.time) / 1000;
         });
         var ctimestamp = rawtimes.map(function(element) {
           return element.ctimestamp - element.timestamp;
@@ -255,12 +255,20 @@ function checkParents(tx) {
     {branchTransaction: tx.hash},
     {trunkTransaction: tx.hash}
     ]});
+
+  let first = true;
   parents.forEach((parent) => {
     tx.tip = false;
     if(parent.confirmed) {
       tx.confirmed = true;
-      tx.ctime = (tx.ctime) ? Math.min(tx.ctime, parent.ctime) : parent.ctime;
-      tx.ctimestamp = (tx.ctimestamp) ? Math.min(tx.ctimestamp, parent.ctimestamp) : parent.ctimestamp;
+      if(first) {
+        first = false;
+        tx.ctime = parent.ctime;
+        tx.ctimestamp = parent.ctimestamp;
+      } else {
+        tx.ctime = Math.min(tx.ctime, parent.ctime);
+        tx.ctimestamp = Math.min(tx.ctimestamp, parent.ctimestamp);
+      }
     }
   })
 }
