@@ -11,8 +11,8 @@ var histographstats = new Mongo.Collection('histstats');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-txs.remove({});
-stats.remove({});
+//txs.remove({});
+//stats.remove({});
 
 
 Meteor.startup(() => {
