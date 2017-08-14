@@ -538,7 +538,7 @@ Template.graphs.rendered = function () {
       data: data[data.length - 1].ctimes.map(function(e) {
         return Math.min(e, 600);
       }),
-      bins: 30,
+      bins: 60,
       chart_type: 'histogram',
       target: document.getElementById('chart4'),
       full_width: true,
