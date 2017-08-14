@@ -10,8 +10,8 @@ var stats = new Mongo.Collection('stats');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-//txs.remove({});
-//stats.remove({});
+txs.remove({});
+stats.remove({});
 
 
 Meteor.startup(() => {
@@ -75,7 +75,7 @@ Meteor.startup(() => {
   SyncedCron.add({
     name: 'Clean export of bad files and graph data',
     schedule: function (parser) {
-      return parser.recur().every(10).minute();
+      return parser.recur().every(5).minute();
     },
     job: function () {
       var startTime = (new Date()).valueOf();
@@ -153,15 +153,15 @@ Meteor.startup(() => {
         var bucketctimestamps = bucket(ctimestamp);
         //var confirmedPercent = totalConfirmedTX / totalTX;
 
-        var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
+        var TXs =  txs.find({"time": {$gte: startTime - (5 * 60000)}}).count() / (5 * 60);
         var cTXs = txs.find(
           {
             $and:
               [
               {"confirmed": {$eq: true}},
-              {"time": {$gte: startTime - (30 * 60000)}}
+              {"ctime": {$gte: startTime - (5 * 60000)}}
               ]
-        }).count() / (30 * 60);
+        }).count() / (5 * 60);
 
         var toInsert = {date: startTime,
           period: periodMinutes,
@@ -174,11 +174,13 @@ Meteor.startup(() => {
           cTXs: cTXs,
           TXs: TXs,
           bucketctimes: bucketctimes,
-          bucketctimestamps: bucketctimestamps};
+          bucketctimestamps: bucketctimestamps,
+          ctimes: ctimes,
+          ctimestamp: ctimestamp};
         stats.insert(toInsert);
 
         console.log("NEW v3 Metrics:");
-        console.log(toInsert);
+        //console.log(toInsert);
       }
     }
   });

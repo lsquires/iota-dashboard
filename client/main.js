@@ -494,8 +494,8 @@ Template.graphs.rendered = function () {
     }
 
     MG.data_graphic({
-      title: "Transaction Volumne",
-      description: "Shows the number of tx's over a 2 hour period",
+      title: "Transaction Volume",
+      description: "Shows the number of tx's (measured over a 2 hour period)",
       data: data,
       target: document.getElementById('chart1'),
       x_accessor: 'date',
@@ -508,7 +508,7 @@ Template.graphs.rendered = function () {
 
     MG.data_graphic({
       title: "Transaction Per Second",
-      description: "Shows the rate of tx's over a 30 minute window",
+      description: "Shows the rate of tx's (measured over a 5 minute window)",
       data: data,
       target: document.getElementById('chart2'),
       x_accessor: 'date',
