@@ -542,9 +542,9 @@ Template.graphs.rendered = function () {
       title: "Current Confirmation Time Chances (Node)",
       description: "Shows the chance of confirmation at certain intervals",
       data: data[data.length - 1].ctimes.map(function(e) {
-        return Math.min(e, 800);
+        return Math.min(e, 900);
       }),
-      bins: 200,
+      bins: 300,
       chart_type: 'histogram',
       target: document.getElementById('chart4'),
       full_width: true,
