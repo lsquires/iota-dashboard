@@ -503,20 +503,23 @@ Template.graphs.rendered = function () {
       legend: ['Total TXs','Confirmed TXs','Unconfirmed Non-Tip TXs','Tip TXs'],
       legend_target: document.getElementById('legend1'),
       full_width: true,
-      full_height: true
+      full_height: true,
+      animate_on_load: true,
     });
 
     MG.data_graphic({
       title: "Transaction Per Second",
-      description: "Shows the rate of tx's (measured over a 5 minute window)",
+      description: "Shows the rate of tx's (measured over a 30 minute window)",
       data: data,
       target: document.getElementById('chart2'),
       x_accessor: 'date',
       y_accessor: ['TXs','cTXs'],
-      legend: ['TX/s','Confirmed TX/s'],
+      legend: ['All','Confirmed'],
       legend_target: document.getElementById('legend2'),
       full_width: true,
-      full_height: true
+      full_height: true,
+      animate_on_load: true,
+      y_label: 'TX/s'
     });
 
     MG.data_graphic({
@@ -529,11 +532,14 @@ Template.graphs.rendered = function () {
       legend: ['According to node time','According to transaction timestamp'],
       legend_target: document.getElementById('legend3'),
       full_width: true,
-      full_height: true
+      full_height: true,
+      animate_on_load: true,
+      yax_format: function(s){return s+"s"},
+      y_label: 'Confirmation Time'
     });
 
     MG.data_graphic({
-      title: "Current Confirmation Time Chances",
+      title: "Current Confirmation Time Chances (Node)",
       description: "Shows the chance of confirmation at certain intervals",
       data: data[data.length - 1].ctimes.map(function(e) {
         return Math.min(e, 600);
@@ -542,7 +548,28 @@ Template.graphs.rendered = function () {
       chart_type: 'histogram',
       target: document.getElementById('chart4'),
       full_width: true,
-      full_height: true
+      full_height: true,
+      animate_on_load: true,
+      xax_format: function(s){return s+"s"},
+      x_label: 'Confirmation Time',
+      y_label: 'Count'
+    });
+
+    MG.data_graphic({
+      title: "Current Confirmation Time Chances (Timestamp)",
+      description: "Shows the chance of confirmation at certain intervals",
+      data: data[data.length - 1].ctimestamp.map(function(e) {
+        return Math.min(e, 600);
+      }),
+      bins: 60,
+      chart_type: 'histogram',
+      target: document.getElementById('chart5'),
+      full_width: true,
+      full_height: true,
+      animate_on_load: true,
+      xax_format: function(s){return s+"s"},
+      x_label: 'Confirmation Time',
+      y_label: 'Count'
     });
   });
 }

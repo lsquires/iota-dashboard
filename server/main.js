@@ -153,15 +153,15 @@ Meteor.startup(() => {
         var bucketctimestamps = bucket(ctimestamps);
         //var confirmedPercent = totalConfirmedTX / totalTX;
 
-        var TXs =  txs.find({"time": {$gte: startTime - (5 * 60000)}}).count() / (5 * 60);
+        var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
         var cTXs = txs.find(
           {
             $and:
               [
               {"confirmed": {$eq: true}},
-              {"ctime": {$gte: startTime - (5 * 60000)}}
+              {"ctime": {$gte: startTime - (30 * 60000)}}
               ]
-        }).count() / (5 * 60);
+        }).count() / (30 * 60);
 
         var toInsert = {date: startTime,
           period: periodMinutes,
