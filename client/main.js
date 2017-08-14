@@ -537,8 +537,9 @@ Template.graphs.rendered = function () {
       description: "Shows the chance of confirmation at certain intervals",
       data: data[data.length - 1].bucketctimestamps,
       chart_type: 'histogram',
-      target: document.getElementById('chart4'),
+      chart_type: 'bar',
       binned: true,
+      target: document.getElementById('chart4'),
       full_width: true,
       full_height: true
     });
