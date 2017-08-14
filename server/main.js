@@ -214,20 +214,20 @@ Meteor.startup(() => {
 
 });
 
-function setChildrenConfirmed(tx) {
+function setChildrenConfirmed(tx, ctime, ctimestamp) {
   let tx1 = txs.findOne({hash: tx.branchTransaction});
   let tx2 = txs.findOne({hash: tx.trunkTransaction});
   if (tx1 && !tx1.confirmed) {
-    txs.update({_id: tx1._id}, {$set: {'confirmed': true}});
+    txs.update({_id: tx1._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
     setChildrenConfirmed(tx1);
   }
   if (tx2 && !tx2.confirmed) {
-    txs.update({_id: tx2._id}, {$set: {'confirmed': true}});
+    txs.update({_id: tx2._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
     setChildrenConfirmed(tx2);
   }
 }
 
-function setChildren(tx) {
+function setChildren(tx, ctime, ctimestamp) {
   let tx1 = txs.findOne({hash: tx.branchTransaction});
   let tx2 = txs.findOne({hash: tx.trunkTransaction});
 
@@ -238,14 +238,14 @@ function setChildren(tx) {
     txs.update({_id: tx2._id}, {$set: {'tip': false}});
   }
 
-  if(tx.confirmed) {
+  if (tx.confirmed) {
     if (tx1 && !tx1.confirmed) {
-      txs.update({_id: tx1._id}, {$set: {'confirmed': true, 'ctime': tx.ctime, 'ctimestamp': tx.ctimestamp}});
-      setChildrenConfirmed(tx1);
+      txs.update({_id: tx1._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
+      setChildrenConfirmed(tx1, ctime, ctimestamp);
     }
     if (tx2 && !tx2.confirmed) {
-      txs.update({_id: tx2._id}, {$set: {'confirmed': true, 'ctime': tx.ctime, 'ctimestamp': tx.ctimestamp}});
-      setChildrenConfirmed(tx2);
+      txs.update({_id: tx2._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
+      setChildrenConfirmed(tx2, ctime, ctimestamp);
     }
   }
 }
@@ -282,7 +282,7 @@ function addTX(tx, path) {
   var doc = txs.upsert({hash: tx.hash}, tx);
   //files.insert({txid: doc.insertedId, path: path, time: new Date().valueOf()});
 
-  setChildren(tx);
+  setChildren(tx, tx.ctime, tx.ctimestamp);
   fs.unlinkSync(path);
 }
 

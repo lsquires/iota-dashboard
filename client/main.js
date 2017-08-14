@@ -485,4 +485,34 @@ Template.vis.destroyed = function () {
 
 Template.graphs.rendered = function () {
   Meteor.subscribe("stats");
+
+  var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
+  var data = graphstats.find({}).fetch();
+  var graph = new Rickshaw.Graph( {
+    element: document.getElementById("chart"),
+    renderer: 'area',
+    stroke: true,
+    series: [ {
+      data: data.map(function(elm) {
+        return { x: elm["date"], y: elm["totalConfirmedTX"]};
+      }),
+      color: palette.color(),
+      name: "Confirmed"
+    }, {
+      data: data.map(function(elm) {
+        return { x: elm["date"], y: elm["totalUnconfirmedNonTippedTX"]};
+      }),
+      color: palette.color(),
+      name: "Unconfirmed"
+    }, {
+      data: data.map(function(elm) {
+        return { x: elm["date"], y: elm["totalTipTX"]};
+      }),
+      color: palette.color(),
+      name: "Tips"
+    }  ]
+  } );
+
+  graph.renderer.unstack = true;
+  graph.render();
 }
