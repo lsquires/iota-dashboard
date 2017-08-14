@@ -516,4 +516,50 @@ Template.graphs.rendered = function () {
 
   graph.renderer.unstack = true;
   graph.render();
+
+  var preview = new Rickshaw.Graph.RangeSlider( {
+    graph: graph,
+    element: document.getElementById('preview1'),
+  } );
+
+  var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+    graph: graph,
+    xFormatter: function(x) {
+      return new Date(x).toString();
+    }
+  } );
+
+  var annotator = new Rickshaw.Graph.Annotate( {
+    graph: graph,
+    element: document.getElementById('timeline1')
+  } );
+
+  var order = new Rickshaw.Graph.Behavior.Series.Order( {
+    graph: graph,
+    legend: legend
+  } );
+
+  var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
+    graph: graph,
+    legend: legend
+  } );
+
+  var ticksTreatment = 'glow';
+
+  var xAxis = new Rickshaw.Graph.Axis.Time( {
+    graph: graph,
+    ticksTreatment: ticksTreatment,
+    timeFixture: new Rickshaw.Fixtures.Time.Local()
+  } );
+
+  xAxis.render();
+
+  var yAxis = new Rickshaw.Graph.Axis.Y( {
+    graph: graph,
+    tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+    ticksTreatment: ticksTreatment
+  } );
+
+  yAxis.render();
+
 }
