@@ -535,8 +535,11 @@ Template.graphs.rendered = function () {
     MG.data_graphic({
       title: "Current Confirmation Time Chances",
       description: "Shows the chance of confirmation at certain intervals",
-      data: data[data.length - 1].bucketctimes,
-      chart_type: 'bar',
+      data: data[data.length - 1].ctimes.map(function(e) {
+        return Math.min(e, 600);
+      }),
+      bins: 30,
+      chart_type: 'histogram',
       target: document.getElementById('chart4'),
       full_width: true,
       full_height: true
