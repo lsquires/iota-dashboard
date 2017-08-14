@@ -490,7 +490,7 @@ Template.graphs.rendered = function () {
   var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
   var data = graphstats.find({}).fetch();
   var graph = new Rickshaw.Graph( {
-    element: document.getElementById("chart"),
+    element: document.getElementById("chart1"),
     renderer: 'area',
     stroke: true,
     series: [ {
