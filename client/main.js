@@ -491,15 +491,26 @@ Template.graphs.rendered = function () {
   for(let i = 0; i < data.length; i++) {
     data[i].date = new Date(data[i].date);
   }
+
   MG.data_graphic({
-    title: "Tangle Load",
-    description: "Show the number of tx's over a 2 hour period",
-    data: [{date: new Date(1502710140*1000), totalTX:1000},
-      {date: new Date(1502710240*1000), totalTX:100},
-      {date: new Date(1502710340*1000), totalTX:1300},
-      {date: new Date(1502710540*1000), totalTX:1600}],//data,
+    title: "Transaction Volumne",
+    description: "Shows the number of tx's over a 2 hour period",
+    data: data,
     target: document.getElementById('chart1'),
     x_accessor: 'date',
-    y_accessor: 'totalTX'
+    y_accessor: ['totalTX','totalConfirmedTX','totalUnconfirmedNonTippedTX','totalTipTX'],
+    legend: ['Total TXs','Confirmed TXs','Unconfirmed TXs','Tip TXs'],
+    legend_target: document.getElementById('legend1')
+  });
+
+  MG.data_graphic({
+    title: "Transaction Per Second",
+    description: "Shows the rate of tx's over a 30 minute window",
+    data: data,
+    target: document.getElementById('chart2'),
+    x_accessor: 'date',
+    y_accessor: ['TXs','cTXs'],
+    legend: ['TX/s','Confirmed TX/s'],
+    legend_target: document.getElementById('legend2')
   });
 }
