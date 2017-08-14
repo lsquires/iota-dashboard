@@ -502,8 +502,8 @@ Template.graphs.rendered = function () {
       y_accessor: ['totalTX','totalConfirmedTX','totalUnconfirmedNonTippedTX','totalTipTX'],
       legend: ['Total TXs','Confirmed TXs','Unconfirmed TXs','Tip TXs'],
       legend_target: document.getElementById('legend1'),
-      full_width: true,
-      full_height: true
+      //full_width: true,
+      //full_height: true
     });
 
     MG.data_graphic({
@@ -515,8 +515,8 @@ Template.graphs.rendered = function () {
       y_accessor: ['TXs','cTXs'],
       legend: ['TX/s','Confirmed TX/s'],
       legend_target: document.getElementById('legend2'),
-      full_width: true,
-      full_height: true
+      //full_width: true,
+      //full_height: true
     });
   });
 }
