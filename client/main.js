@@ -487,30 +487,36 @@ Template.vis.destroyed = function () {
 Template.graphs.rendered = function () {
   Meteor.subscribe("stats");
 
-  var data = graphstats.find({}).fetch();
-  for(let i = 0; i < data.length; i++) {
-    data[i].date = new Date(data[i].date);
-  }
+  Tracker.autorun(() => {
+    var data = graphstats.find({}).fetch();
+    for(let i = 0; i < data.length; i++) {
+      data[i].date = new Date(data[i].date);
+    }
 
-  MG.data_graphic({
-    title: "Transaction Volumne",
-    description: "Shows the number of tx's over a 2 hour period",
-    data: data,
-    target: document.getElementById('chart1'),
-    x_accessor: 'date',
-    y_accessor: ['totalTX','totalConfirmedTX','totalUnconfirmedNonTippedTX','totalTipTX'],
-    legend: ['Total TXs','Confirmed TXs','Unconfirmed TXs','Tip TXs'],
-    legend_target: document.getElementById('legend1')
-  });
+    MG.data_graphic({
+      title: "Transaction Volumne",
+      description: "Shows the number of tx's over a 2 hour period",
+      data: data,
+      target: document.getElementById('chart1'),
+      x_accessor: 'date',
+      y_accessor: ['totalTX','totalConfirmedTX','totalUnconfirmedNonTippedTX','totalTipTX'],
+      legend: ['Total TXs','Confirmed TXs','Unconfirmed TXs','Tip TXs'],
+      legend_target: document.getElementById('legend1'),
+      full_width: true,
+      full_height: true
+    });
 
-  MG.data_graphic({
-    title: "Transaction Per Second",
-    description: "Shows the rate of tx's over a 30 minute window",
-    data: data,
-    target: document.getElementById('chart2'),
-    x_accessor: 'date',
-    y_accessor: ['TXs','cTXs'],
-    legend: ['TX/s','Confirmed TX/s'],
-    legend_target: document.getElementById('legend2')
+    MG.data_graphic({
+      title: "Transaction Per Second",
+      description: "Shows the rate of tx's over a 30 minute window",
+      data: data,
+      target: document.getElementById('chart2'),
+      x_accessor: 'date',
+      y_accessor: ['TXs','cTXs'],
+      legend: ['TX/s','Confirmed TX/s'],
+      legend_target: document.getElementById('legend2'),
+      full_width: true,
+      full_height: true
+    });
   });
 }
