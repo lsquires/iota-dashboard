@@ -115,13 +115,18 @@
 
 <template name="graphs">
   <div class="row margin-bottom-10">
-    <div class="box-end col-sm-6">
+    <div class="box-end col-sm-12">
       <div class="floating-box  shadow-box">
         <div class=inside-floating-box>
-          <h2 style="margin-top: 0px">TX/s </h2>
-          <div id="chart1"></div>
-          <div id="timeline1"></div>
-          <div id="preview1"></div>
+          <form id="side_panel">
+            <h1>Tangle Load</h1>
+            <section><div id="legend"></div></section>
+          </form>
+          <div id="chart_container">
+            <div id="chart"></div>
+            <div id="timeline"></div>
+            <div id="preview"></div>
+          </div>
         </div>
       </div>
     </div>

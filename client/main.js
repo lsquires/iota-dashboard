@@ -490,7 +490,7 @@ Template.graphs.rendered = function () {
   var palette = new Rickshaw.Color.Palette( { scheme: 'classic9' } );
   var data = graphstats.find({}).fetch();
   var graph = new Rickshaw.Graph( {
-    element: document.getElementById("chart1"),
+    element: document.getElementById("chart"),
     renderer: 'area',
     stroke: true,
     series: [ {
@@ -519,7 +519,7 @@ Template.graphs.rendered = function () {
 
   var preview = new Rickshaw.Graph.RangeSlider( {
     graph: graph,
-    element: document.getElementById('preview1'),
+    element: document.getElementById('preview'),
   } );
 
   var hoverDetail = new Rickshaw.Graph.HoverDetail( {
@@ -529,15 +529,21 @@ Template.graphs.rendered = function () {
     }
   } );
 
-  /*var annotator = new Rickshaw.Graph.Annotate( {
+  var annotator = new Rickshaw.Graph.Annotate( {
     graph: graph,
-    element: document.getElementById('timeline1')
+    element: document.getElementById('timeline')
+  } );
+
+  var legend = new Rickshaw.Graph.Legend( {
+    graph: graph,
+    element: document.getElementById('legend')
+
   } );
 
   var order = new Rickshaw.Graph.Behavior.Series.Order( {
     graph: graph,
     legend: legend
-  } );*/
+  } );
 
   var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
     graph: graph,
@@ -562,4 +568,16 @@ Template.graphs.rendered = function () {
 
   yAxis.render();
 
+  var controls = new RenderControls( {
+    element: document.querySelector('form'),
+    graph: graph
+  } );
+
+  var previewXAxis = new Rickshaw.Graph.Axis.Time({
+    graph: preview.previews[0],
+    timeFixture: new Rickshaw.Fixtures.Time.Local(),
+    ticksTreatment: ticksTreatment
+  });
+
+  previewXAxis.render();
 }
