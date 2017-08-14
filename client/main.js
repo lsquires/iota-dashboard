@@ -528,8 +528,8 @@ Template.graphs.rendered = function () {
       data: data,
       target: document.getElementById('chart3'),
       x_accessor: 'date',
-      y_accessor: ['averagectime','averagectimestamp'],
-      legend: ['According to node time','According to transaction timestamp'],
+      y_accessor: ['averagectime'],
+      legend: ['Time according to node'],
       legend_target: document.getElementById('legend3'),
       full_width: true,
       full_height: true,
@@ -544,7 +544,7 @@ Template.graphs.rendered = function () {
       data: data[data.length - 1].ctimes.map(function(e) {
         return Math.min(e, 600);
       }),
-      bins: 60,
+      bins: 100,
       chart_type: 'histogram',
       target: document.getElementById('chart4'),
       full_width: true,
@@ -555,21 +555,5 @@ Template.graphs.rendered = function () {
       y_label: 'Count'
     });
 
-    MG.data_graphic({
-      title: "Current Confirmation Time Chances (Timestamp)",
-      description: "Shows the chance of confirmation at certain intervals",
-      data: data[data.length - 1].ctimestamp.map(function(e) {
-        return Math.min(e, 600);
-      }),
-      bins: 60,
-      chart_type: 'histogram',
-      target: document.getElementById('chart5'),
-      full_width: true,
-      full_height: true,
-      animate_on_load: true,
-      xax_format: function(s){return s+"s"},
-      x_label: 'Confirmation Time',
-      y_label: 'Count'
-    });
   });
 }
