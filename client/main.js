@@ -538,6 +538,8 @@ Template.graphs.rendered = function () {
       data: data[data.length - 1].ctimestamp,
       chart_type: 'histogram',
       target: document.getElementById('chart4'),
+      max_x: 600,
+      bins: 60,
       full_width: true,
       full_height: true
     });
