@@ -10,8 +10,8 @@ var stats = new Mongo.Collection('stats');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-txs.remove({});
-stats.remove({});
+//txs.remove({});
+//stats.remove({});
 
 
 Meteor.startup(() => {
