@@ -6,12 +6,13 @@ var IOTA = require('iota.lib.js');
 var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU';
 var txs = new Mongo.Collection('txs');
 var stats = new Mongo.Collection('stats');
+var histographstats = new Mongo.Collection('histstats');
 //var files = new Mongo.Collection('files');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-//txs.remove({});
-//stats.remove({});
+txs.remove({});
+stats.remove({});
 
 
 Meteor.startup(() => {
@@ -36,7 +37,9 @@ Meteor.startup(() => {
   Meteor.setInterval(function () {
     currentTime.set(new Date().valueOf());
   }, 1000);
-
+  Meteor.publish('histstats', function() {
+    return histographstats.find({});
+  });
   Meteor.publish('stats', function() {
     return stats.find({});
   });
@@ -56,7 +59,7 @@ Meteor.startup(() => {
             {"confirmed": {$eq: true}}]
           },
           {
-            fields: { tip: 0, confirmed: 0}//, ctime: 0, ctimestamp: 0}
+            fields: { tip: 0, confirmed: 0, milestone: 0}//, ctime: 0, ctimestamp: 0}
           });
       } else {
         return txs.find(
@@ -64,7 +67,7 @@ Meteor.startup(() => {
             "time": {$gte: currentTime.get() - (minsago * 60000)}
           },
           {
-            fields: { tip: 0, confirmed: 0}//, ctime: 0, ctimestamp: 0}
+            fields: { tip: 0, confirmed: 0, milestone: 0}//, ctime: 0, ctimestamp: 0}
           });
       }
 
@@ -75,7 +78,7 @@ Meteor.startup(() => {
   SyncedCron.add({
     name: 'Clean export of bad files and graph data',
     schedule: function (parser) {
-      return parser.recur().every(5).minute();
+      return parser.recur().every(10).minute();
     },
     job: function () {
       var startTime = (new Date()).valueOf();
@@ -95,7 +98,7 @@ Meteor.startup(() => {
       });
 
       //Record metrics
-      if(doMetrics || true) {
+      if(doMetrics) {
         console.log("doing metrics");
 
         var totalTX = txs.find({"time": {$gte: now}}).count();
@@ -111,7 +114,8 @@ Meteor.startup(() => {
 
         var rawtimes = txs.find({$and: [
             {"time": {$gte: now}},
-            {"confirmed": {$eq: true}}]
+            {"confirmed": {$eq: true}},
+            {"milestone": {$ne: true}}]
           }).fetch();
 
         var ctimes = rawtimes.map(function(element) {
@@ -132,39 +136,17 @@ Meteor.startup(() => {
         var averagectime = average(ctimes);
         var averagectimestamp = average(ctimestamps);
 
-        function bucket(array) {
-          let bucketspacing = 20,
-            noBuckets = 30,
-            newarray = new Array(noBuckets + 1).fill(0);
-
-          for(let i = 0; i < array.length; i++) {
-            let bucket = Math.floor(array[i] / bucketspacing);
-            if(bucket >= noBuckets) {
-              newarray[noBuckets]++;
-            } else {
-              newarray[bucket]++;
-            }
-          }
-
-          return newarray;
-        }
-
-        var bucketctimes = bucket(ctimes);
-        var bucketctimestamps = bucket(ctimestamps);
-        //var confirmedPercent = totalConfirmedTX / totalTX;
-
-        var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
+        var TXs =  txs.find({"time": {$gte: startTime - (10 * 60000)}}).count() / (10 * 60);
         var cTXs = txs.find(
           {
             $and:
               [
               {"confirmed": {$eq: true}},
-              {"ctime": {$gte: startTime - (30 * 60000)}}
+              {"ctime": {$gte: startTime - (10 * 60000)}}
               ]
-        }).count() / (30 * 60);
+        }).count() / (10 * 60);
 
         var toInsert = {date: startTime,
-          period: periodMinutes,
           totalTX: totalTX,
           totalConfirmedTX: totalConfirmedTX,
           totalTipTX: totalTipTX,
@@ -172,11 +154,10 @@ Meteor.startup(() => {
           averagectime: averagectime,
           averagectimestamp: averagectimestamp,
           cTXs: cTXs,
-          TXs: TXs,
-          bucketctimes: bucketctimes,
-          bucketctimestamps: bucketctimestamps,
-          ctimes: ctimes,
-          ctimestamp: ctimestamps};
+          TXs: TXs};
+
+        var doc = {set: true, ctimes: ctimes};
+        histographstats.upsert({set: true}, doc);
         stats.insert(toInsert);
 
         console.log("NEW v3 Metrics:");

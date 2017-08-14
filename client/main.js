@@ -2,7 +2,7 @@ import {Template} from 'meteor/templating';
 import {Mongo} from 'meteor/mongo';
 import './main.html';
 txs = new Mongo.Collection('txs');
-
+histographstats = new Mongo.Collection('histstats');
 graphstats = new Mongo.Collection('stats');
 var cola = require("webcola");
 var d3 = require('d3');
@@ -486,9 +486,10 @@ Template.vis.destroyed = function () {
 
 Template.graphs.rendered = function () {
   Meteor.subscribe("stats");
-
+  Meteor.subscribe("histstats");
   Tracker.autorun(() => {
     var data = graphstats.find({}).fetch();
+    var histdata = histographstats.find({}).fetch();
     for(let i = 0; i < data.length; i++) {
       data[i].date = new Date(data[i].date);
     }
@@ -524,7 +525,7 @@ Template.graphs.rendered = function () {
 
     MG.data_graphic({
       title: "Average Confirmation Time",
-      description: "Shows the average time before confirmation in seconds",
+      description: "Shows the average time before confirmation in seconds (measured over a 2 hour period)",
       data: data,
       target: document.getElementById('chart3'),
       x_accessor: 'date',
@@ -540,11 +541,11 @@ Template.graphs.rendered = function () {
 
     MG.data_graphic({
       title: "Current Confirmation Time Chances (Node)",
-      description: "Shows the chance of confirmation at certain intervals",
-      data: data[data.length - 1].ctimes.map(function(e) {
+      description: "Shows the chance of confirmation at certain intervals (measured over a 2 hour period)",
+      data: histdata[0].ctimes.map(function(e) {
         return Math.min(e, 500);
       }),
-      bins: 200,
+      bins: 100,
       chart_type: 'histogram',
       target: document.getElementById('chart4'),
       full_width: true,
