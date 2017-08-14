@@ -10,8 +10,8 @@ var stats = new Mongo.Collection('stats');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-//txs.remove({});
-//stats.remove({});
+txs.remove({});
+stats.remove({});
 
 
 Meteor.startup(() => {
@@ -81,7 +81,7 @@ Meteor.startup(() => {
       var startTime = (new Date()).valueOf();
       //Cleaning DB
       var doMetrics = false;
-      var periodMinutes = 4 * 60;
+      var periodMinutes = 2 * 60;
       console.log("doing job, db size: "+txs.find().count());
       var now = startTime - periodMinutes * 60000;
       txs.find().forEach(function (item) {
