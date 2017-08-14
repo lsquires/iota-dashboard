@@ -493,6 +493,7 @@ Template.graphs.rendered = function () {
     element: document.getElementById("chart"),
     renderer: 'area',
     stroke: true,
+    preserve: true,
     series: [ {
       data: data.map(function(elm) {
         return { x: elm["date"], y: elm["totalConfirmedTX"]};
@@ -514,7 +515,6 @@ Template.graphs.rendered = function () {
     }  ]
   } );
 
-  graph.renderer.unstack = true;
   graph.render();
 
   var preview = new Rickshaw.Graph.RangeSlider( {
