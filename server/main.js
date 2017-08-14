@@ -56,7 +56,7 @@ Meteor.startup(() => {
             {"confirmed": {$eq: true}}]
           },
           {
-            fields: { tip: 0, confirmed: 0, ctime: 0, ctimestamp: 0}
+            fields: { tip: 0, confirmed: 0}//, ctime: 0, ctimestamp: 0}
           });
       } else {
         return txs.find(
@@ -64,7 +64,7 @@ Meteor.startup(() => {
             "time": {$gte: currentTime.get() - (minsago * 60000)}
           },
           {
-            fields: { tip: 0, confirmed: 0, ctime: 0, ctimestamp: 0}
+            fields: { tip: 0, confirmed: 0}//, ctime: 0, ctimestamp: 0}
           });
       }
 
