@@ -138,7 +138,7 @@ Meteor.startup(() => {
             newarray = new Array(noBuckets + 1).fill(0);
 
           for(let i = 0; i < array.length; i++) {
-            let bucket = array[i] / bucketspacing;
+            let bucket = Math.floor(array[i] / bucketspacing);
             if(bucket >= noBuckets) {
               newarray[noBuckets]++;
             } else {
@@ -242,10 +242,16 @@ function setChildren(tx, ctime, ctimestamp) {
 
   if (tx.confirmed) {
     if (tx1 && !tx1.confirmed) {
+      if(tx.milestone && tx.bundle === tx1.bundle) {
+        txs.update({_id: tx1._id}, {$set: {'milestone': true}});
+      }
       txs.update({_id: tx1._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
       setChildrenConfirmed(tx1, ctime, ctimestamp);
     }
     if (tx2 && !tx2.confirmed) {
+      if(tx.milestone && tx.bundle === tx2.bundle) {
+        txs.update({_id: tx2._id}, {$set: {'milestone': true}});
+      }
       txs.update({_id: tx2._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
       setChildrenConfirmed(tx2, ctime, ctimestamp);
     }
@@ -272,6 +278,9 @@ function checkParents(tx) {
         tx.ctimestamp = Math.min(tx.ctimestamp, parent.ctimestamp);
       }
     }
+    if(parent.milestone && parent.bundle === tx.bundle) {
+      tx.milestone = true;
+    }
   })
 }
 
@@ -287,6 +296,7 @@ function addTX(tx, path) {
     tx.confirmed = true;
     tx.ctime = tx.time;
     tx.ctimestamp = tx.timestamp;
+    tx.milestone = true;
     console.log("new coor message!!!!")
   }
   var doc = txs.upsert({hash: tx.hash}, tx);

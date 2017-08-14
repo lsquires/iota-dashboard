@@ -500,7 +500,7 @@ Template.graphs.rendered = function () {
       target: document.getElementById('chart1'),
       x_accessor: 'date',
       y_accessor: ['totalTX','totalConfirmedTX','totalUnconfirmedNonTippedTX','totalTipTX'],
-      legend: ['Total TXs','Confirmed TXs','Unconfirmed TXs','Tip TXs'],
+      legend: ['Total TXs','Confirmed TXs','Unconfirmed Non-Tip TXs','Tip TXs'],
       legend_target: document.getElementById('legend1'),
       full_width: true,
       full_height: true
