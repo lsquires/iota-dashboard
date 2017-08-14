@@ -6,7 +6,7 @@ txs = new Mongo.Collection('txs');
 graphstats = new Mongo.Collection('stats');
 var cola = require("webcola");
 var d3 = require('d3');
-var Rickshaw = require('rickshaw');
+var MG = require('metrics-graphics');
 var coorNumber = 0;
 console.log(d3);
 txshandler = {};
@@ -486,4 +486,23 @@ Template.vis.destroyed = function () {
 
 Template.graphs.rendered = function () {
   Meteor.subscribe("stats");
+
+  var data = graphstats.find({}).fetch();
+  for(let i = 0; i < data.length; i++) {
+    data[i].date = new Date(data[i].date);
+  }
+  MG.data_graphic({
+    title: "Tangle Load",
+    description: "Show the number of tx's over a 2 hour period",
+    data: [{date: new Date(1502710140), totalTX:1000},
+      {date: new Date(1502710240), totalTX:100},
+      {date: new Date(1502710340), totalTX:1300},
+      {date: new Date(1502710540), totalTX:1600}],//data,
+    //width: 600,
+    //height: 200,
+    //right: 40,
+    target: document.getElementById('chart1'),
+    x_accessor: 'date',
+    y_accessor: 'totalTX'
+  });
 }
