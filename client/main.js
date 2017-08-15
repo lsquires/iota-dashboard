@@ -527,12 +527,12 @@ Template.graphs.rendered = function () {
 
     MG.data_graphic({
       title: "Average Confirmation Time",
-      description: "Shows the average time before confirmation in seconds (measured over a 2 hour period)",
+      description: "Shows the average time before confirmation in seconds (measured over a 24 hour period)",
       data: data,
       target: document.getElementById('chart3'),
       x_accessor: 'date',
-      y_accessor: ['averagectime'],
-      legend: ['Time according to node'],
+      y_accessor: ['averagectimefiltered','averagectime'],
+      legend: ['Filtered (txs with <1 hour confirmation times','All txs'],
       legend_target: document.getElementById('legend3'),
       full_width: true,
       full_height: true,
@@ -548,7 +548,7 @@ Template.graphs.rendered = function () {
 
     MG.data_graphic({
       title: "Current Confirmation Time Chances (Node)",
-      description: "Shows the chance of confirmation at certain intervals (measured over a 2 hour period). "+d3.format("2p")(histdata[0].outofrange)+" of transactions are out of range (>500s)",
+      description: "Shows the chance of confirmation at certain intervals (measured over a 24 hour period). "+d3.format("2p")(histdata[0].outofrange)+" of transactions are out of range (>500s)",
       data: histdata[0].ctimes,
       binned: true,
       chart_type: 'histogram',

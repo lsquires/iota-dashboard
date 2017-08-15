@@ -134,7 +134,20 @@ Meteor.startup(() => {
           return sum / array.length;
         }
 
+        function averageFiltered(array) {
+          var sum = 0;
+          let total = 0;
+          for (var i = 0; i < array.length; i++) {
+            if(ctimes[i] <= 3600) {
+              sum += array[i];
+              total++;
+            }
+          }
+          return sum / total;
+        }
+
         var averagectime = average(ctimes);
+        var averagectimefiltered = averageFiltered(ctimes);
         var averagectimestamp = average(ctimestamps);
 
         var outofrange = 0;
@@ -168,6 +181,7 @@ Meteor.startup(() => {
           totalTipTX: totalTipTX,
           totalUnconfirmedNonTippedTX: totalUnconfirmedNonTippedTX,
           averagectime: averagectime,
+          averagectimefiltered: averagectimefiltered,
           averagectimestamp: averagectimestamp,
           cTXs: cTXs,
           TXs: TXs};
