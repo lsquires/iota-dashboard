@@ -542,10 +542,8 @@ Template.graphs.rendered = function () {
     MG.data_graphic({
       title: "Current Confirmation Time Chances (Node)",
       description: "Shows the chance of confirmation at certain intervals (measured over a 2 hour period)",
-      data: histdata[0].ctimes.map(function(e) {
-        return Math.min(e, 500);
-      }),
-      bins: 100,
+      data: histdata[0].ctimes,
+      binned: true,
       chart_type: 'histogram',
       target: document.getElementById('chart4'),
       full_width: true,

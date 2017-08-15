@@ -7,6 +7,7 @@ var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQ
 var txs = new Mongo.Collection('txs');
 var stats = new Mongo.Collection('stats');
 var histographstats = new Mongo.Collection('histstats');
+var d3 = require('d3');
 //var files = new Mongo.Collection('files');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
@@ -84,7 +85,7 @@ Meteor.startup(() => {
       var startTime = (new Date()).valueOf();
       //Cleaning DB
       var doMetrics = false;
-      var periodMinutes = 2 * 60;
+      var periodMinutes = 24 * 60;
       console.log("doing job, db size: "+txs.find().count());
       var now = startTime - periodMinutes * 60000;
       txs.find().forEach(function (item) {
@@ -98,7 +99,7 @@ Meteor.startup(() => {
       });
 
       //Record metrics
-      if(doMetrics) {
+      if(doMetrics || true) {
         console.log("doing metrics");
 
         var totalTX = txs.find({"time": {$gte: now}}).count();
@@ -136,15 +137,21 @@ Meteor.startup(() => {
         var averagectime = average(ctimes);
         var averagectimestamp = average(ctimestamps);
 
-        var TXs =  txs.find({"time": {$gte: startTime - (10 * 60000)}}).count() / (10 * 60);
+
+        var histGenerator = d3.histogram()
+          .domain([0,500])    // Set the domain to cover the entire intervall [0,1]
+          .thresholds(49);
+        var ctimesbins = histGenerator(ctimes);
+
+        var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
         var cTXs = txs.find(
           {
             $and:
               [
               {"confirmed": {$eq: true}},
-              {"ctime": {$gte: startTime - (10 * 60000)}}
+              {"ctime": {$gte: startTime - (30 * 60000)}}
               ]
-        }).count() / (10 * 60);
+        }).count() / (30 * 60);
 
         var toInsert = {date: startTime,
           totalTX: totalTX,
@@ -156,7 +163,7 @@ Meteor.startup(() => {
           cTXs: cTXs,
           TXs: TXs};
 
-        var doc = {set: true, ctimes: ctimes};
+        var doc = {set: true, ctimes: ctimesbins};
         histographstats.upsert({set: true}, doc);
         stats.insert(toInsert);
 
