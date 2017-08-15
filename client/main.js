@@ -539,6 +539,11 @@ Template.graphs.rendered = function () {
       y_label: 'Confirmation Time'
     });
 
+    var markers = [{
+      'range': 500,
+      'label': histdata[0].outofrange+" out of range",
+    }];
+
     MG.data_graphic({
       title: "Current Confirmation Time Chances (Node)",
       description: "Shows the chance of confirmation at certain intervals (measured over a 2 hour period)",
@@ -553,7 +558,8 @@ Template.graphs.rendered = function () {
       x_accessor: 'range',
       y_accessor: 'count',
       x_label: 'Confirmation Time',
-      y_label: 'Count'
+      y_label: 'Count',
+      markers: markers
     });
 
   });
