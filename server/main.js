@@ -150,7 +150,7 @@ Meteor.startup(() => {
         var histGenerator = d3.histogram()
           .domain([0,500])
           .thresholds(49);
-        var ctimesbins = histGenerator(ctimes).map(function(e, index){return {range: (index*10), count: (e.length / totalvalid)*100};});
+        var ctimesbins = histGenerator(ctimes).map(function(e, index){return {range: (index*10), count: (e.length / totalvalid)};});
 
         var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
         var cTXs = txs.find(
@@ -172,7 +172,7 @@ Meteor.startup(() => {
           cTXs: cTXs,
           TXs: TXs};
 
-        var doc = {set: true, ctimes: ctimesbins, outofrange: outofrange};
+        var doc = {set: true, ctimes: ctimesbins, outofrange: (100*(outofrange/totalvalid)) + "%"};
         histographstats.upsert({set: true}, doc);
         stats.insert(toInsert);
 
