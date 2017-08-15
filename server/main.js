@@ -137,11 +137,16 @@ Meteor.startup(() => {
         var averagectime = average(ctimes);
         var averagectimestamp = average(ctimestamps);
 
-
+        var outofrange = 0;
+        for(let i = 0; i < ctimes.length; i++) {
+          if(ctimes[i] > 500) {
+            outofrange++;
+          }
+        }
         var histGenerator = d3.histogram()
           .domain([0,500])    // Set the domain to cover the entire intervall [0,1]
           .thresholds(49);
-        var ctimesbins = histGenerator(ctimes);
+        var ctimesbins = histGenerator(ctimes).map(function(e, index){return {range: (index*10), count: e.length};});
 
         var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
         var cTXs = txs.find(
@@ -163,7 +168,7 @@ Meteor.startup(() => {
           cTXs: cTXs,
           TXs: TXs};
 
-        var doc = {set: true, ctimes: ctimesbins};
+        var doc = {set: true, ctimes: ctimesbins, outofrange: outofrange};
         histographstats.upsert({set: true}, doc);
         stats.insert(toInsert);
 
