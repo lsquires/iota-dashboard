@@ -172,7 +172,7 @@ Meteor.startup(() => {
           cTXs: cTXs,
           TXs: TXs};
 
-        var doc = {set: true, ctimes: ctimesbins, outofrange: (100*(outofrange/totalvalid)) + "%"};
+        var doc = {set: true, ctimes: ctimesbins, outofrange: (outofrange/totalvalid)};
         histographstats.upsert({set: true}, doc);
         stats.insert(toInsert);
 
