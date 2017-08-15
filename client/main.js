@@ -564,9 +564,6 @@ Template.graphs.rendered = function () {
       markers: markers,
       yax_format: d3.format('2p'),
       format: 'percentage',
-      x_rollover_format: function(d){
-        return d.count +'s';
-      },
     });
 
   });
