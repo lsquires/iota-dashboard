@@ -540,7 +540,7 @@ Template.graphs.rendered = function () {
     });
 
     var markers = [{
-      'range': 500,
+      'range': 450,
       'label': histdata[0].outofrange+" out of range",
     }];
 
