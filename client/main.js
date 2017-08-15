@@ -550,6 +550,8 @@ Template.graphs.rendered = function () {
       full_height: true,
       animate_on_load: true,
       xax_format: function(s){return s+"s"},
+      x_accessor: 'range',
+      y_accessor: 'count',
       x_label: 'Confirmation Time',
       y_label: 'Count'
     });
