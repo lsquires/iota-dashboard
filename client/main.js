@@ -506,6 +506,7 @@ Template.graphs.rendered = function () {
       full_width: true,
       full_height: true,
       animate_on_load: true,
+      aggregate_rollover: true,
     });
 
     MG.data_graphic({
@@ -521,6 +522,7 @@ Template.graphs.rendered = function () {
       full_height: true,
       animate_on_load: true,
       y_label: 'TX/s'
+      aggregate_rollover: true,
     });
 
     MG.data_graphic({
@@ -546,7 +548,7 @@ Template.graphs.rendered = function () {
 
     MG.data_graphic({
       title: "Current Confirmation Time Chances (Node)",
-      description: "Shows the chance of confirmation at certain intervals (measured over a 2 hour period)",
+      description: "Shows the chance of confirmation at certain intervals (measured over a 2 hour period). "+histdata[0].outofrange+" values are out of range (>500s)",
       data: histdata[0].ctimes,
       binned: true,
       chart_type: 'histogram',
@@ -559,7 +561,9 @@ Template.graphs.rendered = function () {
       y_accessor: 'count',
       x_label: 'Confirmation Time',
       y_label: 'Count',
-      markers: markers
+      markers: markers,
+      yax_format: d3.format('2p'),
+      format: 'percentage'
     });
 
   });

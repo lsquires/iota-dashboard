@@ -138,15 +138,19 @@ Meteor.startup(() => {
         var averagectimestamp = average(ctimestamps);
 
         var outofrange = 0;
+        var totalvalid = 0;
         for(let i = 0; i < ctimes.length; i++) {
           if(ctimes[i] > 500) {
             outofrange++;
           }
+          if(ctimes[i] >= 0) {
+            totalvalid++;
+          }
         }
         var histGenerator = d3.histogram()
-          .domain([0,500])    // Set the domain to cover the entire intervall [0,1]
+          .domain([0,500])
           .thresholds(49);
-        var ctimesbins = histGenerator(ctimes).map(function(e, index){return {range: (index*10), count: e.length};});
+        var ctimesbins = histGenerator(ctimes).map(function(e, index){return {range: (index*10), count: (e.length / totalvalid)*100};});
 
         var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
         var cTXs = txs.find(
