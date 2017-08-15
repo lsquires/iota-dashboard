@@ -521,7 +521,7 @@ Template.graphs.rendered = function () {
       full_width: true,
       full_height: true,
       animate_on_load: true,
-      y_label: 'TX/s'
+      y_label: 'TX/s',
       aggregate_rollover: true,
     });
 
@@ -538,7 +538,7 @@ Template.graphs.rendered = function () {
       full_height: true,
       animate_on_load: true,
       yax_format: function(s){return s+"s"},
-      y_label: 'Confirmation Time'
+      y_label: 'Confirmation Time',
     });
 
     var markers = [{
@@ -563,7 +563,7 @@ Template.graphs.rendered = function () {
       y_label: 'Count',
       markers: markers,
       yax_format: d3.format('2p'),
-      format: 'percentage'
+      format: 'percentage',
     });
 
   });
