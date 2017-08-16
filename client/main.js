@@ -480,19 +480,14 @@ Template.vis.rendered = function () {
 }
 
 Template.vis.destroyed = function () {
-  console.log("started")
   dbwatcher.stop();
   txshandler.stop();
 }
-Template.graphs.onCreated = function () {
 
-
-}
 Template.graphs.rendered = function () {
   Meteor.subscribe("stats");
   Meteor.subscribe("histstats");
   this.autorun(() => {
-    console.log("updated")
     let data = graphstats.find({}).fetch();
     let histdata = histographstats.find({}).fetch();
     if(data.length > 0) {
@@ -548,13 +543,15 @@ Template.graphs.rendered = function () {
         },
         y_label: 'Confirmation Time',
       });
+    }
+
+    if(histdata.length > 0) {
 
       var markers = [{
         'range': 450,
         'label': histdata[0].outofrange + " out of range",
       }];
-    }
-    if(histdata.length > 0) {
+
       MG.data_graphic({
         title: "Current Confirmation Time Chances (Node)",
         description: "Shows the chance of confirmation at certain intervals (measured over a 24 hour period). " + d3.format("2p")(histdata[0].outofrange) + " of transactions are out of range (>500s)",
