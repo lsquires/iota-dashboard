@@ -24,20 +24,29 @@
     <div class="col-sm-12">
       <div class="floating-box shadow-box">
         <div class=inside-floating-box id="outernodebox">
-          <div class="dropdown">
-            <td>
-              <select id="timePeriod">
+          <div class="form-group">
+            <div class="col-sm-4">
+            <label for="timePeriod">Time Range:</label>
+              <select class="form-control" id="timePeriod">
                 <option value="1" selected>1 Minute</option>
                 <option value="2">2 Minutes</option>
                 <option value="4">4 Minutes</option>
                 <option value="8">8 Minutes</option>
                 <option value="16">16 Minutes</option>
               </select>
-              <select id="filter">
+            </div>
+            <div class="col-sm-4">
+            <label for="filter">Filter</label>
+              <select class="form-control" id="filter">
                 <option value="all" selected>All</option>
                 <option value="confirmed">Only Confirmed</option>
               </select>
-            </td>
+            </div>
+            <div class="col-sm-4">
+              <label class="btn btn-outline-success">
+                <input type="checkbox" id="freezeviz" autocomplete="off">Freeze
+              </label>
+            </div>
           </div>
           <div id="nodebox"></div>
         </div>
