@@ -60,7 +60,7 @@ rect {
   color: #66DC71;
 }
 .inside-floating-box {
-  padding: 20px;
+  padding: 12px;
 }
 
 .header .navbar-nav>.active>a, .header .navbar-nav>.active>a:focus, .header .navbar-nav>.active>a:hover, .header .navbar-nav>li>a, .header .navbar-nav>li>a:focus, .header .navbar-nav>li>a:hover {

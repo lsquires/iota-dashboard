@@ -24,7 +24,7 @@
     <div class="col-sm-12">
       <div class="floating-box shadow-box">
         <div class=inside-floating-box id="outernodebox">
-          <div class="form-group">
+
             <div class="col-sm-4">
             <label for="timePeriod">Time Range:</label>
               <select class="form-control" id="timePeriod">
@@ -43,11 +43,11 @@
               </select>
             </div>
             <div class="col-sm-4">
-              <label class="btn btn-outline-success">
+              <label class="btn btn-primary">
                 <input type="checkbox" id="freezeviz" autocomplete="off">Freeze
               </label>
             </div>
-          </div>
+
           <div id="nodebox"></div>
         </div>
       </div>
@@ -62,46 +62,50 @@
         <div class=inside-floating-box>
           <h2 class="box-header" style="margin-top: 0px">Transaction Details</h2>
           <div class="row margin-bottom-20">
-            {{#if havetx}}
-              <div class="col-sm-3">TxHash:</div>
-              <div class="col-sm-9 txinfo">{{txhash}}</div>
-
-              <div class="col-sm-3">Timestamp:</div>
-              <div class="col-sm-9 txinfo">{{txtimestamp}}</div>
-
-              <div class="col-sm-3">Recieved at Node:</div>
-              <div class="col-sm-9 txinfo">{{txnodetimestamp}}</div>
-
-              <div class="col-sm-3">Tag:</div>
-              <div class="col-sm-9 txinfo">{{txtag}}</div>
-
-              <div class="col-sm-3">Address:</div>
-              <div class="col-sm-9 txinfo">{{txaddress}}</div>
-
-              <div class="col-sm-3">Branch Hash:</div>
-              <div class="col-sm-9 txinfo">{{txbranch}}</div>
-
-              <div class="col-sm-3">Trunk Hash:</div>
-              <div class="col-sm-9 txinfo">{{txtrunk}}</div>
-
-              <div class="col-sm-3">Bundle:</div>
-              <div class="col-sm-9 txinfo">{{txbundle}}</div>
-
-              <div class="col-sm-3">Value:</div>
-              <div class="col-sm-9 txinfo">{{txvalue}}</div>
-
-              <div class="col-sm-3">Confirmed:</div>
-              <div class="col-sm-9 txinfo">{{txconfirmed}}</div>
-
-              <div class="col-sm-3">Message:</div>
-              <div class="col-sm-9 txinfo">
-              <textarea readonly="" spellcheck="false"
-                        style="width: 90%; font-size: small; font-family: Monospace; padding: 8px; background-color: #EEEEEE;"
-                        rows="4">
-                {{txmessage}}
-              </textarea>
-              </div>
-            {{/if}}
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th>TxHash</th>
+                <th>Timestamp</th>
+                <th>Recieved at Node</th>
+                <th>Tag</th>
+                <th>Address</th>
+                <th>Branch Hash</th>
+                <th>Trunk Hash</th>
+                <th>Bundle</th>
+                <th>Value</th>
+                <th>Confirmed</th>
+                <th>Message</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+              {{#if havetx}}
+                <td>{{txhash}}</td>
+                <td>{{txtimestamp}}</td>
+                <td>{{txnodetimestamp}}</td>
+                <td>{{txtag}}</td>
+                <td>{{txaddress}}</td>
+                <td>{{txbranch}}</td>
+                <td>{{txtrunk}}</td>
+                <td>{{txbundle}}</td>
+                <td>{{txvalue}}</td>
+                <td>{{txconfirmed}}</td>
+                <td>{{txvalue}}</td>
+                <td><textarea readonly="" spellcheck="false"
+                              style="width: 90%; font-size: small; font-family: Monospace; padding: 8px; background-color: #EEEEEE;"
+                              rows="4">
+                  {{txmessage}}
+                </textarea></td>
+              {{/if}}
+              </tr>
+              <tr>
+                <td>Mary</td>
+                <td>Moe</td>
+                <td>mary@example.com</td>
+              </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
