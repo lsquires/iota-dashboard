@@ -485,15 +485,16 @@ Template.vis.destroyed = function () {
   txshandler.stop();
 }
 Template.graphs.onCreated = function () {
-  console.log("stopped")
-  Meteor.subscribe("stats");
-  Meteor.subscribe("histstats");
+
+
 }
 Template.graphs.rendered = function () {
-
+  Meteor.subscribe("stats");
+  Meteor.subscribe("histstats");
   this.autorun(() => {
-    var data = graphstats.find({}).fetch();
-    var histdata = histographstats.find({}).fetch();
+    console.log("updated")
+    let data = graphstats.find({}).fetch();
+    let histdata = histographstats.find({}).fetch();
     for(let i = 0; i < data.length; i++) {
       data[i].date = new Date(data[i].date);
     }
