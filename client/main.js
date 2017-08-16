@@ -13,12 +13,12 @@ txshandler = {};
 dbwatcher = {};
 minsAgo = 1;
 xclosure = 70;
-xclosuresmall = 70
+xclosuresmall = 30
 linklength = 12
 filterConfirmed = false;
 nextClean = new Date();
 toRestart = true;
-smallNodeRadius = 5;
+smallNodeRadius = 6;
 nodeRadius = 10;
 
 Router.route('/', {name: "Home"}, function () {
