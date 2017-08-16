@@ -107,7 +107,7 @@ Template.vis.events({
 
     console.log(selectValue);
   },
-  "click #freezeviz": function(){
+  "click #freezeviz": function(event, template){
     console.log(template.$("#freezeviz"))
   }
 });
@@ -115,6 +115,7 @@ Template.vis.events({
 Template.vis.rendered = function () {
   var focused;
   var selected;
+  document.getElementById('freezeviz').bootstrapSwitch();
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
     var isFocused = false;
