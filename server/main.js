@@ -88,15 +88,15 @@ Meteor.startup(() => {
       var periodMinutes = 24 * 60;
       console.log("doing job, db size: "+txs.find().count());
       var now = startTime - periodMinutes * 60000;
-      txs.find().forEach(function (item) {
+      /*txs.find().forEach(function (item) {
         if (item.time < now) {
           console.log("removing:" + item._id);
           //fs.unlinkSync(item.path);
-          txs.remove({_id: item._id});
+          //txs.remove({_id: item._id});
           //files.remove({txid: item.txid});
           doMetrics = true;
         }
-      });
+      });*/
 
       //Record metrics
       if(doMetrics || true) {

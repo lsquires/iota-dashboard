@@ -496,7 +496,7 @@ Template.graphs.rendered = function () {
 
     MG.data_graphic({
       title: "Transaction Volume",
-      description: "Shows the number of tx's (measured over a 2 hour period)",
+      description: "Shows the number of tx's (measured over a 24 hour period)",
       data: data,
       target: document.getElementById('chart1'),
       x_accessor: 'date',
