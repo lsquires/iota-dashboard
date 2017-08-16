@@ -480,14 +480,18 @@ Template.vis.rendered = function () {
 }
 
 Template.vis.destroyed = function () {
+  console.log("started")
   dbwatcher.stop();
   txshandler.stop();
 }
-
-Template.graphs.rendered = function () {
+Template.graphs.onCreated = function () {
+  console.log("stopped")
   Meteor.subscribe("stats");
   Meteor.subscribe("histstats");
-  Tracker.autorun(() => {
+}
+Template.graphs.rendered = function () {
+
+  this.autorun(() => {
     var data = graphstats.find({}).fetch();
     var histdata = histographstats.find({}).fetch();
     for(let i = 0; i < data.length; i++) {

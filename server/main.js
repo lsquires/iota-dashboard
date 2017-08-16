@@ -13,7 +13,7 @@ let currentTime = new ReactiveVar(new Date().valueOf());
 
 
 //txs.remove({});
-//stats.remove({});
+stats.remove({date: {$lte: 1502875800}});
 
 
 Meteor.startup(() => {
