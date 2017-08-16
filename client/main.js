@@ -131,7 +131,7 @@ Template.vis.rendered = function () {
       .size([width, height])
       .nodes([])
       //.symmetricDiffLinkLengths(linklength)
-      .linkLengths(function(l) {
+      .linkDistance(function(l) {
         return l.bundle ? 2 : linklength;
       })
       .avoidOverlaps(false)
