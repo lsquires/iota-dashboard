@@ -489,8 +489,6 @@ Template.graphs.onCreated = function () {
 
 }
 Template.graphs.rendered = function () {
-  Meteor.subscribe("stats");
-  Meteor.subscribe("histstats");
   this.autorun(() => {
     console.log("updated")
     let data = graphstats.find({}).fetch();
@@ -572,4 +570,7 @@ Template.graphs.rendered = function () {
     });
 
   });
+
+  Meteor.subscribe("stats");
+  Meteor.subscribe("histstats");
 }
