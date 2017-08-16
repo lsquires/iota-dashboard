@@ -296,7 +296,9 @@ function checkParents(tx) {
 
 function addTX(tx, path) {
   tx.time = new Date().valueOf();
+
   console.log("adding tx: " + tx.time);
+  console.log("alting tx: " + (path.replace(/^.*[\\\/]/, '').split(".")[0]/1000));
   tx.confirmed = false;
   tx.tip = true;
 
