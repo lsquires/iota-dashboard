@@ -132,7 +132,7 @@ Template.vis.rendered = function () {
       .nodes([])
       //.symmetricDiffLinkLengths(linklength)
       .linkDistance(function(l) {
-        return l.bundle ? 2 : linklength;
+        return l.bundle ? 2 : linklength*5;
       })
       .avoidOverlaps(false)
       .flowLayout("x", function(l) {
