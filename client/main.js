@@ -18,6 +18,8 @@ linklength = 12
 filterConfirmed = false;
 nextClean = new Date();
 toRestart = true;
+smallNodeRadius = 3;
+nodeRadius = 10;
 
 Router.route('/', {name: "Home"}, function () {
   this.render('Home');
@@ -121,8 +123,7 @@ Template.vis.rendered = function () {
     var width = w,
       height = 300,
       centerx = width / 2,
-      centery = height / 2,
-      nodeRadius = 10;
+      centery = height / 2;
 
     var fill = d3.scaleOrdinal(d3.schemeCategory20);
 
@@ -186,8 +187,8 @@ Template.vis.rendered = function () {
           dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
           normX = deltaX / dist,
           normY = deltaY / dist,
-          sourcePadding = ((selected === d.target.id) ? nodeRadius + 2 : nodeRadius ),
-          targetPadding = ((selected === d.source.id) ? nodeRadius + 4 : nodeRadius + 2),
+          sourcePadding = ((selected === d.target.id) ? d.target.r + 2 : d.target.r ),
+          targetPadding = ((selected === d.source.id) ? d.source.r + 4 : d.source.r + 2),
           sourceX = d.target.x + (sourcePadding * normX),
           sourceY = d.target.y + (sourcePadding * normY),
           targetX = d.source.x - (targetPadding * normX),
@@ -210,7 +211,7 @@ Template.vis.rendered = function () {
       added: function (id, fields) {
 
         var node = {tx: fields, id: id, tip: true, confirmed: false};
-
+        node.r = (fields.lastIndex === fields.currentIndex) ? nodeRadius : smallNodeRadius;
         if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
           node.confirmed = true;
           node.milestone = true;
@@ -371,7 +372,7 @@ Template.vis.rendered = function () {
       node.exit().remove();
       var nodeenter = node.enter().append("circle")
         .attr("class", "node")
-        .attr("r", nodeRadius)
+        .attr("r", function(d) {return d.r;})
         .attr("id", function (d) {
           return "a" + d.id;
         })
