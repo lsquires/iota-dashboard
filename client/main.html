@@ -64,7 +64,7 @@
           <div class="row margin-bottom-20">
             <table class="table table-striped">
               <tbody>
-              
+              {{#if havetx}}
                 <tr><td>TxHash</td><td>{{txhash}}</td></tr>
                 <tr><td>Timestamp</td><td>{{txtimestamp}}</td></tr>
                 <tr><td>Recieved at Node</td><td>{{txnodetimestamp}}</td></tr>
@@ -78,8 +78,8 @@
                 <tr><td>Message</td><td><textarea readonly="" spellcheck="false"
                                                    style="width: 90%; font-size: small; font-family: Monospace; padding: 8px; background-color: #EEEEEE;"
                                                    rows="4">
-                  {{txmessage}}</td></tr>
-
+                  {{txmessage}}</textarea></td></tr>
+              {{/if}}
               </tbody>
             </table>
           </div>
