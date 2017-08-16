@@ -36,18 +36,15 @@
               </select>
             </div>
             <div class="col-sm-2">
-            <label for="filter">Filter</label>
+            <label for="filter">Filter:</label>
               <select class="form-control" id="filter">
                 <option value="all" selected>All</option>
                 <option value="confirmed">Only Confirmed</option>
               </select>
             </div>
             <div class="col-sm-2">
-              <div class="btn-group" data-toggle="buttons">
-              <label class="btn btn-primary">
-                <input type="checkbox" id="freezeviz" autocomplete="off">Freeze
-              </label>
-              </div>
+              <label for="freezeviz">Freeze Simulation:</label>
+              <input type="checkbox" id="freezeviz" checked data-toggle="toggle">
             </div>
 
           <div id="nodebox"></div>
