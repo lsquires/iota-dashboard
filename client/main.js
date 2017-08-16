@@ -127,7 +127,7 @@ Template.vis.rendered = function () {
       .size([width, height])
       .nodes([])
       .symmetricDiffLinkLengths(linklength)
-      .avoidOverlaps(true)
+      .avoidOverlaps(false)
       .flowLayout("x", function(l) {
         return l.bundle ? xclosuresmall : xclosure;
       })
