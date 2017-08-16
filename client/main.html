@@ -63,47 +63,23 @@
           <h2 class="box-header" style="margin-top: 0px">Transaction Details</h2>
           <div class="row margin-bottom-20">
             <table class="table table-striped">
-              <thead>
-              <tr>
-                <th>TxHash</th>
-                <th>Timestamp</th>
-                <th>Recieved at Node</th>
-                <th>Tag</th>
-                <th>Address</th>
-                <th>Branch Hash</th>
-                <th>Trunk Hash</th>
-                <th>Bundle</th>
-                <th>Value</th>
-                <th>Confirmed</th>
-                <th>Message</th>
-              </tr>
-              </thead>
               <tbody>
-              <tr>
               {{#if havetx}}
-                <td>{{txhash}}</td>
-                <td>{{txtimestamp}}</td>
-                <td>{{txnodetimestamp}}</td>
-                <td>{{txtag}}</td>
-                <td>{{txaddress}}</td>
-                <td>{{txbranch}}</td>
-                <td>{{txtrunk}}</td>
-                <td>{{txbundle}}</td>
-                <td>{{txvalue}}</td>
-                <td>{{txconfirmed}}</td>
-                <td>{{txvalue}}</td>
-                <td><textarea readonly="" spellcheck="false"
-                              style="width: 90%; font-size: small; font-family: Monospace; padding: 8px; background-color: #EEEEEE;"
-                              rows="4">
-                  {{txmessage}}
-                </textarea></td>
+                <tr><td>TxHash</td><td>{{txhash}}</td></tr>
+                <tr><td>Timestamp</td><td>{{txtimestamp}}</td></tr>
+                <tr><td>Recieved at Node</td><td>{{txnodetimestamp}}</td></tr>
+                <tr><td>Tag</td><td>{{txtag}}</td></tr>
+                <tr><td>Address</td><td>{{txaddress}}</td></tr>
+                <tr><td>Branch Hash</td><td>{{txbranch}}</td></tr>
+                <tr><td>Trunk Hash</td><td>{{txtrunk}}</td></tr>
+                <tr><td>Bundle</td><td>{{txbundle}}</td></tr>
+                <tr><td>Value</td><td>{{txvalue}}</td></tr>
+                <tr><td>Confirmed</td><td>{{txconfirmed}}</td></tr>
+                <tr><td>Message</td><td><textarea readonly="" spellcheck="false"
+                                                   style="width: 90%; font-size: small; font-family: Monospace; padding: 8px; background-color: #EEEEEE;"
+                                                   rows="4">
+                  {{txmessage}}</td></tr>
               {{/if}}
-              </tr>
-              <tr>
-                <td>Mary</td>
-                <td>Moe</td>
-                <td>mary@example.com</td>
-              </tr>
               </tbody>
             </table>
           </div>
