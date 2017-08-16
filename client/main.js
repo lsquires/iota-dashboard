@@ -18,7 +18,7 @@ linklength = 12
 filterConfirmed = false;
 nextClean = new Date();
 toRestart = true;
-smallNodeRadius = 3;
+smallNodeRadius = 5;
 nodeRadius = 10;
 
 Router.route('/', {name: "Home"}, function () {
@@ -211,7 +211,7 @@ Template.vis.rendered = function () {
       added: function (id, fields) {
 
         var node = {tx: fields, id: id, tip: true, confirmed: false};
-        node.r = (fields.lastIndex === fields.currentIndex) ? nodeRadius : smallNodeRadius;
+        node.r = (0 === fields.currentIndex) ? nodeRadius : smallNodeRadius;
         if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
           node.confirmed = true;
           node.milestone = true;
