@@ -325,7 +325,7 @@ Template.vis.rendered = function () {
 
 
     function setColour(node) {
-      if (node.tx.milestone) {
+      if (node.milestone) {
         node.colour = "#FF4500";
       } else if (node.confirmed) {
         node.colour = "#FFA500";
