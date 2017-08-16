@@ -106,6 +106,9 @@ Template.vis.events({
     }
 
     console.log(selectValue);
+  },
+  "click #freezeviz": function(){
+    console.log(template.$("#freezeviz"))
   }
 });
 
