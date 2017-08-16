@@ -489,88 +489,93 @@ Template.graphs.onCreated = function () {
 
 }
 Template.graphs.rendered = function () {
+  Meteor.subscribe("stats");
+  Meteor.subscribe("histstats");
   this.autorun(() => {
     console.log("updated")
     let data = graphstats.find({}).fetch();
     let histdata = histographstats.find({}).fetch();
-    for(let i = 0; i < data.length; i++) {
-      data[i].date = new Date(data[i].date);
+    if(data.length > 0) {
+      for (let i = 0; i < data.length; i++) {
+        data[i].date = new Date(data[i].date);
+      }
+
+      MG.data_graphic({
+        title: "Transaction Volume",
+        description: "Shows the number of tx's (measured over a 24 hour period)",
+        data: data,
+        target: document.getElementById('chart1'),
+        x_accessor: 'date',
+        y_accessor: ['totalTX', 'totalConfirmedTX', 'totalUnconfirmedNonTippedTX', 'totalTipTX'],
+        legend: ['Total TXs', 'Confirmed TXs', 'Unconfirmed Non-Tip TXs', 'Tip TXs'],
+        legend_target: document.getElementById('legend1'),
+        full_width: true,
+        full_height: true,
+        animate_on_load: true,
+        aggregate_rollover: true,
+      });
+
+      MG.data_graphic({
+        title: "Transaction Per Second",
+        description: "Shows the rate of tx's (measured over a 30 minute window)",
+        data: data,
+        target: document.getElementById('chart2'),
+        x_accessor: 'date',
+        y_accessor: ['TXs', 'cTXs'],
+        legend: ['All', 'Confirmed'],
+        legend_target: document.getElementById('legend2'),
+        full_width: true,
+        full_height: true,
+        animate_on_load: true,
+        y_label: 'TX/s',
+        aggregate_rollover: true,
+      });
+
+      MG.data_graphic({
+        title: "Average Confirmation Time",
+        description: "Shows the average time before confirmation in seconds (measured over a 24 hour period)",
+        data: data,
+        target: document.getElementById('chart3'),
+        x_accessor: 'date',
+        y_accessor: ['averagectimefiltered', 'averagectime'],
+        legend: ['Filtered (txs with <1 hour confirmation times', 'All txs'],
+        legend_target: document.getElementById('legend3'),
+        full_width: true,
+        full_height: true,
+        animate_on_load: true,
+        yax_format: function (s) {
+          return s + "s"
+        },
+        y_label: 'Confirmation Time',
+      });
+
+      var markers = [{
+        'range': 450,
+        'label': histdata[0].outofrange + " out of range",
+      }];
     }
-
-    MG.data_graphic({
-      title: "Transaction Volume",
-      description: "Shows the number of tx's (measured over a 24 hour period)",
-      data: data,
-      target: document.getElementById('chart1'),
-      x_accessor: 'date',
-      y_accessor: ['totalTX','totalConfirmedTX','totalUnconfirmedNonTippedTX','totalTipTX'],
-      legend: ['Total TXs','Confirmed TXs','Unconfirmed Non-Tip TXs','Tip TXs'],
-      legend_target: document.getElementById('legend1'),
-      full_width: true,
-      full_height: true,
-      animate_on_load: true,
-      aggregate_rollover: true,
-    });
-
-    MG.data_graphic({
-      title: "Transaction Per Second",
-      description: "Shows the rate of tx's (measured over a 30 minute window)",
-      data: data,
-      target: document.getElementById('chart2'),
-      x_accessor: 'date',
-      y_accessor: ['TXs','cTXs'],
-      legend: ['All','Confirmed'],
-      legend_target: document.getElementById('legend2'),
-      full_width: true,
-      full_height: true,
-      animate_on_load: true,
-      y_label: 'TX/s',
-      aggregate_rollover: true,
-    });
-
-    MG.data_graphic({
-      title: "Average Confirmation Time",
-      description: "Shows the average time before confirmation in seconds (measured over a 24 hour period)",
-      data: data,
-      target: document.getElementById('chart3'),
-      x_accessor: 'date',
-      y_accessor: ['averagectimefiltered','averagectime'],
-      legend: ['Filtered (txs with <1 hour confirmation times','All txs'],
-      legend_target: document.getElementById('legend3'),
-      full_width: true,
-      full_height: true,
-      animate_on_load: true,
-      yax_format: function(s){return s+"s"},
-      y_label: 'Confirmation Time',
-    });
-
-    var markers = [{
-      'range': 450,
-      'label': histdata[0].outofrange+" out of range",
-    }];
-
-    MG.data_graphic({
-      title: "Current Confirmation Time Chances (Node)",
-      description: "Shows the chance of confirmation at certain intervals (measured over a 24 hour period). "+d3.format("2p")(histdata[0].outofrange)+" of transactions are out of range (>500s)",
-      data: histdata[0].ctimes,
-      binned: true,
-      chart_type: 'histogram',
-      target: document.getElementById('chart4'),
-      full_width: true,
-      full_height: true,
-      animate_on_load: true,
-      xax_format: function(s){return s+"s"},
-      x_accessor: 'range',
-      y_accessor: 'count',
-      x_label: 'Confirmation Time',
-      y_label: 'Count',
-      markers: markers,
-      yax_format: d3.format('2p'),
-      //format: 'percentage',
-    });
-
+    if(histdata.length > 0) {
+      MG.data_graphic({
+        title: "Current Confirmation Time Chances (Node)",
+        description: "Shows the chance of confirmation at certain intervals (measured over a 24 hour period). " + d3.format("2p")(histdata[0].outofrange) + " of transactions are out of range (>500s)",
+        data: histdata[0].ctimes,
+        binned: true,
+        chart_type: 'histogram',
+        target: document.getElementById('chart4'),
+        full_width: true,
+        full_height: true,
+        animate_on_load: true,
+        xax_format: function (s) {
+          return s + "s"
+        },
+        x_accessor: 'range',
+        y_accessor: 'count',
+        x_label: 'Confirmation Time',
+        y_label: 'Count',
+        markers: markers,
+        yax_format: d3.format('2p'),
+        //format: 'percentage',
+      });
+    }
   });
-
-  Meteor.subscribe("stats");
-  Meteor.subscribe("histstats");
 }
