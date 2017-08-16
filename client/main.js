@@ -231,7 +231,7 @@ Template.vis.rendered = function () {
             if(target.confirmed) {
               node.confirmed = true;
             }
-            if(target.milestone && target.bundle === fields.bundle) {
+            if(target.milestone && target.tx.bundle === fields.bundle) {
               node.milestone = true;
             }
 
