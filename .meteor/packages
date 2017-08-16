@@ -27,3 +27,4 @@ peerlibrary:reactive-publish
 peerlibrary:subscription-data
 check
 d3js:d3
+jiku:bootstrap-toggle
