@@ -210,6 +210,7 @@ Template.vis.rendered = function () {
 
         if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
           node.confirmed = true;
+          node.milestone = true;
           //node.fixed = true;
           /*node.fx = centerx + coorNumber* 2 * xclosure;
           node.x = node.fx;
@@ -230,6 +231,9 @@ Template.vis.rendered = function () {
             if(target.confirmed) {
               node.confirmed = true;
             }
+            if(target.milestone && target.bundle === fields.bundle) {
+              node.milestone = true;
+            }
 
             if(target.tx.bundle == fields.bundle) {
               links.push({source: node, target: target, bundle: true});
@@ -246,6 +250,10 @@ Template.vis.rendered = function () {
               links.push({source: target, target: node, bundle: true});
             } else {
               links.push({source: target, target: node});
+            }
+
+            if(node.milestone && target.tx.bundle == fields.bundle) {
+              target.milestone = true;
             }
 
             if(node.confirmed && !target.confirmed) {
@@ -317,7 +325,7 @@ Template.vis.rendered = function () {
 
 
     function setColour(node) {
-      if (node.tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
+      if (node.tx.milestone) {
         node.colour = "#FF4500";
       } else if (node.confirmed) {
         node.colour = "#FFA500";
