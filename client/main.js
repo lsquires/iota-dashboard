@@ -508,6 +508,7 @@ Template.graphs.rendered = function () {
     if(data.length > 0) {
       for (let i = 0; i < data.length; i++) {
         data[i].date = new Date(data[i].date);
+        data[i].percent = data[i].totalConfirmedTX/data[i].totalTX;
       }
 
       MG.data_graphic({
@@ -558,6 +559,20 @@ Template.graphs.rendered = function () {
         },
         y_label: 'Confirmation Time',
       });
+
+      MG.data_graphic({
+        title: "Percent of Transactions Confirmed",
+        description: "Shows the percentage of txs confirmed in the tangle (measured over a 24 hour period)",
+        data: data,
+        target: document.getElementById('chart4'),
+        x_accessor: 'date',
+        y_accessor: 'percent',
+        full_width: true,
+        full_height: true,
+        format: 'percentage',
+        animate_on_load: true,
+        y_label: 'Confirmation Time',
+      });
     }
 
     if(histdata.length > 0) {
@@ -573,7 +588,7 @@ Template.graphs.rendered = function () {
         data: histdata[0].ctimes,
         binned: true,
         chart_type: 'histogram',
-        target: document.getElementById('chart4'),
+        target: document.getElementById('chart5'),
         full_width: true,
         full_height: true,
         animate_on_load: true,
