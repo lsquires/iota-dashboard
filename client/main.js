@@ -533,7 +533,7 @@ Template.graphs.rendered = function () {
     updateGraph();
   });
 
-  $(window).resize(function () {
+  $('#graphcontainer').resize(function () {
     console.log("resize graphs");
     updateGraph();
   });
