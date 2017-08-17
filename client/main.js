@@ -602,6 +602,9 @@ Template.graphs.rendered = function () {
       }];
 
       peaktx = histdata[0].peakTXs;
+      peakctx = histdata[0].peakCTXs;
+      peakvol = histdata[0].peakVol;
+
       MG.data_graphic({
         title: "Current Confirmation Time Chances (Node)",
         description: "Shows the chance of confirmation at certain intervals (measured over a 24 hour period). " + d3.format("2p")(histdata[0].outofrange) + " of transactions are out of range (>500s)",
