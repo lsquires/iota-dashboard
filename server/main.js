@@ -185,7 +185,17 @@ Meteor.startup(() => {
           cTXs: cTXs,
           TXs: TXs};
 
-        var doc = {set: true, ctimes: ctimesbins, outofrange: (outofrange/totalvalid)};
+        var peakData = histographstats.find({set: true}).fetch();
+        var peakTXs = TXs,
+            peakCTXs = cTXs,
+            peakVol = totalTX;
+        if(peakData.length > 0) {
+          peakTXs = Math.max(peakTXs, peakData[0].peakTXs);
+          peakCTXs = Math.max(peakCTXs, peakData[0].peakCTXs);
+          peakVol = Math.max(peakVol, peakData[0].peakVol);
+
+        }
+        var doc = {set: true, ctimes: ctimesbins, outofrange: (outofrange/totalvalid), peakTXs: peakTXs ,peakCTXs: peakCTXs, peakVol: peakVol};
         histographstats.upsert({set: true}, doc);
         stats.insert(toInsert);
 

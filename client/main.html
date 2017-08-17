@@ -127,11 +127,27 @@
         </div>
       </div>
     </div>
-    <div class="box-end col-sm-12">
+    <div class="box-end col-sm-6">
       <div class="floating-box  shadow-box">
         <div class=inside-floating-box>
           <div id="chart4" style="width: 1000px; height: 400px;"></div>
           <div id="legend4"></div>
+        </div>
+      </div>
+    </div>
+    <div class="box-end col-sm-6">
+      <div class="floating-box  shadow-box">
+        <div class=inside-floating-box>
+          <h2 class="box-header" style="margin-top: 0px">Peak Statistics</h2>
+          <div class="row margin-bottom-4">
+            <table class="table table-striped">
+              <tbody>
+              <tr><td>Highest TXs</td><td>{{peaktx}}</td></tr>
+              <tr><td>Highest CTXs</td><td>{{peakctx}}</td></tr>
+              <tr><td>Highest Volume</td><td>{{peakvol}}</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
