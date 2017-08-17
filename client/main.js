@@ -633,7 +633,7 @@ Template.graphs.rendered = function () {
         x_label: 'Confirmation Time',
         y_label: 'Count',
         markers: markers,
-        yax_format: d3.format('2p'),
+        yax_format: d3.format('.2%'),
         //format: 'percentage',
       });
     }
