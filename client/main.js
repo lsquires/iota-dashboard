@@ -634,6 +634,12 @@ Template.graphs.rendered = function () {
         y_label: 'Count',
         markers: markers,
         yax_format: d3.format('.2%'),
+        mouseover: function(y, x) {
+          // custom format the rollover text, show days
+          var pf = d3.format('.2%');
+          d3.select('#custom-rollover svg .mg-active-datapoint')
+            .text(pf(y)+" confirmed in "+ (x)+"-"+(x+10)+" seconds");
+        },
         //format: 'percentage',
       });
     }
