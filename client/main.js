@@ -530,118 +530,122 @@ Template.graphs.rendered = function () {
   Meteor.subscribe("stats");
   Meteor.subscribe("histstats");
   this.autorun(() => {
-    let data = graphstats.find({}).fetch();
-    let histdata = histographstats.find({}).fetch();
-    if(data.length > 0) {
-      for (let i = 0; i < data.length; i++) {
-        data[i].date = new Date(data[i].date);
-        data[i].percent = data[i].totalConfirmedTX/data[i].totalTX;
-      }
-
-      MG.data_graphic({
-        title: "Transaction Volume",
-        description: "Shows the number of tx's (measured over a 24 hour period)",
-        data: data,
-        target: document.getElementById('chart1'),
-        x_accessor: 'date',
-        y_accessor: ['totalTX', 'totalConfirmedTX', 'totalUnconfirmedNonTippedTX', 'totalTipTX'],
-        legend: ['Total TXs', 'Confirmed TXs', 'Unconfirmed Non-Tip TXs', 'Tip TXs'],
-        legend_target: document.getElementById('legend1'),
-        full_width: true,
-        full_height: true,
-        animate_on_load: true,
-        aggregate_rollover: true,
-      });
-
-      MG.data_graphic({
-        title: "Transaction Per Second",
-        description: "Shows the rate of tx's (measured over a 30 minute window)",
-        data: data,
-        target: document.getElementById('chart2'),
-        x_accessor: 'date',
-        y_accessor: ['TXs', 'cTXs'],
-        legend: ['All', 'Confirmed'],
-        legend_target: document.getElementById('legend2'),
-        full_width: true,
-        full_height: true,
-        animate_on_load: true,
-        y_label: 'TX/s',
-        aggregate_rollover: true,
-      });
-
-      MG.data_graphic({
-        title: "Average Confirmation Time",
-        description: "Shows the average time before confirmation in seconds (measured over a 24 hour period)",
-        data: data,
-        target: document.getElementById('chart3'),
-        x_accessor: 'date',
-        y_accessor: ['averagectimefiltered', 'averagectime'],
-        legend: ['Filtered (txs with <1 hour confirmation times', 'All txs'],
-        legend_target: document.getElementById('legend3'),
-        full_width: true,
-        full_height: true,
-        animate_on_load: true,
-        yax_format: function (s) {
-          return s + "s"
-        },
-        y_label: 'Confirmation Time',
-      });
-
-      MG.data_graphic({
-        title: "Percent of Transactions Confirmed",
-        description: "Shows the percentage of txs confirmed in the tangle (measured over a 24 hour period)",
-        data: data,
-        target: document.getElementById('chart4'),
-        x_accessor: 'date',
-        y_accessor: 'percent',
-        full_width: true,
-        full_height: true,
-        format: 'percentage',
-        animate_on_load: true,
-        y_label: 'Percent Confirmed',
-      });
-    }
-
-    if(histdata.length > 0) {
-
-      var markers = [{
-        'range': 450,
-        'label': histdata[0].outofrange + " out of range",
-      }];
-
-      peaktx.set(histdata[0].peakTXs);
-      peakctx.set(histdata[0].peakCTXs);
-      peakvol.set(histdata[0].peakVol);
-      peakpercent.set(histdata[0].peakPercent);
-      peaktime.set(histdata[0].peakTime);
-
-      MG.data_graphic({
-        title: "Current Confirmation Time Chances (Node)",
-        description: "Shows the chance of confirmation at certain intervals (measured over a 24 hour period). " + d3.format("2p")(histdata[0].outofrange) + " of transactions are out of range (>500s)",
-        data: histdata[0].ctimes,
-        binned: true,
-        chart_type: 'histogram',
-        target: document.getElementById('chart5'),
-        full_width: true,
-        full_height: true,
-        animate_on_load: true,
-        xax_format: function (s) {
-          return s + "s"
-        },
-        x_accessor: 'range',
-        y_accessor: 'count',
-        x_label: 'Confirmation Time',
-        y_label: 'Count',
-        markers: markers,
-        yax_format: d3.format('.2%'),
-        mouseover: function(y, x) {
-          // custom format the rollover text, show days
-          var pf = d3.format('.2%');
-          d3.select('#custom-rollover svg .mg-active-datapoint')
-            .text(pf(y)+" confirmed in "+ (x)+"-"+(x+10)+" seconds");
-        },
-        //format: 'percentage',
-      });
-    }
+    updateGraph();
   });
+}
+
+function updateGraph() {
+  let data = graphstats.find({}).fetch();
+  let histdata = histographstats.find({}).fetch();
+  if (data.length > 0) {
+    for (let i = 0; i < data.length; i++) {
+      data[i].date = new Date(data[i].date);
+      data[i].percent = data[i].totalConfirmedTX / data[i].totalTX;
+    }
+
+    MG.data_graphic({
+      title: "Transaction Volume",
+      description: "Shows the number of tx's (measured over a 24 hour period)",
+      data: data,
+      target: document.getElementById('chart1'),
+      x_accessor: 'date',
+      y_accessor: ['totalTX', 'totalConfirmedTX', 'totalUnconfirmedNonTippedTX', 'totalTipTX'],
+      legend: ['Total TXs', 'Confirmed TXs', 'Unconfirmed Non-Tip TXs', 'Tip TXs'],
+      legend_target: document.getElementById('legend1'),
+      full_width: true,
+      full_height: true,
+      animate_on_load: true,
+      aggregate_rollover: true,
+    });
+
+    MG.data_graphic({
+      title: "Transaction Per Second",
+      description: "Shows the rate of tx's (measured over a 30 minute window)",
+      data: data,
+      target: document.getElementById('chart2'),
+      x_accessor: 'date',
+      y_accessor: ['TXs', 'cTXs'],
+      legend: ['All', 'Confirmed'],
+      legend_target: document.getElementById('legend2'),
+      full_width: true,
+      full_height: true,
+      animate_on_load: true,
+      y_label: 'TX/s',
+      aggregate_rollover: true,
+    });
+
+    MG.data_graphic({
+      title: "Average Confirmation Time",
+      description: "Shows the average time before confirmation in seconds (measured over a 24 hour period)",
+      data: data,
+      target: document.getElementById('chart3'),
+      x_accessor: 'date',
+      y_accessor: ['averagectimefiltered', 'averagectime'],
+      legend: ['Filtered (txs with <1 hour confirmation times', 'All txs'],
+      legend_target: document.getElementById('legend3'),
+      full_width: true,
+      full_height: true,
+      animate_on_load: true,
+      yax_format: function (s) {
+        return s + "s"
+      },
+      y_label: 'Confirmation Time',
+    });
+
+    MG.data_graphic({
+      title: "Percent of Transactions Confirmed",
+      description: "Shows the percentage of txs confirmed in the tangle (measured over a 24 hour period)",
+      data: data,
+      target: document.getElementById('chart4'),
+      x_accessor: 'date',
+      y_accessor: 'percent',
+      full_width: true,
+      full_height: true,
+      format: 'percentage',
+      animate_on_load: true,
+      y_label: 'Percent Confirmed',
+    });
+  }
+
+  if (histdata.length > 0) {
+
+    var markers = [{
+      'range': 450,
+      'label': histdata[0].outofrange + " out of range",
+    }];
+
+    peaktx.set(histdata[0].peakTXs);
+    peakctx.set(histdata[0].peakCTXs);
+    peakvol.set(histdata[0].peakVol);
+    peakpercent.set(histdata[0].peakPercent);
+    peaktime.set(histdata[0].peakTime);
+
+    MG.data_graphic({
+      title: "Current Confirmation Time Chances (Node)",
+      description: "Shows the chance of confirmation at certain intervals (measured over a 24 hour period). " + d3.format("2p")(histdata[0].outofrange) + " of transactions are out of range (>500s)",
+      data: histdata[0].ctimes,
+      binned: true,
+      chart_type: 'histogram',
+      target: document.getElementById('chart5'),
+      full_width: true,
+      full_height: true,
+      animate_on_load: true,
+      xax_format: function (s) {
+        return s + "s"
+      },
+      x_accessor: 'range',
+      y_accessor: 'count',
+      x_label: 'Confirmation Time',
+      y_label: 'Count',
+      markers: markers,
+      yax_format: d3.format('.2%'),
+      /* mouseover: function(y, x) {
+       // custom format the rollover text, show days
+       var pf = d3.format('.2%');
+       d3.select('#custom-rollover svg .mg-active-datapoint')
+       .text(pf(y)+" confirmed in "+ (x)+"-"+(x+10)+" seconds");
+       },*/
+      //format: 'percentage',
+    });
+  }
 }
