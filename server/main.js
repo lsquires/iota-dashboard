@@ -189,7 +189,7 @@ Meteor.startup(() => {
         var peakTXs = TXs,
             peakCTXs = cTXs,
             peakVol = totalTX;
-        if(peakData.length > 0) {
+        if(peakData.length > 0 && peakData[0].peakTXs) {
           peakTXs = Math.max(peakTXs, peakData[0].peakTXs);
           peakCTXs = Math.max(peakCTXs, peakData[0].peakCTXs);
           peakVol = Math.max(peakVol, peakData[0].peakVol);
