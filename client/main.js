@@ -564,7 +564,7 @@ function updateGraph() {
     });
 
     MG.data_graphic({
-      title: "Transaction Per Second",
+      title: "Transaction Rate",
       description: "Shows the rate of tx's (measured over a 30 minute window)",
       data: data,
       target: document.getElementById('chart2'),
@@ -581,7 +581,7 @@ function updateGraph() {
 
     MG.data_graphic({
       title: "Average Confirmation Time",
-      description: "Shows the average time before confirmation in seconds (measured over a 24 hour period)",
+      description: "Shows the average time before confirmation in seconds (measured over a 24 hour period), filtered is included since a few transaction are outliers.",
       data: data,
       target: document.getElementById('chart3'),
       x_accessor: 'date',
@@ -626,7 +626,7 @@ function updateGraph() {
     peaktime.set(histdata[0].peakTime);
 
     MG.data_graphic({
-      title: "Current Confirmation Time Chances (Node)",
+      title: "Current Confirmation Time Chances",
       description: "Shows the chance of confirmation at certain intervals (measured over a 24 hour period). " + d3.format("2p")(histdata[0].outofrange) + " of transactions are out of range (>500s)",
       data: histdata[0].ctimes,
       binned: true,
