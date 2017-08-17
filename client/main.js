@@ -499,11 +499,11 @@ Template.vis.destroyed = function () {
   txshandler.stop();
 }
 
-Template.graphs.onCreated = function () {
+Template.graphs.onCreated(function () {
   peaktx = new ReactiveVar(0);
   peakctx = new ReactiveVar(0);
   peakvol = new ReactiveVar(0);
-}
+});
 
 
 Template.graphs.helpers({
