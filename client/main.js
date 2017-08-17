@@ -503,6 +503,8 @@ Template.graphs.onCreated(function () {
   peaktx = new ReactiveVar(0);
   peakctx = new ReactiveVar(0);
   peakvol = new ReactiveVar(0);
+  peakpercent = new ReactiveVar(0);
+  peaktime = new ReactiveVar(0);
 });
 
 
@@ -515,6 +517,12 @@ Template.graphs.helpers({
   },
   peakvol: function () {
     return peakvol.get();
+  },
+  peakpercent: function () {
+    return d3.format(".2%")(peakpercent.get());
+  },
+  peaktime: function () {
+    return d3.format(".2")(peaktime.get()) + "s";
   },
 });
 
@@ -604,6 +612,8 @@ Template.graphs.rendered = function () {
       peaktx = histdata[0].peakTXs;
       peakctx = histdata[0].peakCTXs;
       peakvol = histdata[0].peakVol;
+      peakpercent = histdata[0].peakPercent;
+      peaktime = histdata[0].peakTime;
 
       MG.data_graphic({
         title: "Current Confirmation Time Chances (Node)",
