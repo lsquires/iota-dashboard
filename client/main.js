@@ -609,11 +609,11 @@ Template.graphs.rendered = function () {
         'label': histdata[0].outofrange + " out of range",
       }];
 
-      peaktx = histdata[0].peakTXs;
-      peakctx = histdata[0].peakCTXs;
-      peakvol = histdata[0].peakVol;
-      peakpercent = histdata[0].peakPercent;
-      peaktime = histdata[0].peakTime;
+      peaktx.set(histdata[0].peakTXs);
+      peakctx.set(histdata[0].peakCTXs);
+      peakvol.set(histdata[0].peakVol);
+      peakpercent.set(histdata[0].peakPercent);
+      peaktime.set(histdata[0].peakTime);
 
       MG.data_graphic({
         title: "Current Confirmation Time Chances (Node)",
