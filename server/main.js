@@ -15,6 +15,16 @@ let currentTime = new ReactiveVar(new Date().valueOf());
 //txs.remove({});
 //stats.remove({date: {$lte: (1502875800000)}});
 
+histographstats.update({set: true}, { $set: {
+  peakTXs: stats.find({},{limit: 1, sort: {TXs: -1}}).fetch().TXs,
+  peakCTXs: stats.find({},{limit: 1, sort: {cTXs: -1}}).fetch().cTXs,
+  peakVol: stats.find({},{limit: 1, sort: {totalTX: -1}}).fetch().totalTX,
+  peakPercent: 0.7947,
+  peakTime: stats.find({},{limit: 1, sort: {averagectimefiltered: 1}}).fetch().averagectimefiltered
+  }
+});
+
+
 Meteor.startup(() => {
 
   function deleteFilesInFolder(path) {
