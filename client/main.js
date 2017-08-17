@@ -492,12 +492,12 @@ Template.vis.rendered = function () {
   }
 
 
-}
+};
 
 Template.vis.destroyed = function () {
   dbwatcher.stop();
   txshandler.stop();
-}
+};
 
 Template.graphs.onCreated(function () {
   peaktx = new ReactiveVar(0);
@@ -532,7 +532,12 @@ Template.graphs.rendered = function () {
   this.autorun(() => {
     updateGraph();
   });
-}
+
+  $(window).resize(function () {
+    console.log("resize graphs");
+    updateGraph();
+  });
+};
 
 function updateGraph() {
   let data = graphstats.find({}).fetch();
