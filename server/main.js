@@ -196,7 +196,7 @@ Meteor.startup(() => {
           peakCTXs = Math.max(peakCTXs, peakData[0].peakCTXs);
           peakVol = Math.max(peakVol, peakData[0].peakVol);
           peakPercent = Math.max(peakPercent, peakData[0].peakPercent);
-          peakTime = Math.max(peakTime, peakData[0].peakTime);
+          peakTime = Math.min(peakTime, peakData[0].peakTime);
         }
         var doc = {set: true, ctimes: ctimesbins, outofrange: (outofrange/totalvalid),
           peakTXs: peakTXs, peakCTXs: peakCTXs, peakVol: peakVol, peakPercent: peakPercent, peakTime: peakTime};
