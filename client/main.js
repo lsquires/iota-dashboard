@@ -557,8 +557,8 @@ function updateGraph() {
       y_accessor: ['totalTX', 'totalConfirmedTX', 'totalUnconfirmedNonTippedTX', 'totalTipTX'],
       legend: ['Total TXs', 'Confirmed TXs', 'Unconfirmed Non-Tip TXs', 'Tip TXs'],
       legend_target: document.getElementById('legend1'),
-      full_width: true,
-      full_height: true,
+      width: document.getElementById('chart1div').clientWidth,
+      height: 400,
       animate_on_load: true,
       aggregate_rollover: true,
     });
