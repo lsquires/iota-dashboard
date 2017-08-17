@@ -510,19 +510,19 @@ Template.graphs.onCreated(function () {
 
 Template.graphs.helpers({
   peaktx: function () {
-    return peaktx.get();
+    return d3.format(".4f")(peaktx.get())+" TX/s";
   },
   peakctx: function () {
-    return peakctx.get();
+    return d3.format(".4f")(peakctx.get())+" CTX/s";
   },
   peakvol: function () {
-    return peakvol.get();
+    return peakvol.get()+" TXs";
   },
   peakpercent: function () {
     return d3.format(".2%")(peakpercent.get());
   },
   peaktime: function () {
-    return d3.format(".2")(peaktime.get()) + "s";
+    return d3.format(".2f")(peaktime.get()) + "s";
   },
 });
 
