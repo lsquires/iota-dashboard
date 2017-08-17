@@ -571,7 +571,7 @@ Template.graphs.rendered = function () {
         full_height: true,
         format: 'percentage',
         animate_on_load: true,
-        y_label: 'Confirmation Time',
+        y_label: 'Percent Confirmed',
       });
     }
 
