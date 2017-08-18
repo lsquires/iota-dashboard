@@ -121,7 +121,7 @@ Template.vis.rendered = function () {
   function startSim(w) {
     var isFocused = false;
     var width = w,
-      height = 300,
+      height = 400,
       centerx = width / 2,
       centery = height / 2;
 
