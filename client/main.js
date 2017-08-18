@@ -455,7 +455,7 @@ Template.vis.rendered = function () {
             });
           })
           .call(force.drag)
-          .merge(node);
+          //.merge(node);
 
         nodeenter.style("opacity", function (o) {
           return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
