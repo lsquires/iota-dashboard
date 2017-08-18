@@ -367,7 +367,7 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-      if(realtime) {
+
         node = node.data(nodes, function (d) {
           return d.id;
         });
@@ -487,7 +487,7 @@ Template.vis.rendered = function () {
 
 
         //link = linkenter.merge(link);
-
+      if(realtime) {
         force.start();
       }
     }
