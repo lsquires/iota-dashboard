@@ -20,6 +20,7 @@ nextClean = new Date();
 toRestart = true;
 smallNodeRadius = 6;
 nodeRadius = 10;
+realtime = true;
 
 Router.route('/', {name: "Home"}, function () {
   this.render('Home');
@@ -89,7 +90,7 @@ Template.transactioninfo.helpers({
 Template.vis.events({
   "change #timePeriod": function (event, template) {
     let selectValue = parseInt(template.$("#timePeriod").val(), 10);
-    console.log(selectValue);
+    //console.log(selectValue);
     txshandler.setData('minsago', selectValue);
   },
   "change #filter": function (event, template) {
@@ -107,10 +108,11 @@ Template.vis.events({
       }
     }
 
-    console.log(selectValue);
+    //console.log(selectValue);
   },
   "click #freezeviz": function(event, template){
-    console.log(template.$("#freezeviz"))
+    //console.log(template.$("#freezeviz"))
+    realtime = $("#freezeviz")[0].checked;
   }
 });
 
@@ -119,6 +121,7 @@ Template.vis.rendered = function () {
   var selected;
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
+    realtime = $("#freezeviz")[0].checked;
     var isFocused = false;
     var width = w,
       height = 400,
@@ -364,130 +367,129 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
+      if(realtime) {
+        node = node.data(nodes, function (d) {
+          return d.id;
+        });
+        link = link.data(links, function (d) {
+          return d.source.id + "-" + d.target.id;
+        });
 
-      node = node.data(nodes, function (d) {
-        return d.id;
-      });
-      link = link.data(links, function (d) {
-        return d.source.id + "-" + d.target.id;
-      });
 
-      node.exit().remove();
-      var nodeenter = node.enter().append("circle")
-        .attr("class", "node")
-        .attr("r", function(d) {return d.r;})
-        .attr("id", function (d) {
-          return "a" + d.id;
-        })
-        .on("mouseleave", function (d) {
-          svg.style("cursor", "move");
-        })
-        .on("mouseover", function (d) {
-          svg.style("cursor", "pointer");
-        })
-        .on("mousedown", function (d) {
-        d3.event.stopPropagation();
-        if (selected && !d3.select("#a" + selected).empty()) {
-          d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
-          d3.select("#a" + selected).style("stroke", "#fff");
-        }
-        d3.select(this).transition().duration(200).style("stroke-width", 4);
-        d3.select(this).style("stroke", "#000");
-        selected = d.id;
+        node.exit().remove();
+        var nodeenter = node.enter().append("circle")
+          .attr("class", "node")
+          .attr("r", function (d) {
+            return d.r;
+          })
+          .attr("id", function (d) {
+            return "a" + d.id;
+          })
+          .on("mouseleave", function (d) {
+            svg.style("cursor", "move");
+          })
+          .on("mouseover", function (d) {
+            svg.style("cursor", "pointer");
+          })
+          .on("mousedown", function (d) {
+            d3.event.stopPropagation();
+            if (selected && !d3.select("#a" + selected).empty()) {
+              d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
+              d3.select("#a" + selected).style("stroke", "#fff");
+            }
+            d3.select(this).transition().duration(200).style("stroke-width", 4);
+            d3.select(this).style("stroke", "#000");
+            selected = d.id;
 
-        txhash.set(d.tx.hash);
-        txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
-        txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
-        txtag.set(d.tx.tag);
-        txaddress.set(d.tx.address);
-        txvalue.set(d.tx.value);
-        txbundle.set(d.tx.bundle)
-        txmessage.set(d.tx.signatureMessageFragment);
-        txconfirmed.set(d.confirmed ? "true" : "false");
-        txbranch.set(d.tx.branchTransaction)
-        txtrunk.set(d.tx.trunkTransaction)
+            txhash.set(d.tx.hash);
+            txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+            txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
+            txtag.set(d.tx.tag);
+            txaddress.set(d.tx.address);
+            txvalue.set(d.tx.value);
+            txbundle.set(d.tx.bundle)
+            txmessage.set(d.tx.signatureMessageFragment);
+            txconfirmed.set(d.confirmed ? "true" : "false");
+            txbranch.set(d.tx.branchTransaction)
+            txtrunk.set(d.tx.trunkTransaction)
 
-          focused = d;
-          isFocused = true;
-          node.style("opacity", function (o) {
-            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-          });
-          link.style("opacity", function (o) {
-            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-          });
-      })
-        .on("click", function (d) {
-          d3.event.stopPropagation();
+            focused = d;
+            isFocused = true;
+            node.style("opacity", function (o) {
+              return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+            });
+            link.style("opacity", function (o) {
+              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+            });
+          })
+          .on("click", function (d) {
+            d3.event.stopPropagation();
+            if (selected && !d3.select("#a" + selected).empty()) {
+              d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
+              d3.select("#a" + selected).style("stroke", "#fff");
+            }
+            d3.select(this).transition().duration(200).style("stroke-width", 4);
+            d3.select(this).style("stroke", "#000");
+            selected = d.id;
+
+            txhash.set(d.tx.hash);
+            txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+            txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
+            txtag.set(d.tx.tag);
+            txaddress.set(d.tx.address);
+            txvalue.set(d.tx.value);
+            txbundle.set(d.tx.bundle)
+            txmessage.set(d.tx.signatureMessageFragment);
+            txconfirmed.set(d.confirmed ? "true" : "false");
+            txbranch.set(d.tx.branchTransaction)
+            txtrunk.set(d.tx.trunkTransaction)
+
+            focused = d;
+            isFocused = true;
+            node.style("opacity", function (o) {
+              return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+            });
+            link.style("opacity", function (o) {
+              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+            });
+          })
+          .call(force.drag)
+          .merge(node);
+
+        nodeenter.style("opacity", function (o) {
+          return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+        });
+        nodeenter.style("fill", function (d) {
+          return d.colour;
+        });
+        node = nodeenter.merge(node);
+
+        basesvg.on("click", function (d) {
+          isFocused = false;
+          link.style("opacity", 0.4);
+          node.style("opacity", 1);
           if (selected && !d3.select("#a" + selected).empty()) {
             d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
             d3.select("#a" + selected).style("stroke", "#fff");
           }
-          d3.select(this).transition().duration(200).style("stroke-width", 4);
-          d3.select(this).style("stroke", "#000");
-          selected = d.id;
-
-          txhash.set(d.tx.hash);
-          txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
-          txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
-          txtag.set(d.tx.tag);
-          txaddress.set(d.tx.address);
-          txvalue.set(d.tx.value);
-          txbundle.set(d.tx.bundle)
-          txmessage.set(d.tx.signatureMessageFragment);
-          txconfirmed.set(d.confirmed ? "true" : "false");
-          txbranch.set(d.tx.branchTransaction)
-          txtrunk.set(d.tx.trunkTransaction)
-
-          focused = d;
-          isFocused = true;
-          node.style("opacity", function (o) {
-            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-          });
-          link.style("opacity", function (o) {
-            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-          });
-        })
-        .call(force.drag)
-        .merge(node);
-
-      nodeenter.style("opacity", function (o) {
-        return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-      });
-      nodeenter.style("fill", function (d) {
-        return d.colour;
-      });
-      node = nodeenter.merge(node);
-
-      basesvg.on("click", function (d) {
-        isFocused = false;
-        link.style("opacity", 0.4);
-        node.style("opacity", 1);
-        if (selected && !d3.select("#a" + selected).empty()) {
-          d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
-          d3.select("#a" + selected).style("stroke", "#fff");
-        }
-        selected = null;
-      });
+          selected = null;
+        });
 
 
+        link.exit().remove();
+        var linkenter = link.enter().append('svg:path')
+          .attr("class", "link");
+
+        linkenter.style("opacity", function (o) {
+          return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+        });
+        link = linkenter.merge(link);
 
 
+        //link = linkenter.merge(link);
 
-      link.exit().remove();
-      var linkenter = link.enter().append('svg:path')
-        .attr("class", "link");
-
-      linkenter.style("opacity", function (o) {
-        return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-      });
-      link = linkenter.merge(link);
-
-
-
-      //link = linkenter.merge(link);
-
-      force.start();
-
+        force.start();
+      }
     }
   }
 
