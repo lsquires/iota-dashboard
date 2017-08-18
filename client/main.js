@@ -375,7 +375,7 @@ Template.vis.rendered = function () {
           return d.source.id + "-" + d.target.id;
         });
 
-
+      if(realtime) {
         node.exit().remove();
         var nodeenter = node.enter().append("circle")
           .attr("class", "node")
@@ -487,7 +487,7 @@ Template.vis.rendered = function () {
 
 
         //link = linkenter.merge(link);
-      if(realtime) {
+
         force.start();
       }
     }
