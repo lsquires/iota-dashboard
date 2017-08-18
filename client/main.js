@@ -133,7 +133,6 @@ Template.vis.rendered = function () {
     var force = cola.d3adaptor(d3)
       .size([width, height])
       .nodes([])
-      .friction(0.5)
       .symmetricDiffLinkLengths(linklength)
       /*.linkDistance(function(l) {
         return l.bundle ? 2 : linklength*2;
