@@ -69,9 +69,6 @@ rect {
 .header .navbar-nav>li>a, .header .navbar-nav>li>a:focus {
   border-bottom: solid 3px transparent;
 }
-.inside-floating-box {
-  padding: 20px;
-}
 
 .profile .profile-body {
   padding: 20px;
