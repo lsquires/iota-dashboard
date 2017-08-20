@@ -10,6 +10,7 @@ var MG = require('metrics-graphics');
 var coorNumber = 0;
 console.log(d3);
 txshandler = {};
+statshandler = {};
 dbwatcher = {};
 minsAgo = 1;
 xclosure = 70;
@@ -84,46 +85,6 @@ Template.transactioninfo.helpers({
   },
   txbranch: function () {
     return txbranch.get();
-  }
-});
-
-Date.prototype.toDateInputValue = (function() {
-  var local = new Date(this);
-  local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-  return local.toJSON().slice(0,10);
-});
-
-function changePeriod(template, days) {
-  let to = (new Date()).valueOf();
-  let from = to - (days * 24 * 60 * 60000);
-
-  template.$("#statsfrom").val(new Date(from).toDateInputValue());
-  template.$("#statsto").val(new Date(to).toDateInputValue());
-  txshandler.setData('statsfrom', from);
-  txshandler.setData('statsto', to);
-}
-
-Template.Stats.events({
-  "click #stats-day": function(event, template){
-    changePeriod(template, 1);
-  },
-  "click #stats-week": function(event, template){
-    changePeriod(template, 7);
-  },
-  "click #stats-month": function(event, template){
-    changePeriod(template, 31);
-  },
-  "click #stats-year": function(event, template){
-    changePeriod(template, 365);
-  },
-  "click #stats-all": function(event, template){
-    let to = (new Date()).valueOf();
-    let from = 0;
-
-    template.$("#statsfrom").val(new Date(from).toDateInputValue());
-    template.$("#statsto").val(new Date(to).toDateInputValue());
-    txshandler.setData('statsfrom', from);
-    txshandler.setData('statsto', to);
   }
 });
 
@@ -542,6 +503,52 @@ Template.vis.destroyed = function () {
   txshandler.stop();
 };
 
+
+Date.prototype.toDateInputValue = (function() {
+  var local = new Date(this);
+  local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+  return local.toJSON().slice(0,10);
+});
+
+function changePeriod(template, days) {
+  let to = (new Date()).valueOf();
+  let from = to - (days * 24 * 60 * 60000);
+
+  template.$("#statsfrom").val(new Date(from).toDateInputValue());
+  template.$("#statsto").val(new Date(to).toDateInputValue());
+  statshandler.setData('statsfrom', from);
+  statshandler.setData('statsto', to);
+}
+
+Template.Stats.events({
+  "click #stats-day": function(event, template){
+    changePeriod(template, 1);
+  },
+  "click #stats-week": function(event, template){
+    changePeriod(template, 7);
+  },
+  "click #stats-month": function(event, template){
+    changePeriod(template, 31);
+  },
+  "click #stats-year": function(event, template){
+    changePeriod(template, 365);
+  },
+  "click #stats-all": function(event, template){
+    let to = (new Date()).valueOf();
+    let from = 0;
+
+    template.$("#statsfrom").val(new Date(from).toDateInputValue());
+    template.$("#statsto").val(new Date(to).toDateInputValue());
+    statshandler.setData('statsfrom', from);
+    statshandler.setData('statsto', to);
+  }
+});
+
+Template.Stats.rendered = function () {
+  statshandler = Meteor.subscribe("stats");
+  Meteor.subscribe("histstats");
+}
+
 Template.graphs.onCreated(function () {
   peaktx = new ReactiveVar(0);
   peakctx = new ReactiveVar(0);
@@ -570,8 +577,7 @@ Template.graphs.helpers({
 });
 
 Template.graphs.rendered = function () {
-  Meteor.subscribe("stats");
-  Meteor.subscribe("histstats");
+
   this.autorun(() => {
     updateGraph();
   });
