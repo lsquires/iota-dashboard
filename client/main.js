@@ -88,7 +88,51 @@ Template.transactioninfo.helpers({
 });
 
 Template.Stats.events({
+  "click #stats-day": function(event, template){
+    let to = (new Date()).valueOf();
+    let from = to - (24 * 60 * 60000);
 
+    template.$("#statsfrom").val(new Date(from).toDateInputValue());
+    template.$("#statsto").val(new Date(to).toDateInputValue());
+    txshandler.setData('statsfrom', from);
+    txshandler.setData('statsto', to);
+  },
+  "click #stats-week": function(event, template){
+    let to = (new Date()).valueOf();
+    let from = to - (7 * 24 * 60 * 60000);
+
+    template.$("#statsfrom").val(new Date(from).toDateInputValue());
+    template.$("#statsto").val(new Date(to).toDateInputValue());
+    txshandler.setData('statsfrom', from);
+    txshandler.setData('statsto', to);
+  },
+  "click #stats-month": function(event, template){
+    let to = (new Date()).valueOf();
+    let from = to - (31 * 24 * 60 * 60000);
+
+    template.$("#statsfrom").val(new Date(from).toDateInputValue());
+    template.$("#statsto").val(new Date(to).toDateInputValue());
+    txshandler.setData('statsfrom', from);
+    txshandler.setData('statsto', to);
+  },
+  "click #stats-year": function(event, template){
+    let to = (new Date()).valueOf();
+    let from = to - (365 * 24 * 60 * 60000);
+
+    template.$("#statsfrom").val(new Date(from).toDateInputValue());
+    template.$("#statsto").val(new Date(to).toDateInputValue());
+    txshandler.setData('statsfrom', from);
+    txshandler.setData('statsto', to);
+  },
+  "click #stats-all": function(event, template){
+    let to = (new Date()).valueOf();
+    let from = 0;
+
+    template.$("#statsfrom").val(new Date(from).toDateInputValue());
+    template.$("#statsto").val(new Date(to).toDateInputValue());
+    txshandler.setData('statsfrom', from);
+    txshandler.setData('statsto', to);
+  }
 });
 
 Template.vis.events({
