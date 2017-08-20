@@ -87,6 +87,10 @@ Template.transactioninfo.helpers({
   }
 });
 
+Template.Stats.events({
+
+});
+
 Template.vis.events({
   "change #timePeriod": function (event, template) {
     let selectValue = parseInt(template.$("#timePeriod").val(), 10);
