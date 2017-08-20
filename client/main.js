@@ -578,15 +578,28 @@ Template.graphs.helpers({
 
 Template.graphs.rendered = function () {
 
+  updateGraphBounced = debounce(updateGraph(), 1000);
   this.autorun(() => {
-    updateGraph();
+    updateGraphBounced();
   });
 
   $(window).resize(function () {
     console.log("resize graphs");
-    updateGraph();
+    updateGraphBounced();
   });
 };
+
+function debounce(func, interval) {
+  var lastCall = -1;
+  return function() {
+    clearTimeout(lastCall);
+    var args = arguments;
+    var self = this;
+    lastCall = setTimeout(function() {
+      func.apply(self, args);
+    }, interval);
+  };
+}
 
 function updateGraph() {
   let data = graphstats.find({}).fetch();
