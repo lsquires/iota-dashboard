@@ -578,7 +578,6 @@ Template.graphs.helpers({
 
 Template.graphs.rendered = function () {
 
-  updateGraphBounced = debounce(updateGraph(), 1000);
   this.autorun(() => {
     updateGraphBounced();
   });
@@ -589,15 +588,13 @@ Template.graphs.rendered = function () {
   });
 };
 
-function debounce(func, interval) {
+function updateGraphBounced() {
   var lastCall = -1;
   return function() {
     clearTimeout(lastCall);
-    var args = arguments;
-    var self = this;
     lastCall = setTimeout(function() {
-      func.apply(self, args);
-    }, interval);
+       updateGraph();
+    }, 1000);
   };
 }
 
