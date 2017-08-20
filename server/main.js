@@ -51,7 +51,26 @@ Meteor.startup(() => {
     return histographstats.find({});
   });
   Meteor.publish('stats', function() {
-    return stats.find({});
+    var self = this;
+    self.autorun(function () {
+      var from = self.data('statsfrom') || (currentTime.get() - (24 * 60 * 60000) );
+      check(from, Number);
+      var to = self.data('statsto') || currentTime.get();
+      check(to, Number);
+
+      let interval = to - from;
+      if(interval <= 0) {
+        from = currentTime.get() - (24 * 60 * 60000);
+        to = currentTime.get()
+        interval = to - from;
+      }
+
+      return stats.find({
+        $and: [
+          {"date": {$gte: from}},
+          {"date": {$lte: to}}]
+      });
+    });
   });
   Meteor.publish('txs', function () {
     var self = this;
