@@ -299,7 +299,7 @@ Template.vis.rendered = function () {
         nodes.push(node);
 
 
-        schedulerestart();
+        scheduledrestart();
 
       },
       changed: function (id, fields) {
@@ -359,8 +359,8 @@ Template.vis.rendered = function () {
         a.id == b.id;
     }
 
-    schedulerestart = debounce(function() {restart()}, 100);
-
+    schedulerestart = debounce(restart(), 100);
+    scheduledrestart = function() {restart()};
     function clickEvent(self) {
 
     }
