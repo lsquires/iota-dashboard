@@ -359,7 +359,7 @@ Template.vis.rendered = function () {
         a.id == b.id;
     }
 
-    schedulerestart = debounce(restart, 200);
+    schedulerestart = debounce(function() {restart(); restart();}, 200);
 
     function clickEvent(self) {
 
@@ -575,7 +575,7 @@ Template.graphs.helpers({
 });
 
 Template.graphs.rendered = function () {
-  updateGraphBounced = debounce(function() {updateGraph(); updateGraph();}, 200);
+  updateGraphBounced = debounce(function() {updateGraph();}, 1000);
   this.autorun(() => {
     updateGraphBounced();
   });
