@@ -25,14 +25,14 @@ let currentTime = new ReactiveVar(new Date().valueOf());
 });*/
 
 
-var index = 0;
+/*var index = 0;
 iterateThrough = stats.find({},{sort: {date: 1}}).fetch();
 for(let i = 0; i < iterateThrough.length; i++) {
   stats.update({_id: iterateThrough[i]._id}, {$set: {index: index}});
   index++;
-}
+}*/
 
-//var index = stats.findOne({}, {sort: {index: -1}}).index + 1;
+var index = stats.findOne({}, {sort: {index: -1}}).index + 1;
 console.log(index + "= cur index")
 
 Meteor.startup(() => {
