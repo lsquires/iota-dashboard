@@ -575,14 +575,15 @@ Template.graphs.helpers({
 });
 
 Template.graphs.rendered = function () {
-  updateGraphBounced = debounce(function(data) {updateGraph(data);}, 1000);
+  updateGraphBounced = debounce(function() {updateGraph();}, 1000);
   this.autorun(() => {
-    updateGraphBounced(graphstats.find({}).fetch());
+    let data = graphstats.find({}).fetch();
+    updateGraphBounced();
   });
 
   $(window).resize(function () {
     console.log("resize graphs");
-    updateGraphBounced(graphstats.find({}).fetch());
+    updateGraphBounced();
   });
 };
 
@@ -593,12 +594,13 @@ function debounce(func, interval) {
     var args = arguments;
     var self = this;
     lastCall = setTimeout(function() {
-      func(args);
+      func();
     }, interval);
   };
 }
 
-function updateGraph(data) {
+function updateGraph() {
+  let data = graphstats.find({}).fetch();
   let histdata = histographstats.find({}).fetch();
   if (data.length > 0) {
     for (let i = 0; i < data.length; i++) {
