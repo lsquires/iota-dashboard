@@ -24,14 +24,14 @@ let currentTime = new ReactiveVar(new Date().valueOf());
   }
 });*/
 
-// var index = stats.findOne({}, {sort: {index: -1}}).index + 1;
-
-var index = 0;
+var index = stats.findOne({}, {sort: {index: -1}}).index + 1;
+console.log(index + "= cur index")
+/*var index = 0;
 iterateThrough = stats.find({},{sort: {date: 1}}).fetch();
 for(let i = 0; i < iterateThrough.length; i++) {
   stats.update({_id: iterateThrough[i].id}, {$set: {index: index}});
   index++;
-}
+}*/
 
 
 
@@ -226,7 +226,8 @@ Meteor.startup(() => {
           averagectimefiltered: averagectimefiltered,
           averagectimestamp: averagectimestamp,
           cTXs: cTXs,
-          TXs: TXs};
+          TXs: TXs,
+          index: index};
 
         var peakData = histographstats.find({set: true}).fetch();
         var peakTXs = TXs,
@@ -245,7 +246,7 @@ Meteor.startup(() => {
           peakTXs: peakTXs, peakCTXs: peakCTXs, peakVol: peakVol, peakPercent: peakPercent, peakTime: peakTime};
         histographstats.upsert({set: true}, doc);
         stats.insert(toInsert);
-
+        index++;
         console.log("NEW v3 Metrics:");
         //console.log(toInsert);
       }
