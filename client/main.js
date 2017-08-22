@@ -541,7 +541,7 @@ Template.Stats.events({
     statshandler.setData('statsto', to);
   },
   "change #statsto": function (event, template) {
-    console.log(template.$("#statsto").val())
+    console.log(new Date(template.$("#statsto").val()))
   }
 });
 
