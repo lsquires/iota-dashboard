@@ -541,7 +541,10 @@ Template.Stats.events({
     statshandler.setData('statsto', to);
   },
   "change #statsto": function (event, template) {
-    console.log(new Date(template.$("#statsto").val()))
+    statshandler.setData('statsto', (new Date(template.$("#statsto").val())).valueOf())
+  },
+  "change #statsfrom": function (event, template) {
+    statshandler.setData('statsfrom', (new Date(template.$("#statsfrom").val())).valueOf())
   }
 });
 
