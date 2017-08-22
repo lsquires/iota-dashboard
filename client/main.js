@@ -359,7 +359,7 @@ Template.vis.rendered = function () {
         a.id == b.id;
     }
 
-    schedulerestart = debounce(function() {restart(); restart();}, 200);
+    schedulerestart = debounce(function() {restart()}, 100);
 
     function clickEvent(self) {
 
