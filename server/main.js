@@ -74,7 +74,7 @@ Meteor.startup(() => {
         to = currentTime.get()
         interval = to - from;
       }
-      let divisor = Math.ceil(interval / (10 * 60000));
+      let divisor = Math.ceil((interval * 100) / (24 * 60 * 60000));
       return stats.find({
         $and: [
           {"date": {$gte: from}},
