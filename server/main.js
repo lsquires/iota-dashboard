@@ -78,8 +78,8 @@ Meteor.startup(() => {
       return stats.find({
         $and: [
           {"date": {$gte: from}},
-          {"date": {$lte: to}},
-          { index: { $mod: [divisor, 0] } }]
+          {"date": {$lte: to}}]
+          //{ index: { $mod: [divisor, 0] }}]
       },
         {
           fields: {averagectimestamp: 0, totalUnconfirmedNonTippedTX: 0}
