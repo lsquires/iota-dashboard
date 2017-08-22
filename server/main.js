@@ -24,6 +24,16 @@ let currentTime = new ReactiveVar(new Date().valueOf());
   }
 });*/
 
+// var index = stats.findOne({}, {sort: {index: -1}}).index + 1;
+
+var index = 0;
+iterateThrough = stats.find({},{sort: {date: 1}}).fetch();
+for(let i = 0; i < iterateThrough.length; i++) {
+  stats.update({_id: iterateThrough[i].id}, {$set: {index: index}});
+  index++;
+}
+
+
 
 Meteor.startup(() => {
 
@@ -64,12 +74,16 @@ Meteor.startup(() => {
         to = currentTime.get()
         interval = to - from;
       }
-
+      let divisor = Math.ceil(interval / (10 * 60000));
       return stats.find({
         $and: [
           {"date": {$gte: from}},
-          {"date": {$lte: to}}]
-      });
+          {"date": {$lte: to}},
+          { index: { $mod: [divisor, 0] } }]
+      },
+        {
+          fields: {averagectimestamp: 0, totalUnconfirmedNonTippedTX: 0}
+        });
     });
   });
   Meteor.publish('txs', function () {

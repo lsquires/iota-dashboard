@@ -605,6 +605,7 @@ function updateGraph() {
     for (let i = 0; i < data.length; i++) {
       data[i].date = new Date(data[i].date);
       data[i].percent = data[i].totalConfirmedTX / data[i].totalTX;
+      data[i].totalUnconfirmedNonTippedTX = data[i].totalTX - data[i].totalConfirmedTX - data[i].totalTipTX;
     }
 
     MG.data_graphic({
