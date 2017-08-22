@@ -575,7 +575,7 @@ Template.graphs.helpers({
 });
 
 Template.graphs.rendered = function () {
-  updateGraphBounced = debounce(updateGraph, 1000);
+  updateGraphBounced = debounce(function() {updateGraph(); updateGraph();}, 1000);
   this.autorun(() => {
     updateGraphBounced();
   });

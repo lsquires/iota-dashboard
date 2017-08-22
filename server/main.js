@@ -267,6 +267,26 @@ Meteor.startup(() => {
 
   SyncedCron.start();
 
+  Router.route("q", function() {
+    var name    = this.params.name,
+      query   = this.request.query,
+      hash  = query.hash;
+
+      //iota.api.findTransactionObjects({}, callback)
+    iota.valid.isTrytes(hash, function (error, success) {
+      console.log(success);
+    });
+
+
+  }, { where: "server" });
+
+
+  Meteor.methods({
+    search: function (query) {
+
+
+    }
+  });
 });
 
 function setChildrenConfirmed(tx, ctime, ctimestamp) {
