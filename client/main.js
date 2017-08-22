@@ -324,7 +324,7 @@ Template.vis.rendered = function () {
               }
             }
             nodes.splice(i, 1);
-            schedulerestart();
+            scheduledrestart();
             break;
           }
         }
