@@ -110,12 +110,16 @@ Template.vis.events({
     }
 
     //console.log(selectValue);
-  },
-  "click #freezeviz": function(event, template){
+  }
+  /*"click #freezeviz": function(event, template){
     //console.log(template.$("#freezeviz"))
     realtime = $("#freezeviz")[0].checked;
-  }
+  }*/
 });
+
+function freezeViz(check) {
+  realtime = check;
+}
 
 Template.vis.rendered = function () {
   var focused;
