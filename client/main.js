@@ -108,11 +108,6 @@ Template.vis.events({
         txshandler.setData('confirmedonly', true);
       }
     }
-  },
-  "click #freezeviz": function(event, template){
-    console.log("clicked");
-    event.preventDefault();
-    realtime = $("#freezeviz")[0].checked;
   }
 });
 
@@ -123,7 +118,6 @@ Template.vis.rendered = function () {
   var selected;
   startSim(document.getElementById('nodebox').clientWidth);
   function startSim(w) {
-    realtime = $("#freezeviz")[0].checked;
     var isFocused = false;
     var width = w,
       height = 400,
