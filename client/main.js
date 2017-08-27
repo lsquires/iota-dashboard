@@ -544,7 +544,7 @@ Template.graphs.helpers({
 });
 
 Template.graphs.rendered = function () {
-  updateGraphBounced = debounce(updateGraph(), 1000);
+  updateGraphBounced = debounce(updateGraph, 1000);
   this.autorun(() => {
     let data = graphstats.find({}).fetch();
     updateGraphBounced(data);
@@ -558,9 +558,8 @@ Template.graphs.rendered = function () {
 
 function debounce(func, interval) {
   var lastCall = -1;
-  return function() {
+  return function(...args) {
     clearTimeout(lastCall);
-    var args = arguments;
     var self = this;
     lastCall = setTimeout(function() {
       func.apply(self, args);
