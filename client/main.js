@@ -23,9 +23,7 @@ smallNodeRadius = 6;
 nodeRadius = 10;
 realtime = true;
 
-function freezeViz(check) {
-  realtime = check;
-}
+
 
 
 Router.route('/', {name: "Home"}, function () {
