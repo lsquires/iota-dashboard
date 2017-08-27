@@ -23,9 +23,9 @@ smallNodeRadius = 6;
 nodeRadius = 10;
 realtime = true;
 
-function freezeViz(check) {
+/*function freezeViz(check) {
   realtime = check;
-}
+}*/
 
 
 Router.route('/', {name: "Home"}, function () {
@@ -115,11 +115,12 @@ Template.vis.events({
     }
 
     //console.log(selectValue);
-  }
-  /*"click #freezeviz": function(event, template){
-    //console.log(template.$("#freezeviz"))
+  },
+  "click #freezeviz": function(event, template){
+    console.log("clicked");
+    event.preventDefault();
     realtime = $("#freezeviz")[0].checked;
-  }*/
+  }
 });
 
 
