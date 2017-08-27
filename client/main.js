@@ -329,7 +329,6 @@ Template.vis.rendered = function () {
         a.id == b.id;
     }
 
-    forcestart = debounce(force.start, 200);
     function restart() {
         node = node.data(nodes, function (d) {
           return d.id;
@@ -451,7 +450,7 @@ Template.vis.rendered = function () {
 
         //link = linkenter.merge(link);
 
-        forcestart();
+        force.start();
 
     }
   }
