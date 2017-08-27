@@ -14,18 +14,13 @@ statshandler = {};
 dbwatcher = {};
 minsAgo = 1;
 xclosure = 70;
-xclosuresmall = 30
-linklength = 12
+xclosuresmall = 30;
+linklength = 12;
 filterConfirmed = false;
 nextClean = new Date();
 toRestart = true;
 smallNodeRadius = 6;
 nodeRadius = 10;
-realtime = true;
-
-/*function freezeViz(check) {
-  realtime = check;
-}*/
 
 
 Router.route('/', {name: "Home"}, function () {
@@ -113,8 +108,6 @@ Template.vis.events({
         txshandler.setData('confirmedonly', true);
       }
     }
-
-    //console.log(selectValue);
   },
   "click #freezeviz": function(event, template){
     console.log("clicked");
@@ -143,9 +136,6 @@ Template.vis.rendered = function () {
       .size([width, height])
       .nodes([])
       .symmetricDiffLinkLengths(linklength)
-      /*.linkDistance(function(l) {
-        return l.bundle ? 2 : linklength*2;
-      })*/
       .avoidOverlaps(false)
       .flowLayout("x", function(l) {
         return l.bundle ? xclosuresmall : xclosure;
@@ -230,16 +220,6 @@ Template.vis.rendered = function () {
         if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
           node.confirmed = true;
           node.milestone = true;
-          //node.fixed = true;
-          /*node.fx = centerx + coorNumber* 2 * xclosure;
-          node.x = node.fx;
-          node.px = node.fx;
-
-          node.fy = centery;
-          node.y = node.fy;
-          node.py = node.fy;
-
-          coorNumber++;*/
         }
 
 
@@ -300,26 +280,13 @@ Template.vis.rendered = function () {
           });
         }
 
-
-
-
         setColour(node);
         nodes.push(node);
-
-
-        scheduledrestart();
-
+        if(!initializing) {
+          restart();
+        }
       },
       changed: function (id, fields) {
-       /* for (var i = nodes.length - 1; i >= 0; i--) {
-          if (nodes[i].id === id) {
-            nodes[i].tx.confirmed = true;
-            setColour(nodes[i]);
-            schedulerestart();
-            break;
-          }
-        }*/
-       console.log("changed??")
       },
       removed: function (id) {
         console.log("removed id");
@@ -332,16 +299,17 @@ Template.vis.rendered = function () {
               }
             }
             nodes.splice(i, 1);
-            scheduledrestart();
+            if(!initializing) {
+              restart();
+            }
             break;
           }
         }
       }
     });
-    console.log(dbwatcher);
-    toRestart = true;
-    restart();
 
+    initializing = false;
+    restart();
 
     function setColour(node) {
       if (node.milestone) {
@@ -367,15 +335,8 @@ Template.vis.rendered = function () {
         a.id == b.id;
     }
 
-    schedulerestart = debounce(restart(), 100);
-    scheduledrestart = function() {restart()};
-    function clickEvent(self) {
-
-    }
 
     function restart() {
-
-      if(realtime) {
         node = node.data(nodes, function (d) {
           return d.id;
         });
@@ -497,7 +458,7 @@ Template.vis.rendered = function () {
         //link = linkenter.merge(link);
 
         force.start();
-      }
+
     }
   }
 
@@ -591,7 +552,7 @@ Template.graphs.helpers({
 Template.graphs.rendered = function () {
   updateGraphBounced = debounce(function() {updateGraph();}, 1000);
   this.autorun(() => {
-    let data = graphstats.find({}).fetch();
+    let data = graphstats.find({});
     updateGraphBounced();
   });
 
