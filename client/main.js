@@ -552,7 +552,7 @@ Template.graphs.rendered = function () {
 
   $(window).resize(function () {
     console.log("resize graphs");
-    updateGraphBounced();
+    updateGraphBounced(graphstats.find({}).fetch());
   });
 };
 
