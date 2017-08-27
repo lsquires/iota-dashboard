@@ -117,9 +117,11 @@ Template.vis.events({
   }*/
 });
 
-function freezeViz(check) {
-  realtime = check;
-}
+Template.vis.helpers({
+  freezeViz: function (check) {
+    realtime = check;
+  }
+});
 
 Template.vis.rendered = function () {
   var focused;
