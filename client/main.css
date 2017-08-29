@@ -14,7 +14,10 @@ rect {
   background: #fff;
   border-bottom: solid 3px #ddd;
 }
-
+.navbar {
+  border-bottom: solid 3px #ddd;
+  margin-bottom: 0px;
+}
 .header .navbar-nav>.active>a, .header .navbar-nav>li>a:hover {
   border-bottom-color: #66DC71;
 }
