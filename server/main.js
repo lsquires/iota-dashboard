@@ -93,7 +93,7 @@ Meteor.startup(() => {
     });
   });
 
-
+/*
   SyncedCron.add({
       name: '10 Minute stats',
       schedule: function (parser) {
@@ -352,7 +352,7 @@ Meteor.startup(() => {
       }
 
     });
-
+*/
 
   var iota = new IOTA({
     'host': 'http://localhost',
