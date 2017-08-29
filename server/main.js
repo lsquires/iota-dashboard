@@ -62,7 +62,7 @@ Meteor.startup(() => {
     });
   });
   Meteor.publish('txs', function () {
-    return txs.find({});
+    //return txs.find({});
     var self = this;
     self.autorun(function () {
       var minsago = self.data('minsago') || 1;
@@ -198,8 +198,9 @@ Meteor.startup(() => {
         console.log("NEW 10m Metrics:");
       }
 
-    },
-    {
+    });
+
+  SyncedCron.add({
       name: 'half day stats and cleaning of data',
       schedule: function (parser) {
         return parser.recur().every(12).hour();
