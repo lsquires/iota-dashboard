@@ -11,7 +11,7 @@ var d3 = require('d3');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-//txs.remove({});
+txs.remove({});
 
 //stats.remove({});
 //histographstats.remove({});
