@@ -13,8 +13,8 @@ let currentTime = new ReactiveVar(new Date().valueOf());
 
 //txs.remove({});
 
-stats.remove({});
-histographstats.remove({});
+//stats.remove({});
+//histographstats.remove({});
 
 /*histographstats.update({set: true}, { $set: {
  peakTXs: stats.find({},{limit: 1, sort: {TXs: -1}}).fetch()[0].TXs,
