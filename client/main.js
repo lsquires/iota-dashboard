@@ -160,7 +160,7 @@ Template.vis.rendered = function () {
 
     svg.append('svg:defs').append('svg:marker')
       .attr('id', 'end-arrow')
-      .attr('viewBox', '0 -5 10 10')
+      .attr('viewBox', '0 -10 20 20')
       .attr('refX', 6)
       .attr('markerWidth', 3)
       .attr('markerHeight', 3)
