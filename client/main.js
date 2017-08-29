@@ -117,6 +117,7 @@ Template.vis.rendered = function () {
   var focused;
   var selected;
   startSim(document.getElementById('nodebox').clientWidth);
+
   function startSim(w) {
     var isFocused = false;
     var width = w,
@@ -454,8 +455,6 @@ Template.vis.rendered = function () {
 
     }
   }
-
-
 };
 
 Template.vis.destroyed = function () {
@@ -567,7 +566,6 @@ function debounce(func, interval) {
 }
 
 function updateGraph(data) {
-  //let data = graphstats.find({}).fetch();
   let histdata = histographstats.find({}).fetch();
   if (data.length > 0) {
     for (let i = 0; i < data.length; i++) {

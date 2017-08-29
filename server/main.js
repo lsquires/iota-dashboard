@@ -8,59 +8,37 @@ var txs = new Mongo.Collection('txs');
 var stats = new Mongo.Collection('stats');
 var histographstats = new Mongo.Collection('histstats');
 var d3 = require('d3');
-//var files = new Mongo.Collection('files');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
 //txs.remove({});
-//stats.remove({date: {$lte: (1502875800000)}});
+
+stats.remove({});
+histographstats.remove({});
 
 /*histographstats.update({set: true}, { $set: {
-  peakTXs: stats.find({},{limit: 1, sort: {TXs: -1}}).fetch()[0].TXs,
-  peakCTXs: stats.find({},{limit: 1, sort: {cTXs: -1}}).fetch()[0].cTXs,
-  peakVol: stats.find({},{limit: 1, sort: {totalTX: -1}}).fetch()[0].totalTX,
-  peakPercent: 0.7947,
-  peakTime: stats.find({},{limit: 1, sort: {averagectimefiltered: 1}}).fetch()[0].averagectimefiltered
-  }
-});*/
-
-
-/*var index = 0;
-iterateThrough = stats.find({},{sort: {date: 1}}).fetch();
-for(let i = 0; i < iterateThrough.length; i++) {
-  stats.update({_id: iterateThrough[i]._id}, {$set: {index: index}});
-  index++;
-}*/
-
-var index = stats.findOne({}, {sort: {index: -1}}).index + 1;
-console.log(index + "= cur index")
+ peakTXs: stats.find({},{limit: 1, sort: {TXs: -1}}).fetch()[0].TXs,
+ peakCTXs: stats.find({},{limit: 1, sort: {cTXs: -1}}).fetch()[0].cTXs,
+ peakVol: stats.find({},{limit: 1, sort: {totalTX: -1}}).fetch()[0].totalTX,
+ peakPercent: 0.7947,
+ peakTime: stats.find({},{limit: 1, sort: {averagectimefiltered: 1}}).fetch()[0].averagectimefiltered
+ }
+ });*/
 
 Meteor.startup(() => {
 
-  function deleteFilesInFolder(path) {
-    //var deleteBy = ((new Date()).valueOf() - 4*60*60*1000)*1000;
-    if( fs.existsSync(path) ) {
-      fs.readdirSync(path).forEach(function(file,index){
-        var curPath = path + "/" + file;
-        //console.log("comparing "+parseInt(file.split('.')[0])+","+deleteBy);
-        //if(parseInt(file.split('.')[0]) < deleteBy) {
-          fs.unlinkSync(curPath);
-        //}
-      });
-    }
-  }
-
-  //deleteFilesInFolder('/home/lsquires/iri/target/export/');
   console.log("server");
-  console.log("loaded tx db of size: "+txs.find().count());
-  console.log("loaded stats db of size: "+stats.find().count());
+  console.log("loaded tx db of size: " + txs.find().count());
+  console.log("loaded stats db of size: " + stats.find().count());
   Meteor.setInterval(function () {
     currentTime.set(new Date().valueOf());
   }, 1000);
-  Meteor.publish('histstats', function() {
+
+  Meteor.publish('histstats', function () {
     return histographstats.find({});
   });
-  Meteor.publish('stats', function() {
+
+  Meteor.publish('stats', function () {
     var self = this;
     self.autorun(function () {
       var from = self.data('statsfrom') || (currentTime.get() - (24 * 60 * 60000) );
@@ -69,18 +47,15 @@ Meteor.startup(() => {
       check(to, Number);
 
       let interval = to - from;
-      if(interval <= 0) {
-        from = currentTime.get() - (24 * 60 * 60000);
-        to = currentTime.get()
-        interval = to - from;
-      }
-      let divisor = Math.ceil((interval) / (24 * 60 * 60000));
+      //If range is more than 5 days, switch to daily stats
+      let period = (interval > 5 * 24 * 60 * 60000) ? 12 * 60 : 30;
+
       return stats.find({
-        $and: [
-          {"date": {$gte: from}},
-          {"date": {$lte: to}},
-          { index: { $mod: [divisor, 0] }}]
-      },
+          $and: [
+            {"date": {$gte: from}},
+            {"date": {$lte: to}},
+            {"period": {$eq: period}}]
+        },
         {
           fields: {averagectimestamp: 0, totalUnconfirmedNonTippedTX: 0}
         });
@@ -97,12 +72,12 @@ Meteor.startup(() => {
       if (confirmedonly) {
         return txs.find(
           {
-          $and: [
-            {"time": {$gte: currentTime.get() - (minsago * 60000)}},
-            {"confirmed": {$eq: true}}]
+            $and: [
+              {"time": {$gte: currentTime.get() - (minsago * 60000)}},
+              {"confirmed": {$eq: true}}]
           },
           {
-            fields: { tip: 0, confirmed: 0, milestone: 0}//, ctime: 0, ctimestamp: 0}
+            fields: {tip: 0, confirmed: 0, milestone: 0, ctime: 0, ctimestamp: 0}
           });
       } else {
         return txs.find(
@@ -110,7 +85,7 @@ Meteor.startup(() => {
             "time": {$gte: currentTime.get() - (minsago * 60000)}
           },
           {
-            fields: { tip: 0, confirmed: 0, milestone: 0}//, ctime: 0, ctimestamp: 0}
+            fields: {tip: 0, confirmed: 0, milestone: 0, ctime: 0, ctimestamp: 0}
           });
       }
 
@@ -119,52 +94,55 @@ Meteor.startup(() => {
 
 
   SyncedCron.add({
-    name: 'Clean export of bad files and graph data',
-    schedule: function (parser) {
-      return parser.recur().every(10).minute();
-    },
-    job: function () {
-      var startTime = (new Date()).valueOf();
-      //Cleaning DB
-      var doMetrics = false;
-      var periodMinutes = 24 * 60;
-      console.log("doing job, db size: "+txs.find().count());
-      var now = startTime - periodMinutes * 60000;
-      /*txs.find().forEach(function (item) {
-        if (item.time < now) {
-          console.log("removing:" + item._id);
-          //fs.unlinkSync(item.path);
-          //txs.remove({_id: item._id});
-          //files.remove({txid: item.txid});
-          doMetrics = true;
-        }
-      });*/
+      name: '10 Minute stats',
+      schedule: function (parser) {
+        return parser.recur().every(10).minute();
+      },
+      job: function () {
+        var startTime = (new Date()).valueOf();
+        var periodMinutes = 30;
+        console.log("doing job, db size: " + txs.find().count());
+        var now = startTime - periodMinutes * 60000;
 
-      //Record metrics
-      if(doMetrics || true) {
-        console.log("doing metrics");
+        //Record metrics
+        console.log("doing 10min metrics");
 
+        //No of txs in range
         var totalTX = txs.find({"time": {$gte: now}}).count();
-        var totalConfirmedTX = txs.find({$and: [
-          {"time": {$gte: now}},
-          {"confirmed": {$eq: true}}]
+        var totalConfirmedTX = txs.find({
+          $and: [
+            {"ctime": {$gte: now}},
+            {"confirmed": {$eq: true}}]
         }).count();
-        var totalTipTX = txs.find({$and: [
-          {"time": {$gte: now}},
-          {"tip": {$eq: true}}]
-        }).count();
-        var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedTX - totalTipTX;
 
-        var rawtimes = txs.find({$and: [
+        //No of transactions confirmed in range
+        var totalConfirmedInRangeTX = txs.find({
+          $and: [
             {"time": {$gte: now}},
+            {"confirmed": {$eq: true}}]
+        }).count();
+
+        //No of transactions in range that are now confirmed
+        var totalTipTX = txs.find({
+          $and: [
+            {"time": {$gte: now}},
+            {"tip": {$eq: true}}]
+        }).count();
+
+        //No of transactions in range that are unconfirmed
+        var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedInRangeTX - totalTipTX;
+
+        var rawtimes = txs.find({
+          $and: [
+            {"ctime": {$gte: now}},
             {"confirmed": {$eq: true}},
             {"milestone": {$ne: true}}]
-          }).fetch();
+        }).fetch();
 
-        var ctimes = rawtimes.map(function(element) {
+        var ctimes = rawtimes.map(function (element) {
           return (element.ctime - element.time) / 1000;
         });
-        var ctimestamps = rawtimes.map(function(element) {
+        var ctimestamps = rawtimes.map(function (element) {
           return element.ctimestamp - element.timestamp;
         });
 
@@ -175,12 +153,127 @@ Meteor.startup(() => {
           }
           return sum / array.length;
         }
-
         function averageFiltered(array) {
           var sum = 0;
           let total = 0;
           for (var i = 0; i < array.length; i++) {
-            if(ctimes[i] <= 3600) {
+            if (ctimes[i] <= 3600) {
+              sum += array[i];
+              total++;
+            }
+          }
+          return sum / total;
+        }
+
+        var averagectime = average(ctimes);
+        var averagectimefiltered = averageFiltered(ctimes);
+        var averagectimestamp = average(ctimestamps);
+
+
+        var TXs = txs.find({"time": {$gte: startTime - (periodMinutes * 60000)}}).count() / (periodMinutes * 60);
+        var cTXs = txs.find(
+            {
+              $and: [
+                {"confirmed": {$eq: true}},
+                {"ctime": {$gte: startTime - (periodMinutes * 60000)}}
+              ]
+            }).count() / (periodMinutes * 60);
+
+        var toInsert = {
+          date: startTime,
+          totalTX: totalTX,
+          totalConfirmedTX: totalConfirmedTX,
+          totalTipTX: totalTipTX,
+          totalUnconfirmedNonTippedTX: totalUnconfirmedNonTippedTX,
+          averagectime: averagectime,
+          averagectimefiltered: averagectimefiltered,
+          averagectimestamp: averagectimestamp,
+          cTXs: cTXs,
+          TXs: TXs,
+          period: periodMinutes
+        };
+
+        stats.insert(toInsert);
+        console.log("NEW 10m Metrics:");
+      }
+
+    },
+    {
+      name: 'half day stats and cleaning of data',
+      schedule: function (parser) {
+        return parser.recur().every(12).hour();
+      },
+      job: function () {
+        var startTime = (new Date()).valueOf();
+        var periodMinutes = 12 * 60;
+        console.log("doing job, db size: " + txs.find().count());
+        var now = startTime - periodMinutes * 60000;
+
+        //Cleaning DB
+        console.log("cleaning db");
+        var weekOld = startTime - 7 * 24 * 60 * 60000;
+        txs.remove({time: {$lte: weekOld}});
+        stats.remove({
+          $and: [
+            {period: {$eq: 30}},
+            {time: {$lte: weekOld}}
+          ]
+        });
+
+        //Record metrics
+        console.log("doing day metrics");
+
+        //No of txs in range
+        var totalTX = txs.find({"time": {$gte: now}}).count();
+        var totalConfirmedTX = txs.find({
+          $and: [
+            {"ctime": {$gte: now}},
+            {"confirmed": {$eq: true}}]
+        }).count();
+
+        //No of transactions confirmed in range
+        var totalConfirmedInRangeTX = txs.find({
+          $and: [
+            {"time": {$gte: now}},
+            {"confirmed": {$eq: true}}]
+        }).count();
+
+        //No of transactions in range that are now confirmed
+        var totalTipTX = txs.find({
+          $and: [
+            {"time": {$gte: now}},
+            {"tip": {$eq: true}}]
+        }).count();
+
+        //No of transactions in range that are unconfirmed
+        var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedInRangeTX - totalTipTX;
+
+        var rawtimes = txs.find({
+          $and: [
+            {"ctime": {$gte: now}},
+            {"confirmed": {$eq: true}},
+            {"milestone": {$ne: true}}]
+        }).fetch();
+
+        var ctimes = rawtimes.map(function (element) {
+          return (element.ctime - element.time) / 1000;
+        });
+        var ctimestamps = rawtimes.map(function (element) {
+          return element.ctimestamp - element.timestamp;
+        });
+
+        function average(array) {
+          var sum = 0;
+          for (var i = 0; i < array.length; i++) {
+            sum += array[i];
+          }
+          return sum / array.length;
+        }
+        function averageFiltered(array) {
+          var sum = 0;
+          let total = 0;
+          for (var i = 0; i < array.length; i++) {
+            if (ctimes[i] <= 3600) {
               sum += array[i];
               total++;
             }
@@ -194,30 +287,32 @@ Meteor.startup(() => {
 
         var outofrange = 0;
         var totalvalid = 0;
-        for(let i = 0; i < ctimes.length; i++) {
-          if(ctimes[i] > 500) {
+        for (let i = 0; i < ctimes.length; i++) {
+          if (ctimes[i] > 500) {
             outofrange++;
           }
-          if(ctimes[i] >= 0) {
+          if (ctimes[i] >= 0) {
             totalvalid++;
           }
         }
         var histGenerator = d3.histogram()
-          .domain([0,500])
+          .domain([0, 500])
           .thresholds(49);
-        var ctimesbins = histGenerator(ctimes).map(function(e, index){return {range: (index*10), count: (e.length / totalvalid)};});
+        var ctimesbins = histGenerator(ctimes).map(function (e, index) {
+          return {range: (index * 10), count: (e.length / totalvalid)};
+        });
 
-        var TXs =  txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
+        var TXs = txs.find({"time": {$gte: startTime - (periodMinutes * 60000)}}).count() / (periodMinutes * 60);
         var cTXs = txs.find(
-          {
-            $and:
-              [
-              {"confirmed": {$eq: true}},
-              {"ctime": {$gte: startTime - (30 * 60000)}}
+            {
+              $and: [
+                {"confirmed": {$eq: true}},
+                {"ctime": {$gte: startTime - (periodMinutes * 60000)}}
               ]
-        }).count() / (30 * 60);
+            }).count() / (periodMinutes * 60);
 
-        var toInsert = {date: startTime,
+        var toInsert = {
+          date: startTime,
           totalTX: totalTX,
           totalConfirmedTX: totalConfirmedTX,
           totalTipTX: totalTipTX,
@@ -227,31 +322,34 @@ Meteor.startup(() => {
           averagectimestamp: averagectimestamp,
           cTXs: cTXs,
           TXs: TXs,
-          index: index};
+          period: periodMinutes
+        };
 
         var peakData = histographstats.find({set: true}).fetch();
         var peakTXs = TXs,
-            peakCTXs = cTXs,
-            peakPercent = totalConfirmedTX  / totalTX,
-            peakTime = averagectimefiltered,
-            peakVol = totalTX;
-        if(peakData.length > 0) {
+          peakCTXs = cTXs,
+          peakPercent = totalConfirmedTX / totalTX,
+          peakTime = averagectimefiltered,
+          peakVol = totalTX;
+
+        if (peakData && peakData.length > 0) {
           peakTXs = Math.max(peakTXs, peakData[0].peakTXs);
           peakCTXs = Math.max(peakCTXs, peakData[0].peakCTXs);
           peakVol = Math.max(peakVol, peakData[0].peakVol);
           peakPercent = Math.max(peakPercent, peakData[0].peakPercent);
           peakTime = Math.min(peakTime, peakData[0].peakTime);
         }
-        var doc = {set: true, ctimes: ctimesbins, outofrange: (outofrange/totalvalid),
-          peakTXs: peakTXs, peakCTXs: peakCTXs, peakVol: peakVol, peakPercent: peakPercent, peakTime: peakTime};
+
+        var doc = {
+          set: true, ctimes: ctimesbins, outofrange: (outofrange / totalvalid),
+          peakTXs: peakTXs, peakCTXs: peakCTXs, peakVol: peakVol, peakPercent: peakPercent, peakTime: peakTime
+        };
         histographstats.upsert({set: true}, doc);
         stats.insert(toInsert);
-        index++;
-        console.log("NEW v3 Metrics:");
-        //console.log(toInsert);
+        console.log("NEW half day Metrics:");
       }
-    }
-  });
+
+    });
 
 
   var iota = new IOTA({
@@ -282,18 +380,18 @@ Meteor.startup(() => {
 
   SyncedCron.start();
 
-  Router.route("q", function() {
-    var name    = this.params.name,
-      query   = this.request.query,
-      hash  = query.hash;
+  Router.route("q", function () {
+    var name = this.params.name,
+      query = this.request.query,
+      hash = query.hash;
 
-      //iota.api.findTransactionObjects({}, callback)
+    //iota.api.findTransactionObjects({}, callback)
     iota.valid.isTrytes(hash, function (error, success) {
       console.log(success);
     });
 
 
-  }, { where: "server" });
+  }, {where: "server"});
 
 
   Meteor.methods({
@@ -330,14 +428,14 @@ function setChildren(tx, ctime, ctimestamp) {
 
   if (tx.confirmed) {
     if (tx1 && !tx1.confirmed) {
-      if(tx.milestone && tx.bundle === tx1.bundle) {
+      if (tx.milestone && tx.bundle === tx1.bundle) {
         txs.update({_id: tx1._id}, {$set: {'milestone': true}});
       }
       txs.update({_id: tx1._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
       setChildrenConfirmed(tx1, ctime, ctimestamp);
     }
     if (tx2 && !tx2.confirmed) {
-      if(tx.milestone && tx.bundle === tx2.bundle) {
+      if (tx.milestone && tx.bundle === tx2.bundle) {
         txs.update({_id: tx2._id}, {$set: {'milestone': true}});
       }
       txs.update({_id: tx2._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
@@ -347,17 +445,19 @@ function setChildren(tx, ctime, ctimestamp) {
 }
 
 function checkParents(tx) {
-  let parents = txs.find({ $or : [
-    {branchTransaction: tx.hash},
-    {trunkTransaction: tx.hash}
-    ]});
+  let parents = txs.find({
+    $or: [
+      {branchTransaction: tx.hash},
+      {trunkTransaction: tx.hash}
+    ]
+  });
 
   let first = true;
   parents.forEach((parent) => {
     tx.tip = false;
-    if(parent.confirmed) {
+    if (parent.confirmed) {
       tx.confirmed = true;
-      if(first) {
+      if (first) {
         first = false;
         tx.ctime = parent.ctime;
         tx.ctimestamp = parent.ctimestamp;
@@ -366,14 +466,14 @@ function checkParents(tx) {
         tx.ctimestamp = Math.min(tx.ctimestamp, parent.ctimestamp);
       }
     }
-    if(parent.milestone && parent.bundle === tx.bundle) {
+    if (parent.milestone && parent.bundle === tx.bundle) {
       tx.milestone = true;
     }
   })
 }
 
 function addTX(tx, path) {
-  tx.time = (path.replace(/^.*[\\\/]/, '').split(".")[0]/1000); //new Date().valueOf();
+  tx.time = (path.replace(/^.*[\\\/]/, '').split(".")[0] / 1000); //new Date().valueOf();
 
   console.log("adding tx: " + tx.time);
   tx.confirmed = false;
