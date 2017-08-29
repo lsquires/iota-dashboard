@@ -62,6 +62,7 @@ Meteor.startup(() => {
     });
   });
   Meteor.publish('txs', function () {
+    return txs.find({});
     var self = this;
     self.autorun(function () {
       var minsago = self.data('minsago') || 1;
@@ -489,7 +490,6 @@ function addTX(tx, path) {
     console.log("new coor message!!!!")
   }
   var doc = txs.upsert({hash: tx.hash}, tx);
-  //files.insert({txid: doc.insertedId, path: path, time: new Date().valueOf()});
 
   setChildren(tx, tx.ctime, tx.ctimestamp);
   fs.unlinkSync(path);
