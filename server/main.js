@@ -11,7 +11,7 @@ var d3 = require('d3');
 let currentTime = new ReactiveVar(new Date().valueOf());
 
 
-txs.remove({});
+//txs.remove({});
 
 //stats.remove({});
 //histographstats.remove({});
@@ -93,7 +93,7 @@ Meteor.startup(() => {
     });
   });
 
-/*
+
   SyncedCron.add({
       name: '10 Minute stats',
       schedule: function (parser) {
@@ -352,7 +352,7 @@ Meteor.startup(() => {
       }
 
     });
-*/
+
 
   var iota = new IOTA({
     'host': 'http://localhost',
