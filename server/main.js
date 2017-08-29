@@ -48,7 +48,7 @@ Meteor.startup(() => {
 
       let interval = to - from;
       //If range is more than 5 days, switch to daily stats
-      let period = (interval > 5 * 24 * 60 * 60000) ? 12 * 60 : 30;
+      let period = (interval > 5 * 24 * 60 * 60000) ? 24 * 60 : 30;
 
       return stats.find({
           $and: [
@@ -205,7 +205,7 @@ Meteor.startup(() => {
       },
       job: function () {
         var startTime = (new Date()).valueOf();
-        var periodMinutes = 12 * 60;
+        var periodMinutes = 24 * 60;
         console.log("doing job, db size: " + txs.find().count());
         var now = startTime - periodMinutes * 60000;
 
