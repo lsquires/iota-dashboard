@@ -31,7 +31,7 @@ Router.route('/Stats');
 
 Template.registerHelper('navClassName', function (page) {
   if (Router.current()) {
-    return Router.current().route.getName() === page ? "active" : "";
+    return Router.current().route.getName() === page ? "<span class=\"sr-only\">(current)</span>" : "";
   }
 });
 
