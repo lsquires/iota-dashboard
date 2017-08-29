@@ -103,6 +103,7 @@
         <div class=inside-floating-box>
           <h2 class="box-header" style="margin-top: 0px">Transaction Details</h2>
           <div class="margin-bottom-4">
+            {{#if havetx}}
             <table class="table table-striped">
               <tbody>
 
@@ -123,6 +124,9 @@
 
               </tbody>
             </table>
+            {{else}}
+              Click on a transaction to display it details
+            {{/if}}
           </div>
         </div>
       </div>
