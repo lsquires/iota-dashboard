@@ -13,8 +13,8 @@ let currentTime = new ReactiveVar(new Date().valueOf());
 
 //txs.remove({});
 
-//stats.remove({});
-//histographstats.remove({});
+stats.remove({});
+histographstats.remove({});
 
 /*histographstats.update({set: true}, { $set: {
  peakTXs: stats.find({},{limit: 1, sort: {TXs: -1}}).fetch()[0].TXs,
@@ -101,7 +101,7 @@ Meteor.startup(() => {
       },
       job: function () {
         var startTime = (new Date()).valueOf();
-        var periodMinutes = 30;
+        var periodMinutes = 24 * 60;
         console.log("doing job, db size: " + txs.find().count());
         var now = startTime - periodMinutes * 60000;
 
@@ -171,14 +171,14 @@ Meteor.startup(() => {
         var averagectimestamp = average(ctimestamps);
 
 
-        var TXs = txs.find({"time": {$gte: startTime - (periodMinutes * 60000)}}).count() / (periodMinutes * 60);
+        var TXs = txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
         var cTXs = txs.find(
             {
               $and: [
                 {"confirmed": {$eq: true}},
-                {"ctime": {$gte: startTime - (periodMinutes * 60000)}}
+                {"ctime": {$gte: startTime - (30 * 60000)}}
               ]
-            }).count() / (periodMinutes * 60);
+            }).count() / (30 * 60);
 
         var toInsert = {
           date: startTime,
@@ -191,7 +191,7 @@ Meteor.startup(() => {
           averagectimestamp: averagectimestamp,
           cTXs: cTXs,
           TXs: TXs,
-          period: periodMinutes
+          period: 30
         };
 
         stats.insert(toInsert);
