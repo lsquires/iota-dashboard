@@ -166,7 +166,7 @@ Template.vis.rendered = function () {
       .attr('markerHeight', 3)
       .attr('orient', 'auto')
       .append('svg:path')
-      .attr('d', 'M0,-5L10,0L0,5')
+      .attr('d', 'M0,-10L20,0L0,10')
       .attr('fill', '#000');
 
     $(window).resize(function () {
