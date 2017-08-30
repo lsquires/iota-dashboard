@@ -511,6 +511,7 @@ Template.Stats.events({
 Template.Stats.rendered = function () {
   statshandler = Meteor.subscribe("stats");
   Meteor.subscribe("histstats");
+  changePeriod(this, 1);
 }
 
 Template.graphs.onCreated(function () {
