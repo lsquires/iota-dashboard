@@ -15,6 +15,11 @@ rect {
   border-bottom: solid 3px #ddd;
 }
 
+.table {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 .mynavbar {
   border-bottom: solid 2px #ddd;
   margin-bottom: 0px;
