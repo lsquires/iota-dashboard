@@ -64,8 +64,8 @@ Meteor.startup(() => {
   Meteor.publish('txs', function () {
     var self = this;
     self.autorun(function () {
-      var minsago = self.data('minsago') || 1;
-      check(minsago, Number);
+      var secsago = self.data('secsago') || 1;
+      check(secsago, Number);
 
       var confirmedonly = self.data('confirmedonly') || false;
       check(confirmedonly, Boolean);
@@ -81,7 +81,7 @@ Meteor.startup(() => {
         return txs.find(
           {
             $and: [
-              {"time": {$gte: currentTime.get() - (minsago * 60000)}},
+              {"time": {$gte: currentTime.get() - (secsago * 1000)}},
               {"confirmed": {$eq: true}}]
           },
           {
@@ -90,7 +90,7 @@ Meteor.startup(() => {
       } else {
         return txs.find(
           {
-            "time": {$gte: currentTime.get() - (minsago * 60000)}
+            "time": {$gte: currentTime.get() - (secsago * 1000)}
           },
           {
             "fields": fields

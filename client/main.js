@@ -98,7 +98,7 @@ Template.vis.events({
   "change #timePeriod": function (event, template) {
     let selectValue = parseInt(template.$("#timePeriod").val(), 10);
     //console.log(selectValue);
-    txshandler.setData('minsago', selectValue);
+    txshandler.setData('secsago', selectValue);
   },
   "change #disableremove": function (event, template) {
     disableremove = template.$("#disableremove").is(":checked");
