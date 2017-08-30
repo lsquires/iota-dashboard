@@ -64,7 +64,7 @@ Meteor.startup(() => {
   Meteor.publish('txs', function () {
     var self = this;
     self.autorun(function () {
-      var secsago = self.data('secsago') || 1;
+      var secsago = self.data('secsago') || 60;
       check(secsago, Number);
 
       var confirmedonly = self.data('confirmedonly') || false;
