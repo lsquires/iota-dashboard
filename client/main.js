@@ -239,7 +239,7 @@ function startSim(w) {
     added: function (id, fields) {
 
       var node = {tx: fields, id: id, tip: true, confirmed: false};
-      node.r = (0 === fields.currentIndex) ? nodeRadius : smallNodeRadius;
+      node.r = (typeof fields.currentIndex === "undefined" || 0 === fields.currentIndex) ? nodeRadius : smallNodeRadius;
       if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
         node.confirmed = true;
         node.milestone = true;
