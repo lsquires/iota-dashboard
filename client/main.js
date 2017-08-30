@@ -96,11 +96,11 @@ Template.vis.events({
     txshandler.setData('minsago', selectValue);
   },
   "change #disableremove": function (event, template) {
-    disableremove = $(event.target).is(":checked");
+    disableremove = template.$("#disableremove").is(":checked");
     startSim(document.getElementById('nodebox').clientWidth);
   },
   "change #fastmode": function (event, template) {
-    fastmode = $(event.target).is(":checked");
+    fastmode = template.$("#fastmode").is(":checked");
     txshandler.setData('fastmode', fastmode);
     startSim(document.getElementById('nodebox').clientWidth);
   },
