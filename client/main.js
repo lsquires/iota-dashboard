@@ -27,6 +27,7 @@ restartDB = {};
 started = false;
 nodes = [];
 links = [];
+restart = {};
 
 Router.route('/', {name: "Home"}, function () {
   this.render('Home');
@@ -333,7 +334,7 @@ function startSim(w) {
   };
   dbwatcher = txs.find().observeChanges(restartDB);
   initializing = false;
-  restart();
+
 
   function setColour(node) {
     if (node.milestone) {
@@ -359,7 +360,7 @@ function startSim(w) {
       a.id == b.id;
   }
 
-  function restart() {
+    restart = function() {
     node = node.data(nodes, function (d) {
       return d.id;
     });
@@ -483,6 +484,8 @@ function startSim(w) {
     force.start();
 
   }
+
+  restart();
 }
 
 function restartDBWatcher() {
