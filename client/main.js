@@ -138,8 +138,10 @@ Template.vis.events({
 
 
 Template.vis.rendered = function () {
-  //startSim(document.getElementById('nodebox').clientWidth);
   txshandler = Meteor.subscribe("txs");
+
+  started = true;
+  startSim(document.getElementById('nodebox').clientWidth);
 };
 
 function startSim(w) {
