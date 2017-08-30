@@ -3,7 +3,6 @@ import {Mongo} from 'meteor/mongo';
 var chokidar = require('chokidar');
 var fs = Npm.require('fs');
 var IOTA = require('iota.lib.js');
-var COOR = 'KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU';
 var txs = new Mongo.Collection('txs');
 var stats = new Mongo.Collection('stats');
 var histographstats = new Mongo.Collection('histstats');
@@ -61,8 +60,8 @@ Meteor.startup(() => {
         });
     });
   });
+  
   Meteor.publish('txs', function () {
-    //return txs.find({});
     var self = this;
     self.autorun(function () {
       var minsago = self.data('minsago') || 1;
@@ -372,8 +371,8 @@ Meteor.startup(() => {
     ignored: /[\/\\]\./, persistent: true
   });
 
+  //Watch export path for txs
   watcher.on('add', Meteor.bindEnvironment(function (path) {
-    //console.log(path);
     newFile = fs.readFileSync(path, 'utf8');
     let split = newFile.split(/\r?\n/);
     let tx = iota.utils.transactionObject(split[1]);
@@ -382,7 +381,8 @@ Meteor.startup(() => {
 
   SyncedCron.start();
 
-  Router.route("q", function () {
+  //WIP Search func
+  /*Router.route("q", function () {
     var name = this.params.name,
       query = this.request.query,
       hash = query.hash;
@@ -401,7 +401,7 @@ Meteor.startup(() => {
 
 
     }
-  });
+  });*/
 });
 
 function setChildrenConfirmed(tx, ctime, ctimestamp) {
@@ -421,29 +421,22 @@ function setChildren(tx, ctime, ctimestamp) {
   let tx1 = txs.findOne({hash: tx.branchTransaction});
   let tx2 = txs.findOne({hash: tx.trunkTransaction});
 
-  if (tx1) {
-    txs.update({_id: tx1._id}, {$set: {'tip': false}});
-  }
-  if (tx2) {
-    txs.update({_id: tx2._id}, {$set: {'tip': false}});
+
+  function updateChild(origTX, childTX, ctime, ctimestamp) {
+    if (childTX) {
+      txs.update({_id: childTX._id}, {$set: {'tip': false}});
+    }
+      if (origTX.confirmed && childTX && !childTX.confirmed) {
+        if (origTX.milestone && origTX.bundle === childTX.bundle) {
+          txs.update({_id: childTX._id}, {$set: {'milestone': true}});
+        }
+        txs.update({_id: childTX._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
+        setChildrenConfirmed(childTX, ctime, ctimestamp);
+      }
   }
 
-  if (tx.confirmed) {
-    if (tx1 && !tx1.confirmed) {
-      if (tx.milestone && tx.bundle === tx1.bundle) {
-        txs.update({_id: tx1._id}, {$set: {'milestone': true}});
-      }
-      txs.update({_id: tx1._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
-      setChildrenConfirmed(tx1, ctime, ctimestamp);
-    }
-    if (tx2 && !tx2.confirmed) {
-      if (tx.milestone && tx.bundle === tx2.bundle) {
-        txs.update({_id: tx2._id}, {$set: {'milestone': true}});
-      }
-      txs.update({_id: tx2._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
-      setChildrenConfirmed(tx2, ctime, ctimestamp);
-    }
-  }
+  updateChild(tx, tx1, ctime, ctimestamp);
+  updateChild(tx, tx2, ctime, ctimestamp);
 }
 
 function checkParents(tx) {
@@ -475,24 +468,32 @@ function checkParents(tx) {
 }
 
 function addTX(tx, path) {
-  tx.time = (path.replace(/^.*[\\\/]/, '').split(".")[0] / 1000); //new Date().valueOf();
+  //Extract time from the filename
+  tx.time = (path.replace(/^.*[\\\/]/, '').split(".")[0] / 1000);
 
   console.log("adding tx: " + tx.time);
   tx.confirmed = false;
   tx.tip = true;
 
+  //Check parents to see if it is already confirmed
   checkParents(tx);
 
+  //Check if it is a coordinator message
   if (tx.address === "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
     tx.confirmed = true;
     tx.ctime = tx.time;
     tx.ctimestamp = tx.timestamp;
     tx.milestone = true;
-    console.log("new coor message!!!!")
+    console.log("new coor message!")
   }
+
+  //Insert into db, upsert stops conflicts if tx is rebroadcasted
   var doc = txs.upsert({hash: tx.hash}, tx);
 
+  //Set children as non tips and confirmed if necessary
   setChildren(tx, tx.ctime, tx.ctimestamp);
+
+  //Delete tx file
   fs.unlinkSync(path);
 }
 

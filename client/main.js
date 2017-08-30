@@ -7,8 +7,8 @@ graphstats = new Mongo.Collection('stats');
 var cola = require("webcola");
 var d3 = require('d3');
 var MG = require('metrics-graphics');
-var coorNumber = 0;
-console.log(d3);
+
+
 txshandler = {};
 statshandler = {};
 dbwatcher = {};
