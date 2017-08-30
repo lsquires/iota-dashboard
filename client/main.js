@@ -514,8 +514,8 @@ Template.Stats.rendered = function () {
   let to = (new Date()).valueOf();
   let from = 0;
 
-  document.getElementById("statsfrom").val(new Date(from).toDateInputValue());
-  document.getElementById("statsto").val(new Date(to).toDateInputValue());
+  $("#statsfrom").val(new Date(from).toDateInputValue());
+  $("#statsto").val(new Date(to).toDateInputValue());
   statshandler.setData('statsfrom', from);
   statshandler.setData('statsto', to);
 }
