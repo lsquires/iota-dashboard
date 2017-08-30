@@ -319,7 +319,7 @@ function startSim(w) {
       }
     }
   };
-  restartDBWatcher();
+  dbwatcher = txs.find().observeChanges(restartDB);
   initializing = false;
   restart();
 
