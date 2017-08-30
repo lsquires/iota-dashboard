@@ -136,6 +136,7 @@ Template.vis.events({
 
 Template.vis.rendered = function () {
   //startSim(document.getElementById('nodebox').clientWidth);
+  txshandler = Meteor.subscribe("txs");
 };
 
 function startSim(w) {
@@ -227,7 +228,7 @@ function startSim(w) {
   }
 
   let initializing = true;
-  txshandler = Meteor.subscribe("txs");
+
 
 
 
