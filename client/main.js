@@ -24,6 +24,7 @@ nodeRadius = 10;
 disableremove = false;
 fastmode = false;
 restartDB = {};
+started = false;
 
 Router.route('/', {name: "Home"}, function () {
   this.render('Home');
@@ -121,12 +122,20 @@ Template.vis.events({
         txshandler.setData('confirmedonly', true);
       }
     }
+  },
+  "click #start": function (event, template) {
+   if(started) {
+     restartDBWatcher();
+   } else {
+     started = true;
+     startSim(document.getElementById('nodebox').clientWidth);
+   }
   }
 });
 
 
 Template.vis.rendered = function () {
-  startSim(document.getElementById('nodebox').clientWidth);
+  //startSim(document.getElementById('nodebox').clientWidth);
 };
 
 function startSim(w) {
