@@ -23,6 +23,7 @@ smallNodeRadius = 6;
 nodeRadius = 10;
 disableremove = false;
 fastmode = false;
+restartDB = {};
 
 Router.route('/', {name: "Home"}, function () {
   this.render('Home');
@@ -97,12 +98,14 @@ Template.vis.events({
   },
   "change #disableremove": function (event, template) {
     disableremove = template.$("#disableremove").is(":checked");
-    startSim(document.getElementById('nodebox').clientWidth);
+    restartDBWatcher();
+    //startSim(document.getElementById('nodebox').clientWidth);
   },
   "change #fastmode": function (event, template) {
     fastmode = template.$("#fastmode").is(":checked");
     txshandler.setData('fastmode', fastmode);
-    startSim(document.getElementById('nodebox').clientWidth);
+    restartDBWatcher();
+    //startSim(document.getElementById('nodebox').clientWidth);
   },
   "change #filter": function (event, template) {
     let selectValue = template.$("#filter").val();
@@ -217,7 +220,9 @@ function startSim(w) {
   let initializing = true;
   txshandler = Meteor.subscribe("txs");
 
-  dbwatcher = txs.find().observeChanges({
+
+
+  restartDB = {
     added: function (id, fields) {
 
       var node = {tx: fields, id: id, tip: true, confirmed: false};
@@ -313,8 +318,8 @@ function startSim(w) {
         }
       }
     }
-  });
-
+  };
+  restartDBWatcher();
   initializing = false;
   restart();
 
@@ -466,6 +471,13 @@ function startSim(w) {
     force.start();
 
   }
+}
+
+function restartDBWatcher() {
+  if(dbwatcher) {
+    dbwatcher.stop();
+  }
+  dbwatcher = txs.find().observeChanges(restartDB);
 }
 Template.vis.destroyed = function () {
   dbwatcher.stop();
