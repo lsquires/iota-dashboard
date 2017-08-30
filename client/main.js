@@ -489,13 +489,13 @@ function startSim(w) {
 }
 
 function restartDBWatcher() {
-  if(dbwatcher) {
+  /*if(dbwatcher) {
     dbwatcher.stop();
   }
   nodes = [];
   links = [];
   restart();
-  dbwatcher = txs.find().observeChanges(restartDB);
+  dbwatcher = txs.find().observeChanges(restartDB);*/
 }
 Template.vis.destroyed = function () {
   dbwatcher.stop();
