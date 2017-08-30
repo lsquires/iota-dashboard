@@ -112,7 +112,6 @@ Template.vis.events({
 });
 
 
-
 Template.vis.rendered = function () {
   var focused;
   var selected;
@@ -132,7 +131,7 @@ Template.vis.rendered = function () {
       .nodes([])
       .symmetricDiffLinkLengths(linklength)
       .avoidOverlaps(false)
-      .flowLayout("x", function(l) {
+      .flowLayout("x", function (l) {
         return l.bundle ? xclosuresmall : xclosure;
       })
       .on("tick", tick);
@@ -222,14 +221,14 @@ Template.vis.rendered = function () {
         nodes.forEach(function (target) {
           if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
             node.tip = false;
-            if(target.confirmed) {
+            if (target.confirmed) {
               node.confirmed = true;
             }
-            if(target.milestone && target.tx.bundle === fields.bundle) {
+            if (target.milestone && target.tx.bundle === fields.bundle) {
               node.milestone = true;
             }
 
-            if(target.tx.bundle == fields.bundle) {
+            if (target.tx.bundle == fields.bundle) {
               links.push({source: node, target: target, bundle: true});
             } else {
               links.push({source: node, target: target});
@@ -240,17 +239,17 @@ Template.vis.rendered = function () {
         //Correct children
         nodes.forEach(function (target) {
           if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
-            if(target.tx.bundle == fields.bundle) {
+            if (target.tx.bundle == fields.bundle) {
               links.push({source: target, target: node, bundle: true});
             } else {
               links.push({source: target, target: node});
             }
 
-            if(node.milestone && target.tx.bundle == fields.bundle) {
+            if (node.milestone && target.tx.bundle == fields.bundle) {
               target.milestone = true;
             }
 
-            if(node.confirmed && !target.confirmed) {
+            if (node.confirmed && !target.confirmed) {
               target.confirmed = true;
               setColour(target);
               setChildren(target);
@@ -277,7 +276,7 @@ Template.vis.rendered = function () {
 
         setColour(node);
         nodes.push(node);
-        if(!initializing) {
+        if (!initializing) {
           restart();
         }
       },
@@ -294,7 +293,7 @@ Template.vis.rendered = function () {
               }
             }
             nodes.splice(i, 1);
-            if(!initializing) {
+            if (!initializing) {
               restart();
             }
             break;
@@ -319,7 +318,7 @@ Template.vis.rendered = function () {
     }
 
     function zoomed() {
-      svg.attr("transform",d3.event.transform);
+      svg.attr("transform", d3.event.transform);
     }
 
     function isConnected(a, b) {
@@ -331,127 +330,127 @@ Template.vis.rendered = function () {
     }
 
     function restart() {
-        node = node.data(nodes, function (d) {
-          return d.id;
-        });
-        link = link.data(links, function (d) {
-          return d.source.id + "-" + d.target.id;
-        });
+      node = node.data(nodes, function (d) {
+        return d.id;
+      });
+      link = link.data(links, function (d) {
+        return d.source.id + "-" + d.target.id;
+      });
 
 
-        node.exit().remove();
-        var nodeenter = node.enter().append("circle")
-          .attr("class", "node")
-          .attr("r", function (d) {
-            return d.r;
-          })
-          .attr("id", function (d) {
-            return "a" + d.id;
-          })
-          .on("mouseleave", function (d) {
-            svg.style("cursor", "move");
-          })
-          .on("mouseover", function (d) {
-            svg.style("cursor", "pointer");
-          })
-          .on("mousedown", function (d) {
-            d3.event.stopPropagation();
-            if (selected && !d3.select("#a" + selected).empty()) {
-              d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
-              d3.select("#a" + selected).style("stroke", "#fff");
-            }
-            d3.select(this).transition().duration(200).style("stroke-width", 4);
-            d3.select(this).style("stroke", "#000");
-            selected = d.id;
-
-            txhash.set(d.tx.hash);
-            txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
-            txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
-            txtag.set(d.tx.tag);
-            txaddress.set(d.tx.address);
-            txvalue.set(d.tx.value);
-            txbundle.set(d.tx.bundle)
-            txmessage.set(d.tx.signatureMessageFragment);
-            txconfirmed.set(d.confirmed ? "true" : "false");
-            txbranch.set(d.tx.branchTransaction)
-            txtrunk.set(d.tx.trunkTransaction)
-
-            focused = d;
-            isFocused = true;
-            node.style("opacity", function (o) {
-              return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-            });
-            link.style("opacity", function (o) {
-              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-            });
-          })
-          .on("click", function (d) {
-            d3.event.stopPropagation();
-            if (selected && !d3.select("#a" + selected).empty()) {
-              d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
-              d3.select("#a" + selected).style("stroke", "#fff");
-            }
-            d3.select(this).transition().duration(200).style("stroke-width", 4);
-            d3.select(this).style("stroke", "#000");
-            selected = d.id;
-
-            txhash.set(d.tx.hash);
-            txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
-            txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
-            txtag.set(d.tx.tag);
-            txaddress.set(d.tx.address);
-            txvalue.set(d.tx.value);
-            txbundle.set(d.tx.bundle)
-            txmessage.set(d.tx.signatureMessageFragment);
-            txconfirmed.set(d.confirmed ? "true" : "false");
-            txbranch.set(d.tx.branchTransaction)
-            txtrunk.set(d.tx.trunkTransaction)
-
-            focused = d;
-            isFocused = true;
-            node.style("opacity", function (o) {
-              return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-            });
-            link.style("opacity", function (o) {
-              return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-            });
-          })
-          .call(force.drag)
-          .merge(node);
-
-        nodeenter.style("opacity", function (o) {
-          return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-        });
-        nodeenter.style("fill", function (d) {
-          return d.colour;
-        });
-        node = nodeenter.merge(node);
-
-        basesvg.on("click", function (d) {
-          isFocused = false;
-          link.style("opacity", 0.4);
-          node.style("opacity", 1);
+      node.exit().remove();
+      var nodeenter = node.enter().append("circle")
+        .attr("class", "node")
+        .attr("r", function (d) {
+          return d.r;
+        })
+        .attr("id", function (d) {
+          return "a" + d.id;
+        })
+        .on("mouseleave", function (d) {
+          svg.style("cursor", "move");
+        })
+        .on("mouseover", function (d) {
+          svg.style("cursor", "pointer");
+        })
+        .on("mousedown", function (d) {
+          d3.event.stopPropagation();
           if (selected && !d3.select("#a" + selected).empty()) {
             d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
             d3.select("#a" + selected).style("stroke", "#fff");
           }
-          selected = null;
-        });
+          d3.select(this).transition().duration(200).style("stroke-width", 4);
+          d3.select(this).style("stroke", "#000");
+          selected = d.id;
+
+          txhash.set(d.tx.hash);
+          txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+          txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
+          txtag.set(d.tx.tag);
+          txaddress.set(d.tx.address);
+          txvalue.set(d.tx.value);
+          txbundle.set(d.tx.bundle)
+          txmessage.set(d.tx.signatureMessageFragment);
+          txconfirmed.set(d.confirmed ? "true" : "false");
+          txbranch.set(d.tx.branchTransaction)
+          txtrunk.set(d.tx.trunkTransaction)
+
+          focused = d;
+          isFocused = true;
+          node.style("opacity", function (o) {
+            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+          });
+          link.style("opacity", function (o) {
+            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+          });
+        })
+        .on("click", function (d) {
+          d3.event.stopPropagation();
+          if (selected && !d3.select("#a" + selected).empty()) {
+            d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
+            d3.select("#a" + selected).style("stroke", "#fff");
+          }
+          d3.select(this).transition().duration(200).style("stroke-width", 4);
+          d3.select(this).style("stroke", "#000");
+          selected = d.id;
+
+          txhash.set(d.tx.hash);
+          txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+          txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
+          txtag.set(d.tx.tag);
+          txaddress.set(d.tx.address);
+          txvalue.set(d.tx.value);
+          txbundle.set(d.tx.bundle)
+          txmessage.set(d.tx.signatureMessageFragment);
+          txconfirmed.set(d.confirmed ? "true" : "false");
+          txbranch.set(d.tx.branchTransaction)
+          txtrunk.set(d.tx.trunkTransaction)
+
+          focused = d;
+          isFocused = true;
+          node.style("opacity", function (o) {
+            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+          });
+          link.style("opacity", function (o) {
+            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+          });
+        })
+        .call(force.drag)
+        .merge(node);
+
+      nodeenter.style("opacity", function (o) {
+        return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+      });
+      nodeenter.style("fill", function (d) {
+        return d.colour;
+      });
+      node = nodeenter.merge(node);
+
+      basesvg.on("click", function (d) {
+        isFocused = false;
+        link.style("opacity", 0.4);
+        node.style("opacity", 1);
+        if (selected && !d3.select("#a" + selected).empty()) {
+          d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
+          d3.select("#a" + selected).style("stroke", "#fff");
+        }
+        selected = null;
+      });
 
 
-        link.exit().remove();
-        var linkenter = link.enter().append('svg:path')
-          .attr("class", "link");
+      link.exit().remove();
+      var linkenter = link.enter().append('svg:path')
+        .attr("class", "link");
 
-        linkenter.style("opacity", function (o) {
-          return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-        });
-        link = linkenter.merge(link);
+      linkenter.style("opacity", function (o) {
+        return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+      });
+      link = linkenter.merge(link);
 
 
-        //link = linkenter.merge(link);
+      //link = linkenter.merge(link);
 
-        force.start();
+      force.start();
 
     }
   }
@@ -463,10 +462,10 @@ Template.vis.destroyed = function () {
 };
 
 
-Date.prototype.toDateInputValue = (function() {
+Date.prototype.toDateInputValue = (function () {
   var local = new Date(this);
   local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-  return local.toJSON().slice(0,10);
+  return local.toJSON().slice(0, 10);
 });
 
 function changePeriod(template, days) {
@@ -480,19 +479,19 @@ function changePeriod(template, days) {
 }
 
 Template.Stats.events({
-  "click #stats-day": function(event, template){
+  "click #stats-day": function (event, template) {
     changePeriod(template, 1);
   },
-  "click #stats-week": function(event, template){
+  "click #stats-week": function (event, template) {
     changePeriod(template, 7);
   },
-  "click #stats-month": function(event, template){
+  "click #stats-month": function (event, template) {
     changePeriod(template, 31);
   },
-  "click #stats-year": function(event, template){
+  "click #stats-year": function (event, template) {
     changePeriod(template, 365);
   },
-  "click #stats-all": function(event, template){
+  "click #stats-all": function (event, template) {
     let to = (new Date()).valueOf();
     let from = 0;
 
@@ -525,13 +524,13 @@ Template.graphs.onCreated(function () {
 
 Template.graphs.helpers({
   peaktx: function () {
-    return d3.format(".4f")(peaktx.get())+" TX/s";
+    return d3.format(".4f")(peaktx.get()) + " TX/s";
   },
   peakctx: function () {
-    return d3.format(".4f")(peakctx.get())+" CTX/s";
+    return d3.format(".4f")(peakctx.get()) + " CTX/s";
   },
   peakvol: function () {
-    return peakvol.get()+" TXs";
+    return peakvol.get() + " TXs";
   },
   peakpercent: function () {
     return d3.format(".2%")(peakpercent.get());
@@ -556,10 +555,10 @@ Template.graphs.rendered = function () {
 
 function debounce(func, interval) {
   var lastCall = -1;
-  return function(...args) {
+  return function (...args) {
     clearTimeout(lastCall);
     var self = this;
-    lastCall = setTimeout(function() {
+    lastCall = setTimeout(function () {
       func.apply(self, args);
     }, interval);
   };
@@ -583,7 +582,7 @@ function updateGraph(data) {
       y_accessor: ['totalTX', 'totalConfirmedTX', 'totalUnconfirmedNonTippedTX', 'totalTipTX'],
       legend: ['Total TXs', 'Confirmed TXs', 'Unconfirmed Non-Tip TXs', 'Tip TXs'],
       legend_target: document.getElementById('legend1'),
-      width: document.getElementById('chart1div').clientWidth - document.getElementById('chart1div').offsetLeft*2,
+      width: document.getElementById('chart1div').clientWidth - document.getElementById('chart1div').offsetLeft * 2,
       height: 400,
       animate_on_load: true,
       aggregate_rollover: true,
@@ -598,7 +597,7 @@ function updateGraph(data) {
       y_accessor: ['TXs', 'cTXs'],
       legend: ['All', 'Confirmed'],
       legend_target: document.getElementById('legend2'),
-      width: document.getElementById('chart2div').clientWidth - document.getElementById('chart2div').offsetLeft*2,
+      width: document.getElementById('chart2div').clientWidth - document.getElementById('chart2div').offsetLeft * 2,
       height: 400,
       animate_on_load: true,
       y_label: 'TX/s',
@@ -614,7 +613,7 @@ function updateGraph(data) {
       y_accessor: ['averagectimefiltered', 'averagectime'],
       legend: ['Filtered (txs with <1 hour confirmation times', 'All txs'],
       legend_target: document.getElementById('legend3'),
-      width: document.getElementById('chart3div').clientWidth - document.getElementById('chart3div').offsetLeft*2,
+      width: document.getElementById('chart3div').clientWidth - document.getElementById('chart3div').offsetLeft * 2,
       height: 400,
       animate_on_load: true,
       yax_format: function (s) {
@@ -630,7 +629,7 @@ function updateGraph(data) {
       target: document.getElementById('chart4'),
       x_accessor: 'date',
       y_accessor: 'percent',
-      width: document.getElementById('chart4div').clientWidth - document.getElementById('chart4div').offsetLeft*2,
+      width: document.getElementById('chart4div').clientWidth - document.getElementById('chart4div').offsetLeft * 2,
       height: 400,
       format: 'percentage',
       animate_on_load: true,
@@ -658,7 +657,7 @@ function updateGraph(data) {
       binned: true,
       chart_type: 'histogram',
       target: document.getElementById('chart5'),
-      width: document.getElementById('chart5div').clientWidth - document.getElementById('chart5div').offsetLeft*2,
+      width: document.getElementById('chart5div').clientWidth - document.getElementById('chart5div').offsetLeft * 2,
       height: 400,
       animate_on_load: true,
       xax_format: function (s) {

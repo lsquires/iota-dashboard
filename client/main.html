@@ -24,40 +24,43 @@
     <div class="col-sm-12">
       <div class="floating-box shadow-box">
         <div class=inside-floating-box id="outernodebox">
-            <div class="row">
-              <div class="col-sm-2">
+          <h2 class="box-header" style="margin-top: 0px">Tangle Visualizer</h2>
+          <div class="margin-bottom-4">
+            <div class="col-sm-2">
               <label for="timePeriod">Time Range:</label>
-                <select class="form-control" id="timePeriod">
-                  <option value="1" selected>1 Minute</option>
-                  <option value="2">2 Minutes</option>
-                  <option value="4">4 Minutes</option>
-                  <option value="8">8 Minutes</option>
-                  <option value="16">16 Minutes</option>
-                </select>
-              </div>
-              <div class="col-sm-2">
-              <label for="filter">Filter:</label>
-                <select class="form-control" id="filter">
-                  <option value="all" selected>All</option>
-                  <option value="confirmed">Only Confirmed</option>
-                </select>
-              </div>
-              <div class="col-sm-4 col-sm-offset-4">
-                A realtime visualiser of the tangle
-              </div>
+              <select class="form-control" id="timePeriod">
+                <option value="1" selected>1 Minute</option>
+                <option value="2">2 Minutes</option>
+                <option value="4">4 Minutes</option>
+                <option value="8">8 Minutes</option>
+                <option value="16">16 Minutes</option>
+              </select>
             </div>
+            <div class="col-sm-2">
+              <label for="filter">Filter:</label>
+              <select class="form-control" id="filter">
+                <option value="all" selected>All</option>
+                <option value="confirmed">Only Confirmed</option>
+              </select>
+            </div>
+            <div class="col-sm-4 col-sm-offset-4">
+              A realtime visualiser of the tangle
+            </div>
+          </div>
           <div class="row" id="nodebox"></div>
           <div class="row" id="vislegend">
             <div class="col-sm-4">
               <div class="col-sm">
                 <svg height="20" width="20">
-                  <circle class="node" cy="10" cx="10" r="10" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: #4AC0F2"></circle>
+                  <circle class="node" cy="10" cx="10" r="10"
+                          style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: #4AC0F2"></circle>
                 </svg>
                 <span style="color:#4AC0F2;">Tip Message</span>
               </div>
               <div class="col-sm">
                 <svg height="20" width="20">
-                  <circle class="node" cy="10" cx="10" r="10" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: rgb(100, 149, 237);"></circle>
+                  <circle class="node" cy="10" cx="10" r="10"
+                          style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: rgb(100, 149, 237);"></circle>
                 </svg>
                 <span style="color:rgb(100, 149, 237);">Unconfirmed Message</span>
               </div>
@@ -65,13 +68,15 @@
             <div class="col-sm-4">
               <div class="col-sm">
                 <svg height="20" width="20">
-                  <circle class="node" cy="10" cx="10" r="10" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: #FFA500"></circle>
+                  <circle class="node" cy="10" cx="10" r="10"
+                          style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: #FFA500"></circle>
                 </svg>
                 <span style="color:#FFA500">Confirmed Message</span>
               </div>
               <div class="col-sm">
                 <svg height="20" width="20">
-                  <circle class="node" cy="10" cx="10" r="10" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: #FF4500"></circle>
+                  <circle class="node" cy="10" cx="10" r="10"
+                          style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: #FF4500"></circle>
                 </svg>
                 <span style="color:#FF4500">Coor Message</span>
               </div>
@@ -79,15 +84,18 @@
             <div class="col-sm-4">
               <div class="col-sm">
                 <svg height="12" width="12">
-                  <circle class="node" cy="6" cx="6" r="6" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: rgb(100, 149, 237);"></circle>
+                  <circle class="node" cy="6" cx="6" r="6"
+                          style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: rgb(100, 149, 237);"></circle>
                 </svg>
                 <span style="color:rgb(100, 149, 237);">Bundle Message</span>
               </div>
               <div class="col-sm">
                 <svg height="20" width="40">
                   <path class="link" d="M26,10L14,10" style="opacity: 0.4;"></path>
-                  <circle class="node" cy="10" cx="0" r="10" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: rgb(100, 149, 237);"></circle>
-                  <circle class="node" cy="10" cx="40" r="10" style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: rgb(100, 149, 237);"></circle>
+                  <circle class="node" cy="10" cx="0" r="10"
+                          style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: rgb(100, 149, 237);"></circle>
+                  <circle class="node" cy="10" cx="40" r="10"
+                          style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1; fill: rgb(100, 149, 237);"></circle>
                 </svg>
                 <span style="color:rgb(100, 149, 237);">Verification Link</span>
               </div>
@@ -107,26 +115,59 @@
           <h2 class="box-header" style="margin-top: 0px">Transaction Details</h2>
           <div class="margin-bottom-4">
             {{#if havetx}}
-            <table class="table table-striped">
-              <tbody>
+              <table class="table table-striped">
+                <tbody>
 
-                <tr><td>TxHash</td><td>{{txhash}}</td></tr>
-                <tr><td>Timestamp</td><td>{{txtimestamp}}</td></tr>
-                <tr><td>Recieved at Node</td><td>{{txnodetimestamp}}</td></tr>
-                <tr><td>Tag</td><td>{{txtag}}</td></tr>
-                <tr><td>Address</td><td>{{txaddress}}</td></tr>
-                <tr><td>Branch Hash</td><td>{{txbranch}}</td></tr>
-                <tr><td>Trunk Hash</td><td>{{txtrunk}}</td></tr>
-                <tr><td>Bundle</td><td>{{txbundle}}</td></tr>
-                <tr><td>Value</td><td>{{txvalue}}</td></tr>
-                <tr><td>Confirmed</td><td>{{txconfirmed}}</td></tr>
-                <tr><td>Message</td><td><textarea readonly="" spellcheck="false"
-                                                   style="width: 90%; white-space: normal; font-size: small; font-family: Monospace; padding: 8px; background-color: #EEEEEE;"
-                                                   rows="4">
-                  {{txmessage}}</textarea></td></tr>
+                <tr>
+                  <td>TxHash</td>
+                  <td>{{txhash}}</td>
+                </tr>
+                <tr>
+                  <td>Timestamp</td>
+                  <td>{{txtimestamp}}</td>
+                </tr>
+                <tr>
+                  <td>Recieved at Node</td>
+                  <td>{{txnodetimestamp}}</td>
+                </tr>
+                <tr>
+                  <td>Tag</td>
+                  <td>{{txtag}}</td>
+                </tr>
+                <tr>
+                  <td>Address</td>
+                  <td>{{txaddress}}</td>
+                </tr>
+                <tr>
+                  <td>Branch Hash</td>
+                  <td>{{txbranch}}</td>
+                </tr>
+                <tr>
+                  <td>Trunk Hash</td>
+                  <td>{{txtrunk}}</td>
+                </tr>
+                <tr>
+                  <td>Bundle</td>
+                  <td>{{txbundle}}</td>
+                </tr>
+                <tr>
+                  <td>Value</td>
+                  <td>{{txvalue}}</td>
+                </tr>
+                <tr>
+                  <td>Confirmed</td>
+                  <td>{{txconfirmed}}</td>
+                </tr>
+                <tr>
+                  <td>Message</td>
+                  <td><textarea readonly="" spellcheck="false"
+                                style="width: 90%; white-space: normal; font-size: small; font-family: Monospace; padding: 8px; background-color: #EEEEEE;"
+                                rows="4">
+                    {{txmessage}}</textarea></td>
+                </tr>
 
-              </tbody>
-            </table>
+                </tbody>
+              </table>
             {{else}}
               Click on a transaction to display it details
             {{/if}}
@@ -192,7 +233,7 @@
     <div class="box-end col-sm-6">
       <div class="floating-box  shadow-box">
         <div class=inside-floating-box id="chart2div">
-          <div id="chart2" ></div>
+          <div id="chart2"></div>
           <div id="legend2"></div>
         </div>
       </div>
@@ -207,7 +248,7 @@
     </div>
     <div class="box-end col-sm-6">
       <div class="floating-box  shadow-box">
-        <div class=inside-floating-box  id="chart4div">
+        <div class=inside-floating-box id="chart4div">
           <div id="chart4"></div>
           <div id="legend4"></div>
         </div>
@@ -215,17 +256,32 @@
     </div>
     <div class="box-end col-sm-6">
       <div class="floating-box  shadow-box">
-        <div class=inside-floating-box style="height: 445px;" >
+        <div class=inside-floating-box style="height: 445px;">
           <h2 class="box-header" style="margin-top: 0px">Peak Day Statistics</h2>
           <br>
           <div class="margin-bottom-4">
             <table class="table table-striped">
               <tbody>
-              <tr><td>Highest TXs</td><td>{{peaktx}}</td></tr>
-              <tr><td>Highest CTXs</td><td>{{peakctx}}</td></tr>
-              <tr><td>Highest Volume</td><td>{{peakvol}}</td></tr>
-              <tr><td>Highest Confirmed Percent</td><td>{{peakpercent}}</td></tr>
-              <tr><td>Lowest Confirmation Time</td><td>{{peaktime}}</td></tr>
+              <tr>
+                <td>Highest TXs</td>
+                <td>{{peaktx}}</td>
+              </tr>
+              <tr>
+                <td>Highest CTXs</td>
+                <td>{{peakctx}}</td>
+              </tr>
+              <tr>
+                <td>Highest Volume</td>
+                <td>{{peakvol}}</td>
+              </tr>
+              <tr>
+                <td>Highest Confirmed Percent</td>
+                <td>{{peakpercent}}</td>
+              </tr>
+              <tr>
+                <td>Lowest Confirmation Time</td>
+                <td>{{peaktime}}</td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -250,7 +306,8 @@
     <div class="container profile">
       <section class="map under-navbar">
         <div class="profile-body">
-          This is a website created by Laurence Squires, a student at Imperial College London. It uses meteor, d3 and metricsgraphics and runs a 24/7 iota node in the backend, hopefully it will be open source soon.
+          This is a website created by Laurence Squires, a student at Imperial College London. It uses meteor, d3 and
+          metricsgraphics and runs a 24/7 iota node in the backend, hopefully it will be open source soon.
           If you have any questions please contact me at laurence.j.squires@gmail.com
         </div>
       </section>
@@ -262,7 +319,8 @@
   <nav class="navbar navbar-default mynavbar">
     <div class="container">
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>

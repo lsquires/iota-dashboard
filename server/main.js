@@ -94,263 +94,265 @@ Meteor.startup(() => {
 
 
   SyncedCron.add({
-      name: '10 Minute stats',
-      schedule: function (parser) {
-        return parser.recur().every(10).minute();
-      },
-      job: function () {
-        var startTime = (new Date()).valueOf();
-        var periodMinutes = 24 * 60;
-        console.log("doing job, db size: " + txs.find().count());
-        var now = startTime - periodMinutes * 60000;
+    name: '10 Minute stats',
+    schedule: function (parser) {
+      return parser.recur().every(10).minute();
+    },
+    job: function () {
+      var startTime = (new Date()).valueOf();
+      var periodMinutes = 24 * 60;
+      console.log("doing job, db size: " + txs.find().count());
+      var now = startTime - periodMinutes * 60000;
 
-        //Record metrics
-        console.log("doing 10min metrics");
+      //Record metrics
+      console.log("doing 10min metrics");
 
-        //No of txs in range
-        var totalTX = txs.find({"time": {$gte: now}}).count();
-        var totalConfirmedTX = txs.find({
-          $and: [
-            {"ctime": {$gte: now}},
-            {"confirmed": {$eq: true}}]
-        }).count();
+      //No of txs in range
+      var totalTX = txs.find({"time": {$gte: now}}).count();
+      var totalConfirmedTX = txs.find({
+        $and: [
+          {"ctime": {$gte: now}},
+          {"confirmed": {$eq: true}}]
+      }).count();
 
-        //No of transactions confirmed in range
-        var totalConfirmedInRangeTX = txs.find({
-          $and: [
-            {"time": {$gte: now}},
-            {"confirmed": {$eq: true}}]
-        }).count();
+      //No of transactions confirmed in range
+      var totalConfirmedInRangeTX = txs.find({
+        $and: [
+          {"time": {$gte: now}},
+          {"confirmed": {$eq: true}}]
+      }).count();
 
-        //No of transactions in range that are now confirmed
-        var totalTipTX = txs.find({
-          $and: [
-            {"time": {$gte: now}},
-            {"tip": {$eq: true}}]
-        }).count();
+      //No of transactions in range that are now confirmed
+      var totalTipTX = txs.find({
+        $and: [
+          {"time": {$gte: now}},
+          {"tip": {$eq: true}}]
+      }).count();
 
-        //No of transactions in range that are unconfirmed
-        var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedInRangeTX - totalTipTX;
+      //No of transactions in range that are unconfirmed
+      var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedInRangeTX - totalTipTX;
 
-        var rawtimes = txs.find({
-          $and: [
-            {"ctime": {$gte: now}},
-            {"confirmed": {$eq: true}},
-            {"milestone": {$ne: true}}]
-        }).fetch();
+      var rawtimes = txs.find({
+        $and: [
+          {"ctime": {$gte: now}},
+          {"confirmed": {$eq: true}},
+          {"milestone": {$ne: true}}]
+      }).fetch();
 
-        var ctimes = rawtimes.map(function (element) {
-          return (element.ctime - element.time) / 1000;
-        });
-        var ctimestamps = rawtimes.map(function (element) {
-          return element.ctimestamp - element.timestamp;
-        });
+      var ctimes = rawtimes.map(function (element) {
+        return (element.ctime - element.time) / 1000;
+      });
+      var ctimestamps = rawtimes.map(function (element) {
+        return element.ctimestamp - element.timestamp;
+      });
 
-        function average(array) {
-          var sum = 0;
-          for (var i = 0; i < array.length; i++) {
-            sum += array[i];
-          }
-          return sum / array.length;
+      function average(array) {
+        var sum = 0;
+        for (var i = 0; i < array.length; i++) {
+          sum += array[i];
         }
-        function averageFiltered(array) {
-          var sum = 0;
-          let total = 0;
-          for (var i = 0; i < array.length; i++) {
-            if (ctimes[i] <= 3600) {
-              sum += array[i];
-              total++;
-            }
-          }
-          return sum / total;
-        }
-
-        var averagectime = average(ctimes);
-        var averagectimefiltered = averageFiltered(ctimes);
-        var averagectimestamp = average(ctimestamps);
-
-
-        var TXs = txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
-        var cTXs = txs.find(
-            {
-              $and: [
-                {"confirmed": {$eq: true}},
-                {"ctime": {$gte: startTime - (30 * 60000)}}
-              ]
-            }).count() / (30 * 60);
-
-        var toInsert = {
-          date: startTime,
-          totalTX: totalTX,
-          totalConfirmedTX: totalConfirmedTX,
-          totalTipTX: totalTipTX,
-          totalUnconfirmedNonTippedTX: totalUnconfirmedNonTippedTX,
-          averagectime: averagectime,
-          averagectimefiltered: averagectimefiltered,
-          averagectimestamp: averagectimestamp,
-          cTXs: cTXs,
-          TXs: TXs,
-          period: 30
-        };
-
-        stats.insert(toInsert);
-        console.log("NEW 10m Metrics:");
+        return sum / array.length;
       }
 
-    });
+      function averageFiltered(array) {
+        var sum = 0;
+        let total = 0;
+        for (var i = 0; i < array.length; i++) {
+          if (ctimes[i] <= 3600) {
+            sum += array[i];
+            total++;
+          }
+        }
+        return sum / total;
+      }
+
+      var averagectime = average(ctimes);
+      var averagectimefiltered = averageFiltered(ctimes);
+      var averagectimestamp = average(ctimestamps);
+
+
+      var TXs = txs.find({"time": {$gte: startTime - (30 * 60000)}}).count() / (30 * 60);
+      var cTXs = txs.find(
+          {
+            $and: [
+              {"confirmed": {$eq: true}},
+              {"ctime": {$gte: startTime - (30 * 60000)}}
+            ]
+          }).count() / (30 * 60);
+
+      var toInsert = {
+        date: startTime,
+        totalTX: totalTX,
+        totalConfirmedTX: totalConfirmedTX,
+        totalTipTX: totalTipTX,
+        totalUnconfirmedNonTippedTX: totalUnconfirmedNonTippedTX,
+        averagectime: averagectime,
+        averagectimefiltered: averagectimefiltered,
+        averagectimestamp: averagectimestamp,
+        cTXs: cTXs,
+        TXs: TXs,
+        period: 30
+      };
+
+      stats.insert(toInsert);
+      console.log("NEW 10m Metrics:");
+    }
+
+  });
 
   SyncedCron.add({
-      name: 'half day stats and cleaning of data',
-      schedule: function (parser) {
-        return parser.recur().every(12).hour();
-      },
-      job: function () {
-        var startTime = (new Date()).valueOf();
-        var periodMinutes = 24 * 60;
-        console.log("doing job, db size: " + txs.find().count());
-        var now = startTime - periodMinutes * 60000;
+    name: 'half day stats and cleaning of data',
+    schedule: function (parser) {
+      return parser.recur().every(12).hour();
+    },
+    job: function () {
+      var startTime = (new Date()).valueOf();
+      var periodMinutes = 24 * 60;
+      console.log("doing job, db size: " + txs.find().count());
+      var now = startTime - periodMinutes * 60000;
 
-        //Cleaning DB
-        console.log("cleaning db");
-        var weekOld = startTime - 7 * 24 * 60 * 60000;
-        txs.remove({time: {$lte: weekOld}});
-        stats.remove({
-          $and: [
-            {period: {$eq: 30}},
-            {time: {$lte: weekOld}}
-          ]
-        });
+      //Cleaning DB
+      console.log("cleaning db");
+      var weekOld = startTime - 7 * 24 * 60 * 60000;
+      txs.remove({time: {$lte: weekOld}});
+      stats.remove({
+        $and: [
+          {period: {$eq: 30}},
+          {time: {$lte: weekOld}}
+        ]
+      });
 
-        //Record metrics
-        console.log("doing day metrics");
+      //Record metrics
+      console.log("doing day metrics");
 
-        //No of txs in range
-        var totalTX = txs.find({"time": {$gte: now}}).count();
-        var totalConfirmedTX = txs.find({
-          $and: [
-            {"ctime": {$gte: now}},
-            {"confirmed": {$eq: true}}]
-        }).count();
+      //No of txs in range
+      var totalTX = txs.find({"time": {$gte: now}}).count();
+      var totalConfirmedTX = txs.find({
+        $and: [
+          {"ctime": {$gte: now}},
+          {"confirmed": {$eq: true}}]
+      }).count();
 
-        //No of transactions confirmed in range
-        var totalConfirmedInRangeTX = txs.find({
-          $and: [
-            {"time": {$gte: now}},
-            {"confirmed": {$eq: true}}]
-        }).count();
+      //No of transactions confirmed in range
+      var totalConfirmedInRangeTX = txs.find({
+        $and: [
+          {"time": {$gte: now}},
+          {"confirmed": {$eq: true}}]
+      }).count();
 
-        //No of transactions in range that are now confirmed
-        var totalTipTX = txs.find({
-          $and: [
-            {"time": {$gte: now}},
-            {"tip": {$eq: true}}]
-        }).count();
+      //No of transactions in range that are now confirmed
+      var totalTipTX = txs.find({
+        $and: [
+          {"time": {$gte: now}},
+          {"tip": {$eq: true}}]
+      }).count();
 
-        //No of transactions in range that are unconfirmed
-        var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedInRangeTX - totalTipTX;
+      //No of transactions in range that are unconfirmed
+      var totalUnconfirmedNonTippedTX = totalTX - totalConfirmedInRangeTX - totalTipTX;
 
-        var rawtimes = txs.find({
-          $and: [
-            {"ctime": {$gte: now}},
-            {"confirmed": {$eq: true}},
-            {"milestone": {$ne: true}}]
-        }).fetch();
+      var rawtimes = txs.find({
+        $and: [
+          {"ctime": {$gte: now}},
+          {"confirmed": {$eq: true}},
+          {"milestone": {$ne: true}}]
+      }).fetch();
 
-        var ctimes = rawtimes.map(function (element) {
-          return (element.ctime - element.time) / 1000;
-        });
-        var ctimestamps = rawtimes.map(function (element) {
-          return element.ctimestamp - element.timestamp;
-        });
+      var ctimes = rawtimes.map(function (element) {
+        return (element.ctime - element.time) / 1000;
+      });
+      var ctimestamps = rawtimes.map(function (element) {
+        return element.ctimestamp - element.timestamp;
+      });
 
-        function average(array) {
-          var sum = 0;
-          for (var i = 0; i < array.length; i++) {
-            sum += array[i];
-          }
-          return sum / array.length;
+      function average(array) {
+        var sum = 0;
+        for (var i = 0; i < array.length; i++) {
+          sum += array[i];
         }
-        function averageFiltered(array) {
-          var sum = 0;
-          let total = 0;
-          for (var i = 0; i < array.length; i++) {
-            if (ctimes[i] <= 3600) {
-              sum += array[i];
-              total++;
-            }
-          }
-          return sum / total;
-        }
-
-        var averagectime = average(ctimes);
-        var averagectimefiltered = averageFiltered(ctimes);
-        var averagectimestamp = average(ctimestamps);
-
-        var outofrange = 0;
-        var totalvalid = 0;
-        for (let i = 0; i < ctimes.length; i++) {
-          if (ctimes[i] > 500) {
-            outofrange++;
-          }
-          if (ctimes[i] >= 0) {
-            totalvalid++;
-          }
-        }
-        var histGenerator = d3.histogram()
-          .domain([0, 500])
-          .thresholds(49);
-        var ctimesbins = histGenerator(ctimes).map(function (e, index) {
-          return {range: (index * 10), count: (e.length / totalvalid)};
-        });
-
-        var TXs = txs.find({"time": {$gte: startTime - (periodMinutes * 60000)}}).count() / (periodMinutes * 60);
-        var cTXs = txs.find(
-            {
-              $and: [
-                {"confirmed": {$eq: true}},
-                {"ctime": {$gte: startTime - (periodMinutes * 60000)}}
-              ]
-            }).count() / (periodMinutes * 60);
-
-        var toInsert = {
-          date: startTime,
-          totalTX: totalTX,
-          totalConfirmedTX: totalConfirmedTX,
-          totalTipTX: totalTipTX,
-          totalUnconfirmedNonTippedTX: totalUnconfirmedNonTippedTX,
-          averagectime: averagectime,
-          averagectimefiltered: averagectimefiltered,
-          averagectimestamp: averagectimestamp,
-          cTXs: cTXs,
-          TXs: TXs,
-          period: periodMinutes
-        };
-
-        var peakData = histographstats.find({set: true}).fetch();
-        var peakTXs = TXs,
-          peakCTXs = cTXs,
-          peakPercent = totalConfirmedTX / totalTX,
-          peakTime = averagectimefiltered,
-          peakVol = totalTX;
-
-        if (peakData && peakData.length > 0) {
-          peakTXs = Math.max(peakTXs, peakData[0].peakTXs);
-          peakCTXs = Math.max(peakCTXs, peakData[0].peakCTXs);
-          peakVol = Math.max(peakVol, peakData[0].peakVol);
-          peakPercent = Math.max(peakPercent, peakData[0].peakPercent);
-          peakTime = Math.min(peakTime, peakData[0].peakTime);
-        }
-
-        var doc = {
-          set: true, ctimes: ctimesbins, outofrange: (outofrange / totalvalid),
-          peakTXs: peakTXs, peakCTXs: peakCTXs, peakVol: peakVol, peakPercent: peakPercent, peakTime: peakTime
-        };
-        histographstats.upsert({set: true}, doc);
-        stats.insert(toInsert);
-        console.log("NEW half day Metrics:");
+        return sum / array.length;
       }
 
-    });
+      function averageFiltered(array) {
+        var sum = 0;
+        let total = 0;
+        for (var i = 0; i < array.length; i++) {
+          if (ctimes[i] <= 3600) {
+            sum += array[i];
+            total++;
+          }
+        }
+        return sum / total;
+      }
+
+      var averagectime = average(ctimes);
+      var averagectimefiltered = averageFiltered(ctimes);
+      var averagectimestamp = average(ctimestamps);
+
+      var outofrange = 0;
+      var totalvalid = 0;
+      for (let i = 0; i < ctimes.length; i++) {
+        if (ctimes[i] > 500) {
+          outofrange++;
+        }
+        if (ctimes[i] >= 0) {
+          totalvalid++;
+        }
+      }
+      var histGenerator = d3.histogram()
+        .domain([0, 500])
+        .thresholds(49);
+      var ctimesbins = histGenerator(ctimes).map(function (e, index) {
+        return {range: (index * 10), count: (e.length / totalvalid)};
+      });
+
+      var TXs = txs.find({"time": {$gte: startTime - (periodMinutes * 60000)}}).count() / (periodMinutes * 60);
+      var cTXs = txs.find(
+          {
+            $and: [
+              {"confirmed": {$eq: true}},
+              {"ctime": {$gte: startTime - (periodMinutes * 60000)}}
+            ]
+          }).count() / (periodMinutes * 60);
+
+      var toInsert = {
+        date: startTime,
+        totalTX: totalTX,
+        totalConfirmedTX: totalConfirmedTX,
+        totalTipTX: totalTipTX,
+        totalUnconfirmedNonTippedTX: totalUnconfirmedNonTippedTX,
+        averagectime: averagectime,
+        averagectimefiltered: averagectimefiltered,
+        averagectimestamp: averagectimestamp,
+        cTXs: cTXs,
+        TXs: TXs,
+        period: periodMinutes
+      };
+
+      var peakData = histographstats.find({set: true}).fetch();
+      var peakTXs = TXs,
+        peakCTXs = cTXs,
+        peakPercent = totalConfirmedTX / totalTX,
+        peakTime = averagectimefiltered,
+        peakVol = totalTX;
+
+      if (peakData && peakData.length > 0) {
+        peakTXs = Math.max(peakTXs, peakData[0].peakTXs);
+        peakCTXs = Math.max(peakCTXs, peakData[0].peakCTXs);
+        peakVol = Math.max(peakVol, peakData[0].peakVol);
+        peakPercent = Math.max(peakPercent, peakData[0].peakPercent);
+        peakTime = Math.min(peakTime, peakData[0].peakTime);
+      }
+
+      var doc = {
+        set: true, ctimes: ctimesbins, outofrange: (outofrange / totalvalid),
+        peakTXs: peakTXs, peakCTXs: peakCTXs, peakVol: peakVol, peakPercent: peakPercent, peakTime: peakTime
+      };
+      histographstats.upsert({set: true}, doc);
+      stats.insert(toInsert);
+      console.log("NEW half day Metrics:");
+    }
+
+  });
 
 
   var iota = new IOTA({
@@ -383,25 +385,25 @@ Meteor.startup(() => {
 
   //WIP Search func
   /*Router.route("q", function () {
-    var name = this.params.name,
-      query = this.request.query,
-      hash = query.hash;
+   var name = this.params.name,
+   query = this.request.query,
+   hash = query.hash;
 
-    //iota.api.findTransactionObjects({}, callback)
-    iota.valid.isTrytes(hash, function (error, success) {
-      console.log(success);
-    });
-
-
-  }, {where: "server"});
+   //iota.api.findTransactionObjects({}, callback)
+   iota.valid.isTrytes(hash, function (error, success) {
+   console.log(success);
+   });
 
 
-  Meteor.methods({
-    search: function (query) {
+   }, {where: "server"});
 
 
-    }
-  });*/
+   Meteor.methods({
+   search: function (query) {
+
+
+   }
+   });*/
 });
 
 function setChildrenConfirmed(tx, ctime, ctimestamp) {
@@ -426,13 +428,13 @@ function setChildren(tx, ctime, ctimestamp) {
     if (childTX) {
       txs.update({_id: childTX._id}, {$set: {'tip': false}});
     }
-      if (origTX.confirmed && childTX && !childTX.confirmed) {
-        if (origTX.milestone && origTX.bundle === childTX.bundle) {
-          txs.update({_id: childTX._id}, {$set: {'milestone': true}});
-        }
-        txs.update({_id: childTX._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
-        setChildrenConfirmed(childTX, ctime, ctimestamp);
+    if (origTX.confirmed && childTX && !childTX.confirmed) {
+      if (origTX.milestone && origTX.bundle === childTX.bundle) {
+        txs.update({_id: childTX._id}, {$set: {'milestone': true}});
       }
+      txs.update({_id: childTX._id}, {$set: {'confirmed': true, 'ctime': ctime, 'ctimestamp': ctimestamp}});
+      setChildrenConfirmed(childTX, ctime, ctimestamp);
+    }
   }
 
   updateChild(tx, tx1, ctime, ctimestamp);
