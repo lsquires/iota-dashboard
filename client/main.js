@@ -100,7 +100,7 @@ Template.vis.events({
       startSim(document.getElementById('nodebox').clientWidth);
     }
     disableremove = $(event.target).is(":checked");
-    
+
   },
   "change #filter": function (event, template) {
     let selectValue = template.$("#filter").val();
@@ -121,351 +121,350 @@ Template.vis.events({
 
 
 Template.vis.rendered = function () {
+  startSim(document.getElementById('nodebox').clientWidth);
+};
+
+function startSim(w) {
   var focused;
   var selected;
-  startSim(document.getElementById('nodebox').clientWidth);
+  var isFocused = false;
+  var width = w,
+    height = 400,
+    centerx = width / 2,
+    centery = height / 2;
 
-  function startSim(w) {
-    var isFocused = false;
-    var width = w,
-      height = 400,
-      centerx = width / 2,
-      centery = height / 2;
+  var fill = d3.scaleOrdinal(d3.schemeCategory20);
 
-    var fill = d3.scaleOrdinal(d3.schemeCategory20);
+  var force = cola.d3adaptor(d3)
+    .size([width, height])
+    .nodes([])
+    .symmetricDiffLinkLengths(linklength)
+    .avoidOverlaps(false)
+    .flowLayout("x", function (l) {
+      return l.bundle ? xclosuresmall : xclosure;
+    })
+    .on("tick", tick);
 
-    var force = cola.d3adaptor(d3)
-      .size([width, height])
-      .nodes([])
-      .symmetricDiffLinkLengths(linklength)
-      .avoidOverlaps(false)
-      .flowLayout("x", function (l) {
-        return l.bundle ? xclosuresmall : xclosure;
-      })
-      .on("tick", tick);
+  var basesvg = d3.select("#nodebox").append("svg")
+    .attr("width", "100%")
+    .attr("height", height)
+    .attr("id", "canvas")
+    .call(d3.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed));
 
-    var basesvg = d3.select("#nodebox").append("svg")
-      .attr("width", "100%")
-      .attr("height", height)
-      .attr("id", "canvas")
-      .call(d3.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed));
-
-    var svg = basesvg.append("g");
+  var svg = basesvg.append("g");
 
 
-    basesvg.style("cursor", "move");
-    svg.style("cursor", "move");
+  basesvg.style("cursor", "move");
+  svg.style("cursor", "move");
 
-    var rect = svg.append("rect")
-      .attr("width", width)
+  var rect = svg.append("rect")
+    .attr("width", width)
+    .attr("height", height);
+
+  var nodes = force.nodes(),
+    links = force.links(),
+    node = svg.selectAll(".node"),
+    link = svg.selectAll(".link");
+
+  svg.append('svg:defs').append('svg:marker')
+    .attr('id', 'end-arrow')
+    .attr('viewBox', '0 -10 20 20')
+    .attr('refX', 10)
+    .attr('markerWidth', 5)
+    .attr('markerHeight', 5)
+    .attr('orient', 'auto')
+    .append('svg:path')
+    .attr('d', 'M0,-10L20,0L0,10')
+    .attr('fill', '#000');
+
+  $(window).resize(function () {
+    console.log("resized");
+    width = document.getElementById('nodebox').clientWidth;
+    centerx = width / 2;
+    force.size([width, height]);
+    svg.attr("width", width)
       .attr("height", height);
+    rect.attr("width", width)
+      .attr("height", height);
+  });
 
-    var nodes = force.nodes(),
-      links = force.links(),
-      node = svg.selectAll(".node"),
-      link = svg.selectAll(".link");
-
-    svg.append('svg:defs').append('svg:marker')
-      .attr('id', 'end-arrow')
-      .attr('viewBox', '0 -10 20 20')
-      .attr('refX', 10)
-      .attr('markerWidth', 5)
-      .attr('markerHeight', 5)
-      .attr('orient', 'auto')
-      .append('svg:path')
-      .attr('d', 'M0,-10L20,0L0,10')
-      .attr('fill', '#000');
-
-    $(window).resize(function () {
-      console.log("resized");
-      width = document.getElementById('nodebox').clientWidth;
-      centerx = width / 2;
-      force.size([width, height]);
-      svg.attr("width", width)
-        .attr("height", height);
-      rect.attr("width", width)
-        .attr("height", height);
+  function tick() {
+    link.attr('d', function (d) {
+      var deltaX = d.source.x - d.target.x,
+        deltaY = d.source.y - d.target.y,
+        dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
+        normX = deltaX / dist,
+        normY = deltaY / dist,
+        sourcePadding = ((selected === d.target.id) ? d.target.r + 2 : d.target.r ),
+        targetPadding = ((selected === d.source.id) ? d.source.r + 4 : d.source.r + 2),
+        sourceX = d.target.x + (sourcePadding * normX),
+        sourceY = d.target.y + (sourcePadding * normY),
+        targetX = d.source.x - (targetPadding * normX),
+        targetY = d.source.y - (targetPadding * normY);
+      return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
     });
 
-    function tick() {
-      link.attr('d', function (d) {
-        var deltaX = d.source.x - d.target.x,
-          deltaY = d.source.y - d.target.y,
-          dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-          normX = deltaX / dist,
-          normY = deltaY / dist,
-          sourcePadding = ((selected === d.target.id) ? d.target.r + 2 : d.target.r ),
-          targetPadding = ((selected === d.source.id) ? d.source.r + 4 : d.source.r + 2),
-          sourceX = d.target.x + (sourcePadding * normX),
-          sourceY = d.target.y + (sourcePadding * normY),
-          targetX = d.source.x - (targetPadding * normX),
-          targetY = d.source.y - (targetPadding * normY);
-        return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+    node.attr("cx", function (d) {
+      return d.x;
+    })
+      .attr("cy", function (d) {
+        return d.y;
+      });
+  }
+
+  let initializing = true;
+  txshandler = Meteor.subscribe("txs");
+
+  dbwatcher = txs.find().observeChanges({
+    added: function (id, fields) {
+
+      var node = {tx: fields, id: id, tip: true, confirmed: false};
+      node.r = (0 === fields.currentIndex) ? nodeRadius : smallNodeRadius;
+      if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
+        node.confirmed = true;
+        node.milestone = true;
+      }
+
+
+      //Check parents and add parents link
+      nodes.forEach(function (target) {
+        if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
+          node.tip = false;
+          if (target.confirmed) {
+            node.confirmed = true;
+          }
+          if (target.milestone && target.tx.bundle === fields.bundle) {
+            node.milestone = true;
+          }
+
+          if (target.tx.bundle == fields.bundle) {
+            links.push({source: node, target: target, bundle: true});
+          } else {
+            links.push({source: node, target: target});
+          }
+        }
       });
 
-      node.attr("cx", function (d) {
-        return d.x;
-      })
-        .attr("cy", function (d) {
-          return d.y;
-        });
-    }
-
-    let initializing = true;
-    txshandler = Meteor.subscribe("txs");
-
-    dbwatcher = txs.find().observeChanges({
-      added: function (id, fields) {
-
-        var node = {tx: fields, id: id, tip: true, confirmed: false};
-        node.r = (0 === fields.currentIndex) ? nodeRadius : smallNodeRadius;
-        if (fields.address == "KPWCHICGJZXKE9GSUDXZYUAPLHAKAHYHDXNPHENTERYMMBQOPSQIDENXKLKCEYCPVTZQLEEJVYJZV9BWU") {
-          node.confirmed = true;
-          node.milestone = true;
-        }
-
-
-        //Check parents and add parents link
-        nodes.forEach(function (target) {
-          if (fields.hash == target.tx.branchTransaction || fields.hash == target.tx.trunkTransaction) {
-            node.tip = false;
-            if (target.confirmed) {
-              node.confirmed = true;
-            }
-            if (target.milestone && target.tx.bundle === fields.bundle) {
-              node.milestone = true;
-            }
-
-            if (target.tx.bundle == fields.bundle) {
-              links.push({source: node, target: target, bundle: true});
-            } else {
-              links.push({source: node, target: target});
-            }
+      //Correct children
+      nodes.forEach(function (target) {
+        if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
+          if (target.tx.bundle == fields.bundle) {
+            links.push({source: target, target: node, bundle: true});
+          } else {
+            links.push({source: target, target: node});
           }
-        });
 
-        //Correct children
+          if (node.milestone && target.tx.bundle == fields.bundle) {
+            target.milestone = true;
+          }
+
+          if (node.confirmed && !target.confirmed) {
+            target.confirmed = true;
+            setColour(target);
+            setChildren(target);
+          }
+
+          if (target.tip) {
+            target.tip = false;
+            setColour(target);
+          }
+        }
+      });
+
+      function setChildren(n) {
         nodes.forEach(function (target) {
-          if (target.tx.hash == fields.branchTransaction || target.tx.hash == fields.trunkTransaction) {
-            if (target.tx.bundle == fields.bundle) {
-              links.push({source: target, target: node, bundle: true});
-            } else {
-              links.push({source: target, target: node});
-            }
-
-            if (node.milestone && target.tx.bundle == fields.bundle) {
-              target.milestone = true;
-            }
-
-            if (node.confirmed && !target.confirmed) {
+          if (target.tx.hash == n.tx.branchTransaction || target.tx.hash == n.tx.trunkTransaction) {
+            if (!target.confirmed) {
               target.confirmed = true;
               setColour(target);
               setChildren(target);
             }
-
-            if (target.tip) {
-              target.tip = false;
-              setColour(target);
-            }
           }
         });
+      }
 
-        function setChildren(n) {
-          nodes.forEach(function (target) {
-            if (target.tx.hash == n.tx.branchTransaction || target.tx.hash == n.tx.trunkTransaction) {
-              if (!target.confirmed) {
-                target.confirmed = true;
-                setColour(target);
-                setChildren(target);
+      setColour(node);
+      nodes.push(node);
+      if (!initializing) {
+        restart();
+      }
+    },
+    changed: function (id, fields) {
+    },
+    removed: function (id) {
+      if(!disableremove) {
+        console.log("removed id");
+        for (var i = nodes.length - 1; i >= 0; i--) {
+          if (nodes[i].id === id) {
+            //Delete links
+            for (var i2 = links.length - 1; i2 >= 0; i2--) {
+              if (links[i2].source.id === id || links[i2].target.id === id) {
+                links.splice(i2, 1);
               }
             }
-          });
-        }
-
-        setColour(node);
-        nodes.push(node);
-        if (!initializing) {
-          restart();
-        }
-      },
-      changed: function (id, fields) {
-      },
-      removed: function (id) {
-        if(!disableremove) {
-          console.log("removed id");
-          for (var i = nodes.length - 1; i >= 0; i--) {
-            if (nodes[i].id === id) {
-              //Delete links
-              for (var i2 = links.length - 1; i2 >= 0; i2--) {
-                if (links[i2].source.id === id || links[i2].target.id === id) {
-                  links.splice(i2, 1);
-                }
-              }
-              nodes.splice(i, 1);
-              if (!initializing) {
-                restart();
-              }
-              break;
+            nodes.splice(i, 1);
+            if (!initializing) {
+              restart();
             }
+            break;
           }
         }
       }
+    }
+  });
+
+  initializing = false;
+  restart();
+
+  function setColour(node) {
+    if (node.milestone) {
+      node.colour = "#FF4500";
+    } else if (node.confirmed) {
+      node.colour = "#FFA500";
+    } else if (node.tip) {
+      node.colour = "#4AC0F2";
+    } else {
+      node.colour = "#6495ED";
+    }
+  }
+
+  function zoomed() {
+    svg.attr("transform", d3.event.transform);
+  }
+
+  function isConnected(a, b) {
+    return a.tx.hash == b.tx.branchTransaction ||
+      a.tx.hash == b.tx.trunkTransaction ||
+      b.tx.hash == a.tx.branchTransaction ||
+      b.tx.hash == a.tx.trunkTransaction ||
+      a.id == b.id;
+  }
+
+  function restart() {
+    node = node.data(nodes, function (d) {
+      return d.id;
+    });
+    link = link.data(links, function (d) {
+      return d.source.id + "-" + d.target.id;
     });
 
-    initializing = false;
-    restart();
 
-    function setColour(node) {
-      if (node.milestone) {
-        node.colour = "#FF4500";
-      } else if (node.confirmed) {
-        node.colour = "#FFA500";
-      } else if (node.tip) {
-        node.colour = "#4AC0F2";
-      } else {
-        node.colour = "#6495ED";
-      }
-    }
-
-    function zoomed() {
-      svg.attr("transform", d3.event.transform);
-    }
-
-    function isConnected(a, b) {
-      return a.tx.hash == b.tx.branchTransaction ||
-        a.tx.hash == b.tx.trunkTransaction ||
-        b.tx.hash == a.tx.branchTransaction ||
-        b.tx.hash == a.tx.trunkTransaction ||
-        a.id == b.id;
-    }
-
-    function restart() {
-      node = node.data(nodes, function (d) {
-        return d.id;
-      });
-      link = link.data(links, function (d) {
-        return d.source.id + "-" + d.target.id;
-      });
-
-
-      node.exit().remove();
-      var nodeenter = node.enter().append("circle")
-        .attr("class", "node")
-        .attr("r", function (d) {
-          return d.r;
-        })
-        .attr("id", function (d) {
-          return "a" + d.id;
-        })
-        .on("mouseleave", function (d) {
-          svg.style("cursor", "move");
-        })
-        .on("mouseover", function (d) {
-          svg.style("cursor", "pointer");
-        })
-        .on("mousedown", function (d) {
-          d3.event.stopPropagation();
-          if (selected && !d3.select("#a" + selected).empty()) {
-            d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
-            d3.select("#a" + selected).style("stroke", "#fff");
-          }
-          d3.select(this).transition().duration(200).style("stroke-width", 4);
-          d3.select(this).style("stroke", "#000");
-          selected = d.id;
-
-          txhash.set(d.tx.hash);
-          txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
-          txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
-          txtag.set(d.tx.tag);
-          txaddress.set(d.tx.address);
-          txvalue.set(d.tx.value);
-          txbundle.set(d.tx.bundle)
-          txmessage.set(d.tx.signatureMessageFragment);
-          txconfirmed.set(d.confirmed ? "true" : "false");
-          txbranch.set(d.tx.branchTransaction)
-          txtrunk.set(d.tx.trunkTransaction)
-
-          focused = d;
-          isFocused = true;
-          node.style("opacity", function (o) {
-            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-          });
-          link.style("opacity", function (o) {
-            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-          });
-        })
-        .on("click", function (d) {
-          d3.event.stopPropagation();
-          if (selected && !d3.select("#a" + selected).empty()) {
-            d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
-            d3.select("#a" + selected).style("stroke", "#fff");
-          }
-          d3.select(this).transition().duration(200).style("stroke-width", 4);
-          d3.select(this).style("stroke", "#000");
-          selected = d.id;
-
-          txhash.set(d.tx.hash);
-          txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
-          txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
-          txtag.set(d.tx.tag);
-          txaddress.set(d.tx.address);
-          txvalue.set(d.tx.value);
-          txbundle.set(d.tx.bundle)
-          txmessage.set(d.tx.signatureMessageFragment);
-          txconfirmed.set(d.confirmed ? "true" : "false");
-          txbranch.set(d.tx.branchTransaction)
-          txtrunk.set(d.tx.trunkTransaction)
-
-          focused = d;
-          isFocused = true;
-          node.style("opacity", function (o) {
-            return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-          });
-          link.style("opacity", function (o) {
-            return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-          });
-        })
-        .call(force.drag)
-        .merge(node);
-
-      nodeenter.style("opacity", function (o) {
-        return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
-      });
-      nodeenter.style("fill", function (d) {
-        return d.colour;
-      });
-      node = nodeenter.merge(node);
-
-      basesvg.on("click", function (d) {
-        isFocused = false;
-        link.style("opacity", 0.4);
-        node.style("opacity", 1);
+    node.exit().remove();
+    var nodeenter = node.enter().append("circle")
+      .attr("class", "node")
+      .attr("r", function (d) {
+        return d.r;
+      })
+      .attr("id", function (d) {
+        return "a" + d.id;
+      })
+      .on("mouseleave", function (d) {
+        svg.style("cursor", "move");
+      })
+      .on("mouseover", function (d) {
+        svg.style("cursor", "pointer");
+      })
+      .on("mousedown", function (d) {
+        d3.event.stopPropagation();
         if (selected && !d3.select("#a" + selected).empty()) {
           d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
           d3.select("#a" + selected).style("stroke", "#fff");
         }
-        selected = null;
-      });
+        d3.select(this).transition().duration(200).style("stroke-width", 4);
+        d3.select(this).style("stroke", "#000");
+        selected = d.id;
+
+        txhash.set(d.tx.hash);
+        txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+        txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
+        txtag.set(d.tx.tag);
+        txaddress.set(d.tx.address);
+        txvalue.set(d.tx.value);
+        txbundle.set(d.tx.bundle)
+        txmessage.set(d.tx.signatureMessageFragment);
+        txconfirmed.set(d.confirmed ? "true" : "false");
+        txbranch.set(d.tx.branchTransaction)
+        txtrunk.set(d.tx.trunkTransaction)
+
+        focused = d;
+        isFocused = true;
+        node.style("opacity", function (o) {
+          return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+        });
+        link.style("opacity", function (o) {
+          return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+        });
+      })
+      .on("click", function (d) {
+        d3.event.stopPropagation();
+        if (selected && !d3.select("#a" + selected).empty()) {
+          d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
+          d3.select("#a" + selected).style("stroke", "#fff");
+        }
+        d3.select(this).transition().duration(200).style("stroke-width", 4);
+        d3.select(this).style("stroke", "#000");
+        selected = d.id;
+
+        txhash.set(d.tx.hash);
+        txtimestamp.set((new Date(d.tx.timestamp * 1000)).toLocaleString());
+        txnodetimestamp.set((new Date(d.tx.time)).toLocaleString());
+        txtag.set(d.tx.tag);
+        txaddress.set(d.tx.address);
+        txvalue.set(d.tx.value);
+        txbundle.set(d.tx.bundle)
+        txmessage.set(d.tx.signatureMessageFragment);
+        txconfirmed.set(d.confirmed ? "true" : "false");
+        txbranch.set(d.tx.branchTransaction)
+        txtrunk.set(d.tx.trunkTransaction)
+
+        focused = d;
+        isFocused = true;
+        node.style("opacity", function (o) {
+          return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+        });
+        link.style("opacity", function (o) {
+          return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+        });
+      })
+      .call(force.drag)
+      .merge(node);
+
+    nodeenter.style("opacity", function (o) {
+      return isFocused ? (isConnected(focused, o) ? 1 : 0.2) : 1;
+    });
+    nodeenter.style("fill", function (d) {
+      return d.colour;
+    });
+    node = nodeenter.merge(node);
+
+    basesvg.on("click", function (d) {
+      isFocused = false;
+      link.style("opacity", 0.4);
+      node.style("opacity", 1);
+      if (selected && !d3.select("#a" + selected).empty()) {
+        d3.select("#a" + selected).transition().duration(200).style("stroke-width", 1.5);
+        d3.select("#a" + selected).style("stroke", "#fff");
+      }
+      selected = null;
+    });
 
 
-      link.exit().remove();
-      var linkenter = link.enter().append('svg:path')
-        .attr("class", "link");
+    link.exit().remove();
+    var linkenter = link.enter().append('svg:path')
+      .attr("class", "link");
 
-      linkenter.style("opacity", function (o) {
-        return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
-      });
-      link = linkenter.merge(link);
+    linkenter.style("opacity", function (o) {
+      return isFocused ? (o.source.id == focused.id || o.target.id == focused.id ? 0.8 : 0.12) : 0.4;
+    });
+    link = linkenter.merge(link);
 
 
-      //link = linkenter.merge(link);
+    //link = linkenter.merge(link);
 
-      force.start();
+    force.start();
 
-    }
   }
-};
-
+}
 Template.vis.destroyed = function () {
   dbwatcher.stop();
   txshandler.stop();
