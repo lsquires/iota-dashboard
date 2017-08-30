@@ -60,7 +60,7 @@ Meteor.startup(() => {
         });
     });
   });
-  
+
   Meteor.publish('txs', function () {
     var self = this;
     self.autorun(function () {
