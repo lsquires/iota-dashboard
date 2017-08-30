@@ -25,6 +25,8 @@ disableremove = false;
 fastmode = false;
 restartDB = {};
 started = false;
+nodes = [];
+links = [];
 
 Router.route('/', {name: "Home"}, function () {
   this.render('Home');
@@ -176,9 +178,9 @@ function startSim(w) {
     .attr("width", width)
     .attr("height", height);
 
-  var nodes = force.nodes(),
-    links = force.links(),
-    node = svg.selectAll(".node"),
+  nodes = force.nodes();
+  links = force.links();
+  var node = svg.selectAll(".node"),
     link = svg.selectAll(".link");
 
   svg.append('svg:defs').append('svg:marker')
@@ -487,6 +489,8 @@ function restartDBWatcher() {
   if(dbwatcher) {
     dbwatcher.stop();
   }
+  nodes = [];
+  links = [];
   dbwatcher = txs.find().observeChanges(restartDB);
 }
 Template.vis.destroyed = function () {
