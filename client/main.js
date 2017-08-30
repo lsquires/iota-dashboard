@@ -21,6 +21,7 @@ nextClean = new Date();
 toRestart = true;
 smallNodeRadius = 6;
 nodeRadius = 10;
+disableremove = false;
 
 
 Router.route('/', {name: "Home"}, function () {
@@ -93,6 +94,13 @@ Template.vis.events({
     let selectValue = parseInt(template.$("#timePeriod").val(), 10);
     //console.log(selectValue);
     txshandler.setData('minsago', selectValue);
+  },
+  "change #disableremove": function (event, template) {
+    if(disableremove) {
+      startSim(document.getElementById('nodebox').clientWidth);
+    }
+    disableremove = $(event.target).is(":checked").val();
+    
   },
   "change #filter": function (event, template) {
     let selectValue = template.$("#filter").val();
@@ -283,20 +291,22 @@ Template.vis.rendered = function () {
       changed: function (id, fields) {
       },
       removed: function (id) {
-        console.log("removed id");
-        for (var i = nodes.length - 1; i >= 0; i--) {
-          if (nodes[i].id === id) {
-            //Delete links
-            for (var i2 = links.length - 1; i2 >= 0; i2--) {
-              if (links[i2].source.id === id || links[i2].target.id === id) {
-                links.splice(i2, 1);
+        if(!disableremove) {
+          console.log("removed id");
+          for (var i = nodes.length - 1; i >= 0; i--) {
+            if (nodes[i].id === id) {
+              //Delete links
+              for (var i2 = links.length - 1; i2 >= 0; i2--) {
+                if (links[i2].source.id === id || links[i2].target.id === id) {
+                  links.splice(i2, 1);
+                }
               }
+              nodes.splice(i, 1);
+              if (!initializing) {
+                restart();
+              }
+              break;
             }
-            nodes.splice(i, 1);
-            if (!initializing) {
-              restart();
-            }
-            break;
           }
         }
       }
