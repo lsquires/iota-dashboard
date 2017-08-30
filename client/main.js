@@ -491,6 +491,7 @@ function restartDBWatcher() {
   }
   nodes = [];
   links = [];
+  restart();
   dbwatcher = txs.find().observeChanges(restartDB);
 }
 Template.vis.destroyed = function () {
