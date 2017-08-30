@@ -74,7 +74,7 @@ Meteor.startup(() => {
       check(fastmode, Boolean);
       fields = {tip: 0, confirmed: 0, milestone: 0, ctime: 0, ctimestamp: 0};
       if(fastmode) {
-        fields = {hash: 1, address: 1, trunkTransaction: 1, branchTransaction: 1};
+        fields = {hash: 1, address: 1, trunkTransaction: 1, branchTransaction: 1, bundle: 1};
       }
 
       if (confirmedonly) {
