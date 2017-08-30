@@ -99,7 +99,7 @@ Template.vis.events({
     if(disableremove) {
       startSim(document.getElementById('nodebox').clientWidth);
     }
-    disableremove = $(event.target).is(":checked").val();
+    disableremove = $(event.target).is(":checked");
     
   },
   "change #filter": function (event, template) {
