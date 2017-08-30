@@ -22,7 +22,7 @@ toRestart = true;
 smallNodeRadius = 6;
 nodeRadius = 10;
 disableremove = false;
-
+fastmode = false;
 
 Router.route('/', {name: "Home"}, function () {
   this.render('Home');
@@ -96,11 +96,13 @@ Template.vis.events({
     txshandler.setData('minsago', selectValue);
   },
   "change #disableremove": function (event, template) {
-    if(disableremove) {
-      startSim(document.getElementById('nodebox').clientWidth);
-    }
     disableremove = $(event.target).is(":checked");
-
+    startSim(document.getElementById('nodebox').clientWidth);
+  },
+  "change #fastmode": function (event, template) {
+    fastmode = $(event.target).is(":checked");
+    txshandler.setData('fastmode', fastmode);
+    startSim(document.getElementById('nodebox').clientWidth);
   },
   "change #filter": function (event, template) {
     let selectValue = template.$("#filter").val();

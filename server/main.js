@@ -69,6 +69,14 @@ Meteor.startup(() => {
 
       var confirmedonly = self.data('confirmedonly') || false;
       check(confirmedonly, Boolean);
+
+      var fastmode = self.data('fastmode') || false;
+      check(fastmode, Boolean);
+      fields = {tip: 0, confirmed: 0, milestone: 0, ctime: 0, ctimestamp: 0};
+      if(fastmode) {
+        fields = {hash: 1, address: 1, trunkTransaction: 1, branchTransaction: 1};
+      }
+
       if (confirmedonly) {
         return txs.find(
           {
@@ -77,7 +85,7 @@ Meteor.startup(() => {
               {"confirmed": {$eq: true}}]
           },
           {
-            fields: {tip: 0, confirmed: 0, milestone: 0, ctime: 0, ctimestamp: 0}
+            "fields": fields
           });
       } else {
         return txs.find(
@@ -85,7 +93,7 @@ Meteor.startup(() => {
             "time": {$gte: currentTime.get() - (minsago * 60000)}
           },
           {
-            fields: {tip: 0, confirmed: 0, milestone: 0, ctime: 0, ctimestamp: 0}
+            "fields": fields
           });
       }
 
