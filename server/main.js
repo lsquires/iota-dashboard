@@ -383,7 +383,7 @@ Meteor.startup(() => {
 
   //Watch export path for txs
   watcher.on('add', Meteor.bindEnvironment(function (path) {
-    newFile = fs.readFileSync(path, 'utf8');
+    let newFile = fs.readFileSync(path, 'utf8');
     let split = newFile.split(/\r?\n/);
     let tx = iota.utils.transactionObject(split[1]);
     addTX(tx, path);
