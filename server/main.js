@@ -379,7 +379,7 @@ Meteor.startup(() => {
   });
 
   console.log('/home/lsquires/iri/target/export/');
-  var watcher = chokidar.watch('/home/lsquires/iri/target/export/', {
+  /*var watcher = chokidar.watch('/home/lsquires/iri/target/export/', {
     ignored: /[\/\\]\./, persistent: true
   });
 
@@ -389,7 +389,16 @@ Meteor.startup(() => {
     let split = newFile.split(/\r?\n/);
     let tx = iota.utils.transactionObject(split[1]);
     addTX(tx, path);
-  }));
+  }));*/
+
+  fs.watch('/home/lsquires/iri/target/export/', (eventType, filename) => {
+    console.log(`event type is: ${eventType}`);
+    if (filename) {
+      console.log(`filename provided: ${filename}`);
+    } else {
+      console.log('filename not provided');
+    }
+  });
 
 });
 
