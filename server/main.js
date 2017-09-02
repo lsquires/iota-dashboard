@@ -393,7 +393,7 @@ Meteor.startup(() => {
       if (err) {
         console.log("failed to delete local file:"+err);
       } else {
-        console.log('successfully deleted local file');
+        //console.log('successfully deleted local file');
       }
     });
     addTX(tx, path);
@@ -481,7 +481,7 @@ function addTX(tx, path) {
   //Extract time from the filename
   tx.time = (path.replace(/^.*[\\\/]/, '').split(".")[0] / 1000);
 
-  console.log("adding tx: " + tx.time);
+
   tx.confirmed = false;
   tx.tip = true;
 
@@ -499,8 +499,9 @@ function addTX(tx, path) {
 
   //Insert into db, upsert stops conflicts if tx is rebroadcasted
   let doc = txs.upsert({hash: tx.hash}, tx);
-  console.log("added tx");
+  //console.log("added tx");
   //Set children as non tips and confirmed if necessary
   setChildren(tx, tx.ctime, tx.ctimestamp);
+  console.log("added tx: " + tx.time);
 }
 
