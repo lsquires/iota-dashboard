@@ -391,7 +391,14 @@ Meteor.startup(() => {
     addTX(tx, path);
 
     //Delete tx file
-    fs.unlinkSync(path);
+    //fs.unlinkSync(path);
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.log("failed to delete local file:"+err);
+      } else {
+        console.log('successfully deleted local file');
+      }
+    });
   }));
 
   /*fs.watch('/home/lsquires/iri/target/export/', (eventType, filename) => {
