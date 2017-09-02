@@ -385,13 +385,10 @@ Meteor.startup(() => {
 
   //Watch export path for txs
   watcher.on('add', Meteor.bindEnvironment(function (path) {
+
     let newFile = fs.readFileSync(path, 'utf8');
     let split = newFile.split(/\r?\n/);
     let tx = iota.utils.transactionObject(split[1]);
-    addTX(tx, path);
-
-    //Delete tx file
-    //fs.unlinkSync(path);
     fs.unlink(path, (err) => {
       if (err) {
         console.log("failed to delete local file:"+err);
@@ -399,6 +396,11 @@ Meteor.startup(() => {
         console.log('successfully deleted local file');
       }
     });
+    addTX(tx, path);
+
+    //Delete tx file
+    //fs.unlinkSync(path);
+
   }));
 
   /*fs.watch('/home/lsquires/iri/target/export/', (eventType, filename) => {
