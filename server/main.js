@@ -498,8 +498,8 @@ function addTX(tx, path) {
   }
 
   //Insert into db, upsert stops conflicts if tx is rebroadcasted
-  txs.upsert({hash: tx.hash}, tx);
-
+  let doc = txs.upsert({hash: tx.hash}, tx);
+  console.log("added tx");
   //Set children as non tips and confirmed if necessary
   setChildren(tx, tx.ctime, tx.ctimestamp);
 }
