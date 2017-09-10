@@ -392,8 +392,6 @@ Meteor.startup(() => {
     fs.unlink(path, (err) => {
       if (err) {
         console.log("failed to delete local file:"+err);
-      } else {
-        //console.log('successfully deleted local file');
       }
     });
     addTX(tx, path);
