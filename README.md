@@ -4,6 +4,4 @@ A meteor based dashboard website for monitoring the IOTA network, includes a d3 
 
 To use you need a full IOTA node running with an --export flag and point the chokidar path watcher in server.js to that directory.
 
-<video  style="display:block; width:100%; height:auto;" autoplay controls loop="loop">
-       <source src="https://github.com/lsquires/iota-dashboard/blob/master/imgs/iotatest.webm?raw=true"  type="video/webm"  />
-</video>
+![Demo](https://github.com/lsquires/iota-dashboard/blob/master/imgs/iotatest.gif)
